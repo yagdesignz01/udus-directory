@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login | Faculty of Computing</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --udus-green: #008001;
+    --udus-dark-green: #005A01;
+    --udus-plum: #9F4A71;
+    --surface: #F4F9EE;
+    --white: #FFFFFF;
+    --text-dark: #12233F;
+    --text-muted: #6B7A94;
+    --hairline: #E1E5EC;
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: var(--text-dark);
+  }
+
+  .login-container {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px -10px rgba(0, 90, 1, 0.15);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid var(--hairline);
+  }
+
+  .brand-mark {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: var(--udus-plum);
+    color: var(--white);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+
+  h1 { font-size: 22px; font-weight: 800; color: var(--udus-dark-green); margin: 0 0 8px; }
+  p { font-size: 14px; color: var(--text-muted); margin: 0 0 24px; }
+
+  .form-group { text-align: left; margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); margin-bottom: 8px; }
+  .form-group input { width: 100%; padding: 14px 16px; border: 1.5px solid var(--hairline); border-radius: 12px; font-size: 14px; font-family: inherit; box-sizing: border-box; transition: border-color 0.2s; }
+  .form-group input:focus { outline: none; border-color: var(--udus-green); }
+
+  .btn { width: 100%; padding: 14px; background: var(--udus-green); color: var(--white); border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: background 0.2s; }
+  .btn:hover { background: var(--udus-dark-green); }
+
+  .error-message { background: #FFF0F0; color: #D32F2F; padding: 10px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<div class="login-container">
+  <div class="brand-mark">FC</div>
+  <h1>Admin Gateway</h1>
+  <p>Secure access for Super Administrators.</p>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="error-message">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="POST" action="{% url 'admin_login' %}">
+    {% csrf_token %}
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" name="email" placeholder="admin@udus.edu.ng" required>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" name="password" placeholder="••••••••" required>
+    </div>
+    <button type="submit" class="btn">Access Dashboard</button>
+  </form>
+</div>
+
+</body>
+</html>

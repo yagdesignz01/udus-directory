@@ -1,67 +1,68 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
+from django.contrib.auth.hashers import check_password
 from .models import AcademicStaff, SystemAdmin
 
-def dashboard_view(request):
-    return render(request, 'admin-dashboard-prototype.html')
+# ==========================================
+# ADMIN AUTHENTICATION
+# ==========================================
+def admin_login(request):
+    # 1. If already logged in, redirect to dashboard
+    if 'admin_id' in request.session:
+        return redirect('admin_dashboard')
 
-# Shows the Login Page
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        # 2. Find the admin by email only
+        admin = SystemAdmin.objects.filter(email=email).first()
+        
+        # 3. Safely check the password
+        if admin and (admin.password == password or check_password(password, admin.password)):
+            # Create session
+            request.session['admin_id'] = admin.id
+            request.session.modified = True
+            return redirect('admin_dashboard')
+        else:
+            messages.error(request, 'Invalid email or password.')
+
+    return render(request, 'admin-login.html')
+
+def admin_logout(request):
+    # Completely flush all session data to force a hard logout
+    request.session.flush()
+    return redirect('admin_login')
+
+def admin_dashboard_view(request):
+    # STRICT LOCKDOWN: If there is no active session, redirect to login
+    if 'admin_id' not in request.session:
+        return redirect('admin_login')
+
+    # Get the logged-in admin's details
+    current_admin = SystemAdmin.objects.get(id=request.session['admin_id'])
+
+    # explicitly return the HttpResponse
+    return render(request, 'admin-dashboard-prototype.html', {'admin': current_admin})
+
+# ==========================================
+# STAFF AUTHENTICATION & DASHBOARD
+# ==========================================
 def lecturer_login_view(request):
     return render(request, 'lecturer-login.html')
 
-# Shows the Dashboard Page
 def lecturer_dashboard_view(request):
     return render(request, 'lecturer-dashboard.html')
-
-@csrf_exempt 
-def get_staff_data(request):
-    # READ: Send data to the frontend
-    if request.method == 'GET':
-        staff_records = AcademicStaff.objects.all().order_by('-id')
-        data = [{"id": s.staff_id, "name": s.name, "rank": s.rank, "unit": s.unit, "status": s.status} for s in staff_records]
-        return JsonResponse(data, safe=False)
-    
-    # CREATE: Add a new staff member
-    elif request.method == 'POST':
-        data = json.loads(request.body)
-        AcademicStaff.objects.create(
-            staff_id=data['id'],
-            name=data['name'],
-            rank=data['rank'],
-            unit=data['unit'],
-            status=data['status']
-        )
-        return JsonResponse({"message": "Staff added successfully!"})
-        
-    # UPDATE: Edit staff status (Active/Suspended)
-    elif request.method == 'PUT':
-        data = json.loads(request.body)
-        staff = AcademicStaff.objects.get(staff_id=data['id'])
-        staff.status = data['status']
-        staff.save()
-        return JsonResponse({"message": "Status updated successfully!"})
-        
-    # DELETE: Instantly remove staff record
-    elif request.method == 'DELETE':
-        data = json.loads(request.body)
-        staff = AcademicStaff.objects.get(staff_id=data['id'])
-        staff.delete()
-        return JsonResponse({"message": "Staff deleted successfully!"})
-
-    # Add this to the bottom of views.py
-def lecturer_dashboard_view(request):
-    return render(request, 'lecturer-dashboard.html')
-
-# ... Keep your existing imports and views at the top ...
 
 @csrf_exempt
 def lecturer_login(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         input_id = str(data.get('staff_id', '')).strip()
-        input_pw = str(data.get('password', '')).strip() # .strip() removes accidental extra spaces
+        input_pw = str(data.get('password', '')).strip()
         
         staff = AcademicStaff.objects.filter(staff_id=input_id).first()
         
@@ -91,7 +92,7 @@ def lecturer_profile(request, staff_id):
             try:
                 img_url = staff.profile_image.url
             except ValueError:
-                img_url = ""
+                pass
 
         data = {
             "name": staff.name, "rank": staff.rank, "unit": staff.unit,
@@ -134,6 +135,44 @@ def lecturer_profile(request, staff_id):
         staff.save()
         return JsonResponse({"message": "Profile updated successfully!"})
 
+# ==========================================
+# ADMIN API ENDPOINTS
+# ==========================================
+@csrf_exempt 
+def get_staff_data(request):
+    # READ: Send data to the frontend
+    if request.method == 'GET':
+        staff_records = AcademicStaff.objects.all().order_by('-id')
+        data = [{"id": s.staff_id, "name": s.name, "rank": s.rank, "unit": s.unit, "status": s.status} for s in staff_records]
+        return JsonResponse(data, safe=False)
+    
+    # CREATE: Add a new staff member
+    elif request.method == 'POST':
+        data = json.loads(request.body)
+        AcademicStaff.objects.create(
+            staff_id=data['id'],
+            name=data['name'],
+            rank=data['rank'],
+            unit=data['unit'],
+            status=data['status']
+        )
+        return JsonResponse({"message": "Staff added successfully!"})
+        
+    # UPDATE: Edit staff status (Active/Suspended)
+    elif request.method == 'PUT':
+        data = json.loads(request.body)
+        staff = AcademicStaff.objects.get(staff_id=data['id'])
+        staff.status = data['status']
+        staff.save()
+        return JsonResponse({"message": "Status updated successfully!"})
+        
+    # DELETE: Instantly remove staff record
+    elif request.method == 'DELETE':
+        data = json.loads(request.body)
+        staff = AcademicStaff.objects.get(staff_id=data['id'])
+        staff.delete()
+        return JsonResponse({"message": "Staff deleted successfully!"})
+
 
 @csrf_exempt
 def admin_settings_api(request):
@@ -168,7 +207,7 @@ def admin_settings_api(request):
         admin_profile.save()
         return JsonResponse({"message": "Admin profile updated successfully!"})
 
-    # ==========================================
+# ==========================================
 # PUBLIC DIRECTORY VIEWS & API
 # ==========================================
 def public_directory_view(request):
