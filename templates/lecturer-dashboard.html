@@ -1,0 +1,220 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UDUS Academic Staff Portal — Profile Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/lecturer.css' %}">
+</head>
+<body>
+
+  <div class="shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-profile">
+        <div class="sidebar-avatar">AO</div>
+        <div class="sidebar-profile-text">
+            <div class="name">Loading...</div>
+            <div class="rank">Academic Staff</div>
+        </div>
+      </div>
+
+      <nav class="nav-group">
+        <a class="nav-link active" data-target="section-basic">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span>Edit Profile</span>
+        </a>
+        <a class="nav-link" data-target="section-location">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Guidance</span>
+        </a>
+        <a class="nav-link" data-target="section-contact">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+          <span>Contact</span>
+        </a>
+        <!-- NEW SECURITY TAB -->
+        <a class="nav-link" data-target="section-security">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Security</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a class="logout-link" id="logoutLink">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <div class="main-header">
+        <div class="header-content">
+          <h1>Update Your Directory Profile</h1>
+          <p>These details appear on your public staff directory page.</p>
+        </div>
+        <button class="mobile-logout-btn" id="mobileLogoutBtn" title="Logout">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--udus-plum)" stroke-width="2.5" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+        </button>
+      </div>
+
+      <div class="form-wrap">
+        <!-- 1. BASIC INFORMATION -->
+        <div class="form-section" id="section-basic">
+          <div class="section-head">
+            <div class="section-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+            </div>
+            <h2>Basic Information</h2>
+          </div>
+          <div class="section-desc">Your name, rank, and photo as they'll appear to students.</div>
+
+          <div class="photo-row">
+            <div class="photo-preview" id="displayPhoto"></div>
+            <div class="photo-actions">
+              <input type="file" id="imageUpload" accept="image/png, image/jpeg" style="display:none;">
+              <button class="change-photo-btn" id="uploadTriggerBtn">Upload Profile Picture</button>
+              <span class="photo-hint">JPG or PNG, square image recommended.</span>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Full Name (Managed by Admin)</label>
+            <input class="text-input" id="profName" type="text" disabled />
+          </div>
+
+          <div class="field-grid">
+            <div class="form-field">
+              <label>Academic Rank (Managed by Admin)</label>
+              <input class="text-input" id="profRank" type="text" disabled />
+            </div>
+            <div class="form-field">
+              <label>Highest Qualification</label>
+              <input class="text-input" id="profQual" type="text" placeholder="e.g. Ph.D. Computer Science" />
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 2. ACADEMIC ASSIGNMENT -->
+        <div class="form-section">
+          <div class="section-head">
+            <div class="section-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
+            </div>
+            <h2>Academic Assignment</h2>
+          </div>
+
+          <div class="form-field">
+            <label>Courses Taught</label>
+            <div class="tag-input-shell" id="tagShell">
+              <input id="tagInput" type="text" placeholder="Type course code and press Enter…" />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Core Research Interests</label>
+            <textarea id="profResearch" rows="3" placeholder="e.g. Machine learning, neural networks..."></textarea>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 3. DIRECTIONAL GUIDANCE -->
+        <div class="form-section" id="section-location">
+          <div class="section-head">
+            <div class="section-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <h2>Directional Guidance &amp; Location</h2>
+          </div>
+
+          <div class="field-grid cols-3">
+            <div class="form-field">
+              <label>Building Name</label>
+              <input class="text-input" id="profBuilding" type="text" placeholder="e.g. Main Faculty Block" />
+            </div>
+            <div class="form-field">
+              <label>Floor Level</label>
+              <input class="text-input" id="profFloor" type="text" placeholder="e.g. 2nd Floor" />
+            </div>
+            <div class="form-field">
+              <label>Office Number</label>
+              <input class="text-input" id="profOffice" type="text" placeholder="e.g. Room 204" />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Step-by-Step Directional Guidance</label>
+            <textarea id="profGuidance" class="guidance-textarea" placeholder="Type the exact pathway..."></textarea>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 4. DIRECT COMMUNICATION -->
+        <div class="form-section" id="section-contact">
+          <div class="section-head">
+            <div class="section-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
+            </div>
+            <h2>Direct Communication</h2>
+          </div>
+
+          <div class="form-field">
+            <label>Office Hours</label>
+            <textarea id="profOfficeHours" rows="3" placeholder="Mon: 10:00 - 12:00&#10;Wed: 14:00 - 16:00"></textarea>
+            <div class="helper">Type each day on a new line. Separate the day and time with a colon (:).</div>
+          </div>
+
+          <div class="field-grid">
+              <div class="form-field">
+                <label>Official University Email</label>
+                <input class="text-input" id="profEmail" type="email" placeholder="email@udus.edu.ng" />
+              </div>
+              <div class="form-field">
+                <label>WhatsApp Contact Number</label>
+                <input class="text-input" id="profWhatsapp" type="tel" placeholder="+234..." />
+              </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 5. SECURITY SETTINGS (NEW) -->
+        <div class="form-section" id="section-security">
+          <div class="section-head">
+            <div class="section-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h2>Security Settings</h2>
+          </div>
+          <div class="section-desc">Change your default portal password to something secure.</div>
+          
+          <div class="form-field">
+            <label>New Password</label>
+            <input class="text-input" id="profPassword" type="password" placeholder="Leave blank to keep your current password" />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- STICKY ACTION BAR -->
+      <div class="action-bar">
+        <div class="save-status"><span class="dot"></span> Unsaved changes</div>
+        <div class="action-buttons">
+          <button class="btn-discard" id="discardBtn">Discard</button>
+          <button class="btn-publish" id="publishBtn">Save &amp; Publish</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script src="{% static 'js/lecturer-dashboard.js' %}"></script>
+</body>
+</html>

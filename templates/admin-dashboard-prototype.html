@@ -1,0 +1,377 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UDUS CS Directory Admin — Staff Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<!-- UDUS BRANDED DASHBOARD CSS OVERRIDES -->
+<style>
+  :root {
+    --udus-plum: #9F4A71;
+    --udus-lgreen: #8BC24A;
+    --udus-dgreen: #008001;
+  }
+  
+  /* Sidebar Branding */
+  .sidebar { background: var(--udus-dgreen) !important; }
+  .sidebar-brand { border-bottom: 1px solid rgba(255,255,255,0.15) !important; }
+  .nav-link.active { 
+    background: rgba(139, 194, 74, 0.2) !important; /* Light green tint */
+    color: #FFFFFF !important;
+    box-shadow: inset 4px 0 0 var(--udus-lgreen) !important;
+  }
+  .nav-link.active svg { color: var(--udus-lgreen) !important; }
+  .admin-avatar { background: var(--udus-lgreen) !important; color: var(--udus-dgreen) !important; }
+  .admin-role { color: var(--udus-lgreen) !important; }
+
+  /* Buttons & Accents */
+  .add-btn, .save-btn { background: var(--udus-dgreen) !important; }
+  .add-btn:hover, .save-btn:hover { background: #006000 !important; }
+  .nav-badge { background: var(--udus-plum) !important; color: #FFF !important; }
+
+  /* Status Badges */
+  .status-active { background: #E8F5E9 !important; color: var(--udus-dgreen) !important; }
+  .status-active .dot { background: var(--udus-dgreen) !important; }
+  .status-suspended { background: #F8EBF0 !important; color: var(--udus-plum) !important; }
+  .status-suspended .dot { background: var(--udus-plum) !important; }
+
+  /* Bento Box Grid */
+  .bento-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    grid-template-rows: 240px 240px;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .bento-card {
+    border-radius: 28px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.03);
+  }
+  
+  /* Tall Card: UDUS Light Green */
+  .card-tall {
+    grid-column: 1 / 2; grid-row: 1 / 3;
+    background: var(--udus-lgreen); 
+    color: #003300;
+  }
+  
+  /* Wide Top Card: White */
+  .card-wide-top {
+    grid-column: 2 / 4; grid-row: 1 / 2;
+    background: #FFFFFF; color: #121212;
+    flex-direction: row; align-items: center;
+  }
+  
+  /* Wide Bottom Card: UDUS Plum */
+  .card-wide-bottom {
+    grid-column: 2 / 4; grid-row: 2 / 3;
+    background: var(--udus-plum); 
+    color: #FFFFFF;
+    flex-direction: row; align-items: flex-end;
+  }
+  
+  /* Bento Typography */
+  .bento-label { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+  .bento-value { font-size: 86px; font-weight: 800; line-height: 1; letter-spacing: -0.04em; }
+  .bento-sub { font-size: 14px; margin-top: 12px; font-weight: 500; color: rgba(255,255,255,0.7); }
+  
+  /* Tall Card Button */
+  .bento-btn {
+    background: var(--udus-dgreen); color: #FFF; border: none; padding: 16px 24px;
+    border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer;
+    width: fit-content; z-index: 2; transition: transform 0.2s;
+  }
+  .bento-btn:hover { transform: translateY(-2px); }
+  
+  /* Abstract Overlapping Rings (Matching the Light Green theme) */
+  .bento-abstract-rings { position: absolute; top: 40%; left: 32px; z-index: 1; }
+  .bento-abstract-rings .ring {
+    width: 160px; height: 50px;
+    border: 1px solid rgba(0, 51, 0, 0.2); border-radius: 50%;
+    margin-top: -24px;
+  }
+  
+  /* Circular Progress Chart */
+  .circular-chart {
+    width: 140px; height: 140px; border-radius: 50%;
+    background: conic-gradient(var(--udus-dgreen) 0%, #F0F2F5 0%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .inner-circle {
+    width: 104px; height: 104px; background: #FFF; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 800; color: var(--udus-dgreen);
+  }
+
+  /* Massive Banned Icon (Replacing the bar chart) */
+  .banned-icon-wrapper {
+    height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 20px;
+  }
+  .banned-icon-wrapper svg {
+    width: 130px; height: 130px;
+    stroke: rgba(255, 255, 255, 0.25); /* Subtle transparent white */
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">CS</div>
+      <div class="brand-copy">
+        <div class="l1">UDUS CS Directory</div>
+        <div class="l2">Admin Console</div>
+      </div>
+    </div>
+
+    <nav class="nav-group" id="sidebarNav">
+      <div class="nav-label">Overview</div>
+      <a class="nav-link active" href="#" data-target="section-dashboard">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        Dashboard
+      </a>
+      
+      <div class="nav-label" style="margin-top:12px;">Manage</div>
+      <a class="nav-link" href="#" data-target="section-manage" data-status="all">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Staff Management
+      </a>
+      <a class="nav-link" href="#" data-target="section-manage" data-status="suspended">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M4.9 4.9l14.2 14.2"/></svg>
+        Suspended Staffs
+        <span class="nav-badge" id="sidebarSuspendedCount">0</span>
+      </a>
+      
+      <div class="nav-label" style="margin-top:12px;">System</div>
+      <a class="nav-link" href="#" data-target="section-settings">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        System Settings
+      </a>
+    </nav>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1>Staff Management &amp; Overview</h1>
+        <div class="subtitle">Manage academic staff accounts, roles, and access</div>
+      </div>
+      <div class="topbar-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="searchInput" type="text" placeholder="Search staff accounts by name or ID..." />
+      </div>
+    </div>
+
+    <div class="content">
+      
+      <!-- BENTO DASHBOARD OVERVIEW SECTION -->
+      <div id="section-dashboard" class="content-section active">
+        <div class="bento-metrics">
+          
+          <!-- Tall Card: Total Staff (UDUS Light Green) -->
+          <div class="bento-card card-tall">
+            <div>
+              <div class="bento-label">Total Academic Staff</div>
+              <div class="bento-value" id="bentoTotal">0</div>
+            </div>
+            
+            <div class="bento-abstract-rings">
+              <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+            </div>
+            
+            <button class="bento-btn" onclick="document.querySelector('[data-target=\'section-manage\']').click()">Manage Staff →</button>
+          </div>
+
+          <!-- Wide Card Top: Active Accounts (White) -->
+          <div class="bento-card card-wide-top">
+            <div style="flex:1;">
+              <div class="bento-label">Active Accounts</div>
+              <div class="bento-value" id="bentoActive">0</div>
+              <div class="bento-sub" style="color: #6B7A94;">Across 3 academic units</div>
+            </div>
+            <div class="circular-chart" id="activeProgressChart">
+              <div class="inner-circle" id="bentoActivePercent">0%</div>
+            </div>
+          </div>
+
+          <!-- Wide Card Bottom: Suspended Accounts (UDUS Plum) -->
+          <div class="bento-card card-wide-bottom">
+            <div style="flex:1; margin-bottom: 24px;">
+              <div class="bento-label" style="color: #F8EBF0;">Suspended Accounts</div>
+              <div class="bento-value" id="bentoSuspended">0</div>
+              <div class="bento-sub">Flagged for security review</div>
+            </div>
+            
+            <!-- NEW MASSIVE BANNED ICON -->
+            <div class="banned-icon-wrapper">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+              </svg>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- STAFF MANAGEMENT SECTION -->
+      <div id="section-manage" class="content-section" style="display:none;">
+        <h2 id="tableSectionTitle" style="margin-top:0; font-size:18px; margin-bottom: 20px;">All Academic Staff</h2>
+        <div class="table-card">
+          <div class="table-toolbar">
+            <div class="unit-tabs" id="unitTabs">
+              <button class="unit-tab active" data-unit="all">All <span class="count">(0)</span></button>
+              <button class="unit-tab" data-unit="Computer Science">Computer Science <span class="count">(0)</span></button>
+              <button class="unit-tab" data-unit="Software Engineering">Software Engineering <span class="count">(0)</span></button>
+              <button class="unit-tab" data-unit="Cyber Security">Cyber Security <span class="count">(0)</span></button>
+            </div>
+            <div class="toolbar-right">
+              <button class="export-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Export
+              </button>
+              <button class="add-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Add Staff
+              </button>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Staff Name</th>
+                <th>Academic Rank</th>
+                <th>Academic Unit</th>
+                <th>Account Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SYSTEM SETTINGS SECTION (Properly Hidden!) -->
+      <!-- ========================================== -->
+      <div id="section-settings" class="content-section" style="display:none;">
+        <h2 style="margin-top:0; font-size:22px; margin-bottom: 24px;">Super Admin Settings</h2>
+        <div class="settings-card">
+          <form id="adminSettingsForm" class="settings-form">
+            <div class="settings-group avatar-group">
+              <div class="admin-avatar large" id="adminDisplayPhoto">SA</div>
+              <div class="avatar-actions">
+                <div class="admin-name" id="adminDisplayName" style="color: var(--navy-900); font-size: 16px; margin-bottom: 6px;">Sarah Aliyu</div>
+                
+                <!-- Hidden file input for Admin Photo -->
+                <input type="file" id="adminImageUpload" accept="image/png, image/jpeg" style="display:none;">
+                <button type="button" class="change-photo-btn" onclick="document.getElementById('adminImageUpload').click()">Upload New Photo</button>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="adminNameInput" required>
+              </div>
+              <div class="input-group">
+                <label>Official Email Address</label>
+                <input type="email" id="adminEmailInput" required>
+              </div>
+            </div>
+            <h3 class="settings-subheading">Security & Password</h3>
+            <div class="form-grid">
+              <div class="input-group">
+                <label>New Password</label>
+                <input type="password" id="adminPasswordInput" placeholder="Leave blank to keep current password">
+              </div>
+              <div class="input-group">
+                <label>Confirm New Password</label>
+                <input type="password" id="adminConfirmPasswordInput" placeholder="Confirm your new password">
+              </div>
+            </div>
+            <div class="settings-footer">
+              <button type="submit" class="save-btn large">Save Admin Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- END SYSTEM SETTINGS SECTION -->
+
+    </div>
+  </main>
+</div>
+
+<!-- ADD STAFF MODAL -->
+<div class="modal-overlay" id="addStaffModal">
+  <div class="modal-box">
+    <h3>Add New Staff Member</h3>
+    <form id="addStaffForm">
+      <input type="text" id="newId" placeholder="Staff ID (e.g. STF-1004)" required>
+      <input type="text" id="newName" placeholder="Full Name" required>
+      
+      <select id="newRank" required>
+        <option value="" disabled selected>Select Academic Rank</option>
+        <option value="Professor">Professor</option>
+        <option value="Associate Professor">Associate Professor</option>
+        <option value="Senior Lecturer">Senior Lecturer</option>
+        <option value="Lecturer I">Lecturer I</option>
+        <option value="Lecturer II">Lecturer II</option>
+        <option value="Assistant Lecturer">Assistant Lecturer</option>
+        <option value="Graduate Assistant">Graduate Assistant</option>
+        <option value="Lab Technician">Lab Technician</option>
+      </select>
+
+      <select id="newUnit" required>
+        <option value="" disabled selected>Select Department Unit</option>
+        <option value="Computer Science">Computer Science</option>
+        <option value="Software Engineering">Software Engineering</option>
+        <option value="Cyber Security">Cyber Security</option>
+      </select>
+      
+      <select id="newStatus" required>
+        <option value="Active">Active</option>
+        <option value="Suspended">Suspended</option>
+      </select>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" id="closeAddModalBtn">Cancel</button>
+        <button type="submit" class="save-btn">Save Staff</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- EDIT STATUS MODAL -->
+<div class="modal-overlay" id="editStatusModal">
+  <div class="modal-box">
+    <h3>Update Staff Status</h3>
+    <p id="editStaffName" style="margin-bottom:15px; color:var(--slate-400); font-weight:600;"></p>
+    <form id="editStatusForm">
+      <input type="hidden" id="editStaffId">
+      <select id="editStatusSelect" required>
+        <option value="Active">Active</option>
+        <option value="Suspended">Suspended</option>
+      </select>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" id="closeEditModalBtn">Cancel</button>
+        <button type="submit" class="save-btn">Update Status</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Link to external JavaScript file -->
+<script src="{% static 'js/admin.js' %}"></script>
+</body>
+</html>

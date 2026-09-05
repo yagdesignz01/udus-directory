@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UDUS Staff Portal — Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/lecturer.css' %}">
+</head>
+<body style="background: var(--udus-dark-green); margin:0; display:flex; align-items:center; justify-content:center; min-height:100vh;">
+
+  <div class="login-card" style="width:100%; max-width:408px; background:var(--white); border-radius:24px; box-shadow:0 4px 24px rgba(0,0,0,0.15); padding:36px 32px 30px;">
+    <div class="login-brand" style="text-align:center; margin-bottom:28px;">
+      <div class="login-mark" style="width:52px; height:52px; border-radius:14px; margin:0 auto 14px; background:var(--udus-plum); display:flex; align-items:center; justify-content:center; color:var(--white); font-weight:800; font-size:18px;">CS</div>
+      <h1 style="font-size:18px; font-weight:800; margin:0 0 4px; color:var(--text-dark);">UDUS Academic Staff Portal</h1>
+      <p style="font-size:12.5px; color:var(--text-muted); font-weight:500; margin:0;">Sign in to manage your directory profile</p>
+    </div>
+
+    <div class="field" style="margin-bottom:16px;">
+      <label style="display:block; font-size:12.5px; font-weight:700; color:var(--text-dark); margin-bottom:7px;">Staff ID / Username</label>
+      <div class="input-shell" style="display:flex; align-items:center; border:1.5px solid var(--hairline); border-radius:12px; background:var(--white); padding:12px 14px;">
+        <input id="staffId" type="text" placeholder="e.g. STF-1001" style="border:none; outline:none; width:100%; font-size:14px;" />
+      </div>
+    </div>
+
+    <div class="field" style="margin-bottom:22px;">
+      <label style="display:block; font-size:12.5px; font-weight:700; color:var(--text-dark); margin-bottom:7px;">Password</label>
+      <div class="input-shell" style="display:flex; align-items:center; border:1.5px solid var(--hairline); border-radius:12px; background:var(--white); padding:12px 14px;">
+        <input id="password" type="password" placeholder="Enter your password" style="border:none; outline:none; width:100%; font-size:14px;" />
+      </div>
+    </div>
+
+    <button class="login-cta" id="loginBtn" style="width:100%; padding:14px; border-radius:12px; border:none; background:var(--udus-dark-green); color:var(--white); font-weight:700; font-size:14.5px; cursor:pointer;">Secure Login</button>
+    <div class="login-footnote" style="text-align:center; font-size:11.5px; color:var(--text-muted); margin-top:20px;">Protected by UDUS institutional access control</div>
+  </div>
+
+<script>
+document.getElementById('loginBtn').addEventListener('click', async (e) => {
+    e.preventDefault();
+    const staffIdInput = document.getElementById('staffId').value.trim();
+    const passwordInput = document.getElementById('password').value.trim();
+
+    if (!staffIdInput || !passwordInput) {
+        alert("Please enter both your Staff ID and Password.");
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/lecturer/login/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ staff_id: staffIdInput, password: passwordInput })
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+            // Save staff ID locally and immediately redirect to the separate dashboard page
+            localStorage.setItem('currentStaffId', data.staff_id);
+            window.location.href = '/lecturer/dashboard/';
+        } else {
+            alert(data.error || "Login failed. Check your credentials.");
+        }
+    } catch (error) {
+        console.error("Login error:", error);
+        alert("Server error connecting to backend.");
+    }
+});
+</script>
+</body>
+</html>
