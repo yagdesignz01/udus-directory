@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UDUS | Faculty of Computing Directory</title>
+<title>UDUS | Department of Computing Directory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -37,30 +37,182 @@
   .app{max-width:1180px;margin:0 auto;position:relative;}
 
   /* Header & Search */
-  .topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline);}
-  .topbar-inner{max-width:1180px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;}
-  .brand{display:flex;align-items:center;gap:10px;}
-  .brand-mark{width:34px;height:34px;border-radius:9px;background:var(--udus-plum);display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:800;font-size:13px;font-family:'JetBrains Mono',monospace;}
-  .brand-text .eyebrow{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);font-weight:700;}
-  .brand-text .title{font-size:14.5px;font-weight:800;display:none;color:var(--text-dark);}
-  @media(min-width:540px){.brand-text .title{display:block;}}
-  .topbar-badge{font-size:11px;font-weight:700;color:var(--udus-dark-green);background:var(--surface-alt);padding:5px 10px;border-radius:100px;display:flex;align-items:center;gap:6px;}
-  .topbar-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--udus-green);}
+  .topbar{
+    position:sticky;
+    top:0;z-index:50;
+    background:rgba(255,255,255,0.94);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--hairline);
+  }
 
-  .hero{padding:40px 20px 8px;}
-  .hero-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;color:var(--udus-plum);text-transform:uppercase;letter-spacing:.08em;background:var(--udus-plum-light);padding:6px 12px;border-radius:100px;margin-bottom:16px;}
-  .hero h1{font-size:32px;font-weight:800;letter-spacing:-0.02em;line-height:1.12;margin:0 0 12px;max-width:15ch;color:var(--udus-dark-green);}
-  .hero p{font-size:15px;color:var(--text-muted);font-weight:500;max-width:46ch;margin:0 0 4px;}
-  @media(min-width:720px){.hero h1{font-size:42px;}}
+  .topbar-inner{
+    max-width:1180px;
+    margin:0 auto;
+    padding:14px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
 
-  .search-zone{position:sticky;top:61px;z-index:40;background:var(--surface);padding:20px 20px 12px;}
-  .search-zone::after{content:"";position:absolute;left:0;right:0;bottom:-14px;height:14px;background:linear-gradient(to bottom,var(--surface),rgba(244,249,238,0));pointer-events:none;}
-  .search-box{display:flex;align-items:center;gap:11px;background:var(--white);border:1.5px solid var(--hairline);border-radius:16px;padding:15px 17px;box-shadow:var(--shadow-card);}
-  .search-box:focus-within{border-color:var(--udus-green);box-shadow:0 0 0 4px rgba(0,128,1,0.08);}
-  .search-box svg{flex-shrink:0;color:var(--text-muted);}
-  .search-box input{border:none;outline:none;flex:1;font-size:15.5px;font-weight:500;background:transparent;color:var(--text-dark);min-width:0;}
-  .search-box input::placeholder{color:var(--text-muted);font-weight:450;}
-  .search-clear{display:none;width:24px;height:24px;border-radius:50%;background:var(--surface-alt);align-items:center;justify-content:center;color:var(--text-muted);flex-shrink:0;}
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  .brand-mark{
+    width: 34px;
+    height: 34px; 
+    display: flex;
+  }
+
+  .brand-text .eyebrow{
+    font-size:10px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    font-weight:700;
+  }
+
+  .brand-text .title{
+    font-size:14.5px;
+    font-weight:800;
+    display:none;
+    color:var(--text-dark);
+  }
+
+  @media(min-width:540px){
+    .brand-text .title{
+      display:block;
+    }
+  }
+
+  .topbar-badge{
+    font-size:11px;
+    font-weight:700;
+    color:var(--udus-dark-green);
+    background:var(--surface-alt);
+    padding:5px 10px;
+    border-radius:100px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+
+  .topbar-badge .dot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:var(--udus-green);
+  }
+
+
+  .hero{
+    padding:40px 20px 8px;
+  }
+
+  .hero-eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--udus-plum);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    background:var(--udus-plum-light);
+    padding:6px 12px;
+    border-radius:100px;
+    margin-bottom:16px;
+  }
+  .hero h1{
+    font-size:32px;
+    font-weight:800;
+    letter-spacing:-0.02em;
+    line-height:1.12;
+    margin:0 0 12px;
+    max-width:15ch;
+    color:var(--udus-dark-green);
+  }
+  .hero p{
+    font-size:15px;
+    color:var(--text-muted);
+    font-weight:500;
+    max-width:46ch;
+    margin:0 0 4px;
+  }
+  @media(min-width:720px){
+    .hero h1{
+      font-size:42px;
+    }
+  }
+
+  .search-zone{
+    position:sticky;
+    top:61px;
+    z-index:40;
+    background:var(--surface);
+    padding:20px 20px 12px;
+  }
+
+  .search-zone::after{
+    content:"";
+    position:absolute;
+    left:0;right:0;
+    bottom:-14px;height:14px;
+    background:linear-gradient(to bottom,
+    var(--surface),rgba(244,249,238,0));
+    pointer-events:none;
+  }
+
+  .search-box{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    background:var(--white);
+    border:1.5px solid var(--hairline);
+    border-radius:16px;
+    padding:15px 17px;
+    box-shadow:var(--shadow-card);
+  }
+
+  .search-box:focus-within{
+    border-color:var(--udus-green);
+    box-shadow:0 0 0 4px rgba(0,128,1,0.08);
+  }
+
+  .search-box svg{
+    flex-shrink:0;
+    color:var(--text-muted);
+  }
+
+  .search-box input{
+    border:none;
+    outline:none;
+    flex:1;
+    font-size:15.5px;
+    font-weight:500;
+    background:transparent;
+    color:var(--text-dark);
+    min-width:0;
+  }
+
+  .search-box input::placeholder{
+    color:var(--text-muted);
+    font-weight:450;
+  }
+
+  .search-clear{
+    display:none;
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    background:var(--surface-alt);
+    align-items:center;
+    justify-content:center;
+    color:var(--text-muted);
+    flex-shrink:0;
+  }
   
   .filters{display:flex;gap:8px;padding:14px 0 2px;overflow-x:auto;scrollbar-width:none;}
   .filters::-webkit-scrollbar{display:none;}
@@ -165,10 +317,10 @@
   <div class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        <div class="brand-mark">FC</div>
+        <div class="brand-mark"> <img src="/media/udus_logo.png" ></div>
         <div class="brand-text">
           <div class="eyebrow">Public Directory</div>
-          <div class="title">Faculty of Computing Directory</div>
+          <div class="title">Department of Computing Directory</div>
         </div>
       </div>
       <div class="topbar-badge"><span class="dot"></span>Live Database Connection</div>

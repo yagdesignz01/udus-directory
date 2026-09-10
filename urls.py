@@ -10,7 +10,7 @@ urlpatterns = [
     
     # Lecturer Portal (THESE ARE THE CRITICAL LINES)
     path('lecturer/', views.lecturer_login_view, name='lecturer_login'),
-    path('admin-dashboard/', views.admin_dashboard_view, name='admin_dashboard'),
+    path('lecturer/dashboard/', views.lecturer_dashboard_view, name='lecturer_dashboard'),
     
     # Lecturer APIs
     path('api/lecturer/login/', views.lecturer_login, name='lecturer_login'),
