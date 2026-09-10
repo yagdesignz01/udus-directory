@@ -72,7 +72,7 @@ def lecturer_login(request):
             
             # Compare cleaned passwords
             if str(staff.password).strip() == input_pw:
-                return JsonResponse({"message": "Login successful", "staff_id": staff.staff_id})
+               return JsonResponse({"success": True, "message": "Login successful", "staff_id": staff.staff_id})
             else:
                 return JsonResponse({"error": "Invalid Staff ID or Password"}, status=401)
         else:

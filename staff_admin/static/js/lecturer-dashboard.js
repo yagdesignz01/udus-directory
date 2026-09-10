@@ -2,7 +2,7 @@ const currentStaffId = localStorage.getItem('currentStaffId');
 
 // Redirect if not logged in
 if (!currentStaffId) {
-    window.location.replace('/lecturer/');
+    window.location.replace('/lecturer-login/');
 }
 
 // ==========================================
@@ -10,7 +10,7 @@ if (!currentStaffId) {
 // ==========================================
 function handleLogout() {
     localStorage.removeItem('currentStaffId');
-    window.location.href = '/lecturer/';
+    window.location.href = '/lecturer-login/';
 }
 document.getElementById('logoutLink')?.addEventListener('click', handleLogout);
 document.getElementById('mobileLogoutBtn')?.addEventListener('click', handleLogout);
@@ -184,10 +184,22 @@ document.getElementById('publishBtn')?.addEventListener('click', async () => {
             const pwBox = document.getElementById('profPassword');
             if(pwBox) pwBox.value = '';
             
-            alert('Profile updated successfully!');
+            Swal.fire({
+                title: 'Success!',
+                text: 'Profile updated successfully!',
+                icon: 'success',
+                confirmButtonColor: '#008001',
+                borderRadius: '12px'
+        });
             loadProfileData(); 
         } else {
-            alert("Failed to save changes. Check server connection.");
+            Swal.fire({
+                title: 'Access Denied',
+                text: 'Invalid Staff ID or Password',
+                icon: 'error',
+                confirmButtonColor: '#D32F2F',
+                borderRadius: '12px'
+        });
         }
     } catch (error) {
         console.error("Error saving profile:", error);

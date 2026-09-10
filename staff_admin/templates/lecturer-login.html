@@ -1,72 +1,205 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UDUS Staff Portal — Login</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/lecturer.css' %}">
-</head>
-<body style="background: var(--udus-dark-green); margin:0; display:flex; align-items:center; justify-content:center; min-height:100vh;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Login | UDUS Directory</title>
+    
+    <!-- 1. EXTERNAL LIBRARIES -->
+    <!-- This imports our professional fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- This imports SweetAlert2 for our beautiful popup boxes -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <div class="login-card" style="width:100%; max-width:408px; background:var(--white); border-radius:24px; box-shadow:0 4px 24px rgba(0,0,0,0.15); padding:36px 32px 30px;">
-    <div class="login-brand" style="text-align:center; margin-bottom:28px;">
-      <div class="login-mark" > <img src="/media/udus_logo.png" height="65px"> </div>
-      <h1 style="font-size:18px; font-weight:800; margin:0 0 4px; color:var(--text-dark);">UDUS Academic Staff Portal</h1>
-      <p style="font-size:12.5px; color:var(--text-muted); font-weight:500; margin:0;">Sign in to manage your directory profile</p>
-    </div>
-
-    <div class="field" style="margin-bottom:16px;">
-      <label style="display:block; font-size:12.5px; font-weight:700; color:var(--text-dark); margin-bottom:7px;">Staff ID / Username</label>
-      <div class="input-shell" style="display:flex; align-items:center; border:1.5px solid var(--hairline); border-radius:12px; background:var(--white); padding:12px 14px;">
-        <input id="staffId" type="text" placeholder="e.g. STF-1001" style="border:none; outline:none; width:100%; font-size:14px;" />
-      </div>
-    </div>
-
-    <div class="field" style="margin-bottom:22px;">
-      <label style="display:block; font-size:12.5px; font-weight:700; color:var(--text-dark); margin-bottom:7px;">Password</label>
-      <div class="input-shell" style="display:flex; align-items:center; border:1.5px solid var(--hairline); border-radius:12px; background:var(--white); padding:12px 14px;">
-        <input id="password" type="password" placeholder="Enter your password" style="border:none; outline:none; width:100%; font-size:14px;" />
-      </div>
-    </div>
-
-    <button class="login-cta" id="loginBtn" style="width:100%; padding:14px; border-radius:12px; border:none; background:var(--udus-dark-green); color:var(--white); font-weight:700; font-size:14.5px; cursor:pointer;">Secure Login</button>
-    <div class="login-footnote" style="text-align:center; font-size:11.5px; color:var(--text-muted); margin-top:20px;">Protected by UDUS institutional access control</div>
-  </div>
-
-<script>
-document.getElementById('loginBtn').addEventListener('click', async (e) => {
-    e.preventDefault();
-    const staffIdInput = document.getElementById('staffId').value.trim();
-    const passwordInput = document.getElementById('password').value.trim();
-
-    if (!staffIdInput || !passwordInput) {
-        alert("Please enter both your Staff ID and Password.");
-        return;
-    }
-
-    try {
-        const response = await fetch('/api/lecturer/login/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ staff_id: staffIdInput, password: passwordInput })
-        });
-        const data = await response.json();
-
-        if (response.ok) {
-            // Save staff ID locally and immediately redirect to the separate dashboard page
-            localStorage.setItem('currentStaffId', data.staff_id);
-            window.location.href = '/lecturer/dashboard/';
-        } else {
-            alert(data.error || "Login failed. Check your credentials.");
+    <!-- 2. CSS STYLING -->
+    <style>
+        /* Define our main UDUS colors so we can reuse them easily */
+        :root {
+            --udus-green: #008001;
+            --udus-dark-green: #005A01;
+            --surface: #F4F9EE;
+            --white: #FFFFFF;
+            --text-dark: #12233F;
+            --text-muted: #6B7A94;
+            --hairline: #E1E5EC;
         }
-    } catch (error) {
-        console.error("Login error:", error);
-        alert("Server error connecting to backend.");
-    }
-});
-</script>
+        
+        /* The main page background - Flexbox keeps the login card perfectly centered */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--text-dark);
+            padding: 20px; /* Gives breathing room on mobile phones */
+            box-sizing: border-box;
+        }
+
+        /* The white card holding the form */
+        .login-container {
+            background: var(--white);
+            padding: 40px 30px; 
+            border-radius: 20px;
+            box-shadow: 0 10px 40px -10px rgba(0, 90, 1, 0.15); /* Soft green shadow */
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid var(--hairline);
+            box-sizing: border-box; /* Prevents the box from breaking on mobile */
+        }
+
+        /* Typography (Text styles) */
+        h1 { font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0 0 8px; }
+        p { font-size: 14px; color: var(--text-muted); margin: 0 0 24px; }
+
+        /* Form input fields */
+        .form-group { text-align: left; margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
+        .form-group input { 
+            width: 100%; 
+            padding: 14px 16px; 
+            border: 1.5px solid var(--hairline); 
+            border-radius: 12px; 
+            font-size: 14px; 
+            font-family: inherit; 
+            box-sizing: border-box; 
+            transition: border-color 0.2s; 
+        }
+        .form-group input:focus { outline: none; border-color: var(--udus-green); } /* Green border when typing */
+
+        /* The Submit Button */
+        .btn { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--udus-green); 
+            color: var(--white); 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 15px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            transition: background 0.2s; 
+        }
+        .btn:hover { background: var(--udus-dark-green); }
+    </style>
+</head>
+<body>
+
+    <!-- 3. HTML BODY & FORM -->
+    <div class="login-container">
+        
+        <!-- UDUS Logo from your local media folder -->
+        <img src="/media/udus_logo.png" alt="UDUS Logo" style="width: 65px; height: 65px; margin-bottom: 16px; object-fit: contain;">
+        
+        <h1>UDUS Academic Staff Portal</h1>
+        <p>Sign in to manage your directory profile</p>
+
+        <!-- The ID here allows our JavaScript to connect to this specific form -->
+        <form id="lecturerLoginForm">
+            <!-- Django Security Token -->
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label>Staff ID / Username</label>
+                <!-- We add ID to inputs so JavaScript can read what the user types -->
+                <input type="text" id="staff_id" placeholder="e.g. STF-1001" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+            
+            <button type="submit" class="btn">Secure Login</button>
+        </form>
+
+        <p style="font-size: 11px; margin-top: 24px; margin-bottom: 0;">Protected by UDUS institutional access control</p>
+    </div>
+
+    <!-- 4. JAVASCRIPT & ALERTS -->
+    <script>
+        // Step A: Find the form in the HTML document
+        const loginForm = document.getElementById('lecturerLoginForm');
+
+        // Step B: Listen for the moment the user clicks the "Submit" button
+        loginForm.addEventListener('submit', function(event) {
+            
+            // 1. Stop the page from reloading instantly (default browser behavior)
+            event.preventDefault();
+
+            // 2. Grab the exact text the user typed into the input boxes
+            const typedStaffId = document.getElementById('staff_id').value;
+            const typedPassword = document.getElementById('password').value;
+            
+            // 3. Grab the hidden Django security token from the form
+            const djangoCsrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            // 4. Show a loading popup so the user knows the system is thinking
+            Swal.fire({
+                title: 'Authenticating...',
+                text: 'Please wait while we verify your credentials.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // 5. Send the data to your Django backend API
+            fetch('/api/lecturer/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': djangoCsrfToken // Send the security token
+                },
+                body: JSON.stringify({
+                    staff_id: typedStaffId,
+                    password: typedPassword
+                })
+            })
+            .then(response => response.json()) // Convert the server's response into JavaScript format
+            .then(data => {
+                
+                // 6. Check if the backend said the login was successful
+                if (data.success) {
+                    localStorage.setItem('currentStaffId', data.staff_id);
+                    // Success Popup!
+                    Swal.fire({
+                        title: 'Welcome Back!',
+                        text: 'Login successful. Redirecting to your dashboard...',
+                        icon: 'success',
+                        confirmButtonColor: '#008001', // UDUS Green
+                        timer: 2000, // Closes automatically after 2 seconds
+                        showConfirmButton: false
+                    }).then(() => {
+                        // Send them to the dashboard URL
+                        window.location.href = '/lecturer-dashboard/';
+                    });
+                } else {
+                    // Error Popup (e.g., wrong password or suspended account)
+                    Swal.fire({
+                        title: 'Access Denied',
+                        text: data.message || 'Invalid Staff ID or Password.',
+                        icon: 'error',
+                        confirmButtonColor: '#D32F2F', // Red for errors
+                        borderRadius: '12px'
+                    });
+                }
+            })
+            .catch(error => {
+                // Failsafe Popup if the internet disconnects or server crashes
+                Swal.fire({
+                    title: 'System Error',
+                    text: 'Could not connect to the server. Please try again.',
+                    icon: 'error',
+                    confirmButtonColor: '#D32F2F'
+                });
+            });
+        });
+    </script>
+
 </body>
 </html>
