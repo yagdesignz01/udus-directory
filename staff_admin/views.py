@@ -5,7 +5,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from .models import AcademicStaff, SystemAdmin
-from django.http import HttpResponse
 
 # ==========================================
 # ADMIN AUTHENTICATION
@@ -212,11 +211,10 @@ def admin_settings_api(request):
 # PUBLIC DIRECTORY VIEWS & API
 # ==========================================
 def public_directory_view(request):
-    # Temporarily comment out the HTML render
-    # return render(request, 'public-directory.html')
     
-    # Return a basic text string instead
-    return HttpResponse("<h1>NO REDIRECT LOOP. THE SERVER IS FINE.</h1>")
+    return render(request, 'public-directory.html')
+    
+    
 
 def public_directory_api(request):
     # Only fetch staff members whose status is 'Active'

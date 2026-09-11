@@ -12,7 +12,7 @@ urlpatterns = [
     path('lecturer-dashboard/', views.lecturer_dashboard_view, name='lecturer_dashboard_view'),
     
     # Public Directory Route (Homepage)
-    path('', views.public_directory_view, name='public_directory'),
+    path('homepage/', views.public_directory_view, name='public_directory'),
     
     # API Endpoints (For your JavaScript frontend)
     path('api/staff/', views.get_staff_data, name='staff_api'),
