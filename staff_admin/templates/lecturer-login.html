@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -93,7 +94,7 @@
     <div class="login-container">
         
         <!-- UDUS Logo from your local media folder -->
-        <img src="/media/udus_logo.png" alt="UDUS Logo" style="width: 65px; height: 65px; margin-bottom: 16px; object-fit: contain;">
+        <img src="{% static 'images/udus_logo.png' %}" alt="UDUS Logo" style="width: 65px; height: 65px; margin-bottom: 16px; object-fit: contain;">
         
         <h1>UDUS Academic Staff Portal</h1>
         <p>Sign in to manage your directory profile</p>
