@@ -52,4 +52,3 @@ railway up
 | `DATABASE_URL` | Set to `${{Postgres.DATABASE_URL}}` on Railway |
 | `MEDIA_ROOT` | `/app/media` (the volume mount path) |
 | `ALLOWED_HOSTS` | Extra comma-separated hosts; the Railway domain is added automatically |
-| `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` | Seed/update the `SystemAdmin` login on each boot |
