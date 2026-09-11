@@ -8,9 +8,9 @@ directory, the lecturer self-service portal, and the admin dashboard.
 | Path | Purpose |
 | --- | --- |
 | `/` | Redirects to the public directory |
-| `/directory/` | Public student-facing staff directory |
-| `/lecturer/` | Lecturer login |
-| `/lecturer/dashboard/` | Lecturer profile self-service |
+| `/homepage/` | Public student-facing staff directory |
+| `/lecturer-login/` | Lecturer login |
+| `/lecturer-dashboard/` | Lecturer profile self-service |
 | `/admin-login/`, `/admin-dashboard/` | Admin portal |
 | `/django-admin/` | Django's built-in admin |
 
