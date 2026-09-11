@@ -1,4 +1,5 @@
-:root{
+/* Shared colours, sizes, and shadows used by the admin dashboard. */
+:root {
   --navy-900:#0B1B33;
   --navy-800:#12233F;
   --navy-700:#16294A;
@@ -11,59 +12,100 @@
   --hairline:#E4E7EE;
   --gold:#C6A15B;
 
-  --green:#1D9A6C;      --green-bg:#E5F5EE;
-  --amber:#B4791F;      --amber-bg:#FBF0DE;
-  --red:#C0453A;        --red-bg:#FAEAE8;
+  --green: #1D9A6C;
+  --green-bg: #E5F5EE;
+  --amber: #B4791F;
+  --amber-bg: #FBF0DE;
+  --red: #C0453A;
+  --red-bg: #FAEAE8;
 
-  --unit-cs-bg:#E7ECF5; --unit-cs-text:#1E3A66;
-  --unit-se-bg:#F1EBFB; --unit-se-text:#5B3FA0;
-  --unit-cyb-bg:#E3F5F1; --unit-cyb-text:#106355;
+  --unit-cs-bg: #E7ECF5;
+  --unit-cs-text: #1E3A66;
+  --unit-se-bg: #F1EBFB;
+  --unit-se-text: #5B3FA0;
+  --unit-cyb-bg: #E3F5F1;
+  --unit-cyb-text: #106355;
 
-  --radius-lg:18px;
-  --radius-md:12px;
-  --radius-sm:8px;
-  --shadow-card:0 1px 2px rgba(11,27,51,0.04), 0 8px 24px -14px rgba(11,27,51,0.14);
-}
-*{box-sizing:border-box;}
-html,body{margin:0;padding:0;}
-body{
-  font-family:'Inter',system-ui,sans-serif;
-  background:var(--surface);
-  color:var(--navy-900);
-  -webkit-font-smoothing:antialiased;
-}
-.mono{font-family:'JetBrains Mono',monospace;}
-button{font-family:inherit;cursor:pointer;}
-a{text-decoration:none;color:inherit;}
-
-.shell{
-  display:flex; min-height:100vh;
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --shadow-card: 0 1px 2px rgba(11,27,51,0.04), 0 8px 24px -14px rgba(11,27,51,0.14);
 }
 
-/* ================= SIDEBAR ================= */
-.sidebar{
-  width:252px; flex-shrink:0;
-  background:var(--navy-900);
-  color:var(--white);
-  display:flex; flex-direction:column;
-  position:sticky; top:0; height:100vh;
+/* Give all elements predictable sizing. */
+* {
+  box-sizing: border-box;
 }
-.sidebar-brand{
-  display:flex; align-items:center; gap:10px;
-  padding:22px 20px 20px;
-  border-bottom:1px solid rgba(255,255,255,0.08);
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--surface);
+  color: var(--navy-900);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Reuse the page font in controls and links. */
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* The shell places the sidebar beside the main dashboard content. */
+.shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* The sidebar contains the brand, navigation links, and admin account. */
+.sidebar {
+  width: 252px;
+  flex-shrink: 0;
+  background: var(--navy-900);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+/* Brand area at the top of the sidebar. */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .brand-mark{
-    width: 34px;
-    height: 34px;
-    display: flex;
-  }
+  width: 34px;
+  height: 34px;
+  display: flex;
+}
 
 .brand-copy{line-height:1.2;}
 .brand-copy .l1{font-size:13.5px; font-weight:800; color:var(--white);}
 .brand-copy .l2{font-size:10.5px; font-weight:600; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:.07em;}
 
-.nav-group{padding:16px 12px; flex:1;}
+/* Navigation links fill the space between the brand and footer. */
+.nav-group {
+  padding: 16px 12px;
+  flex: 1;
+}
 .nav-label{
   font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
   color:rgba(255,255,255,0.32); padding:6px 10px 10px;
@@ -106,22 +148,53 @@ a{text-decoration:none;color:inherit;}
 }
 .logout-btn:hover{ background:rgba(192,69,58,0.25); color:#F3B4AE; }
 
-/* ================= MAIN ================= */
-.main{flex:1; min-width:0; display:flex; flex-direction:column;}
-
-.topbar{
-  background:var(--white); border-bottom:1px solid var(--hairline);
-  padding:18px 32px; display:flex; align-items:center; justify-content:space-between; gap:20px;
-  position:sticky; top:0; z-index:10;
+/* Main area beside the sidebar. */
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
-.topbar h1{ font-size:19px; font-weight:800; letter-spacing:-0.01em; margin:0; }
-.topbar .subtitle{ font-size:12.5px; color:var(--slate-400); font-weight:500; margin-top:2px; }
 
-.topbar-search{
-  flex:1; max-width:420px;
-  display:flex; align-items:center; gap:9px;
-  background:var(--surface); border:1px solid var(--hairline); border-radius:11px;
-  padding:9px 13px;
+/* The top bar stays visible while the admin scrolls. */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--hairline);
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar h1 {
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.topbar .subtitle {
+  font-size: 12.5px;
+  color: var(--slate-400);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* Search box used to find staff by name or ID. */
+.topbar-search {
+  flex: 1;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 11px;
+  padding: 9px 13px;
 }
 .topbar-search svg{color:var(--slate-300); flex-shrink:0;}
 .topbar-search input{
@@ -140,89 +213,264 @@ a{text-decoration:none;color:inherit;}
   background:var(--red); border:1.5px solid var(--white);
 }
 
-.content{padding:26px 32px 60px;}
+.content {
+  padding: 26px 32px 60px;
+}
 
-/* ---------- Metric cards ---------- */
-.metrics{
-  display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:26px;
+/* ---------- Summary metric cards ---------- */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 26px;
 }
-.metric-card{
-  background:var(--white); border:1px solid var(--hairline); border-radius:var(--radius-lg);
-  padding:18px 20px; box-shadow:var(--shadow-card);
-  display:flex; flex-direction:column; gap:10px;
-}
-.metric-top{display:flex; align-items:flex-start; justify-content:space-between;}
-.metric-icon{
-  width:34px;height:34px;border-radius:9px; display:flex; align-items:center; justify-content:center;
-}
-.metric-label{font-size:12px; font-weight:700; color:var(--slate-400); text-transform:uppercase; letter-spacing:.05em;}
-.metric-value{font-size:26px; font-weight:800; letter-spacing:-0.01em; color:var(--navy-900);}
-.metric-sub{font-size:12px; font-weight:600;}
-.metric-sub.up{color:var(--green);}
-.metric-sub.flag{color:var(--amber);}
-.metric-sub.neutral{color:var(--slate-400);}
 
-/* ---------- Table card ---------- */
-.table-card{
-  background:var(--white); border:1px solid var(--hairline); border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card); overflow:hidden;
+.metric-card {
+  background: var(--white);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-.table-toolbar{
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding:16px 20px; border-bottom:1px solid var(--hairline); flex-wrap:wrap;
-}
-.unit-tabs{
-  display:flex; gap:6px; background:var(--surface); padding:4px; border-radius:11px;
-}
-.unit-tab{
-  padding:8px 14px; border-radius:8px; border:none; background:transparent;
-  font-size:13px; font-weight:700; color:var(--slate-400);
-  display:flex; align-items:center; gap:7px; transition:all .15s ease;
-}
-.unit-tab .count{font-family:'JetBrains Mono',monospace; font-size:11px; opacity:.75;}
-.unit-tab.active{ background:var(--white); color:var(--navy-900); box-shadow:var(--shadow-card); }
 
-.toolbar-right{display:flex; align-items:center; gap:10px;}
-.export-btn{
-  display:flex; align-items:center; gap:7px;
-  padding:9px 14px; border-radius:9px; border:1px solid var(--hairline); background:var(--white);
-  font-size:13px; font-weight:700; color:var(--navy-700);
+.metric-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
 }
-.export-btn:hover{background:var(--surface);}
-.add-btn{
-  display:flex; align-items:center; gap:7px;
-  padding:9px 15px; border-radius:9px; border:none; background:var(--navy-900);
-  font-size:13px; font-weight:700; color:var(--white);
-}
-.add-btn:hover{background:var(--navy-700);}
 
-table{width:100%; border-collapse:collapse;}
-thead th{
-  text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
-  color:var(--slate-400); padding:13px 20px; background:var(--surface); border-bottom:1px solid var(--hairline);
-  white-space:nowrap;
+.metric-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-tbody tr{ border-bottom:1px solid var(--hairline); transition:background .12s ease; }
-tbody tr:last-child{ border-bottom:none; }
-tbody tr:hover{ background:#FBFCFD; }
-td{ padding:15px 20px; font-size:13.5px; vertical-align:middle; }
 
-.staff-cell{display:flex; align-items:center; gap:11px;}
-.staff-thumb{
-  width:38px;height:38px;border-radius:10px; flex-shrink:0;
-  display:flex; align-items:center; justify-content:center;
-  color:var(--white); font-weight:800; font-size:13px; font-family:'JetBrains Mono',monospace;
+.metric-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--slate-400);
+  text-transform: uppercase;
+  letter-spacing: .05em;
 }
-.staff-name{font-weight:700; color:var(--navy-900); font-size:13.5px;}
-.staff-id{font-size:11.5px; color:var(--slate-400); font-family:'JetBrains Mono',monospace; margin-top:1px;}
 
-.rank-text{color:var(--navy-500); font-weight:500;}
-
-.badge{
-  display:inline-flex; align-items:center; gap:6px;
-  font-size:11.5px; font-weight:700; padding:5px 11px; border-radius:100px;
+.metric-value {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--navy-900);
 }
-.badge .dot{width:6px;height:6px;border-radius:50%;}
+
+.metric-sub {
+  font-size: 12px;
+  font-weight: 600;
+}
+.metric-sub.up {
+  color: var(--green);
+}
+
+.metric-sub.flag {
+  color: var(--amber);
+}
+
+.metric-sub.neutral {
+  color: var(--slate-400);
+}
+
+/* ---------- Staff table card ---------- */
+.table-card {
+  background: var(--white);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* The toolbar contains unit filters and action buttons. */
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--hairline);
+  flex-wrap: wrap;
+}
+
+.unit-tabs {
+  display: flex;
+  gap: 6px;
+  background: var(--surface);
+  padding: 4px;
+  border-radius: 11px;
+}
+
+.unit-tab {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-400);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: all .15s ease;
+}
+.unit-tab .count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  opacity: .75;
+}
+
+/* The active tab is shown with a white background. */
+.unit-tab.active {
+  background: var(--white);
+  color: var(--navy-900);
+  box-shadow: var(--shadow-card);
+}
+
+/* Keep the export and add buttons together. */
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  border-radius: 9px;
+  border: 1px solid var(--hairline);
+  background: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy-700);
+}
+
+.export-btn:hover {
+  background: var(--surface);
+}
+
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 15px;
+  border-radius: 9px;
+  border: none;
+  background: var(--navy-900);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.add-btn:hover {
+  background: var(--navy-700);
+}
+
+/* Basic table layout. */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--slate-400);
+  padding: 13px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--hairline);
+  white-space: nowrap;
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--hairline);
+  transition: background .12s ease;
+}
+
+tbody tr:last-child {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: #FBFCFD;
+}
+
+td {
+  padding: 15px 20px;
+  font-size: 13.5px;
+  vertical-align: middle;
+}
+
+/* Keep the staff photo and text next to each other. */
+.staff-cell {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+/* Show initials when a staff photo is not available. */
+.staff-thumb {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-weight: 800;
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.staff-name {
+  font-weight: 700;
+  color: var(--navy-900);
+  font-size: 13.5px;
+}
+
+.staff-id {
+  font-size: 11.5px;
+  color: var(--slate-400);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 1px;
+}
+
+/* Style the academic rank shown in the table. */
+.rank-text {
+  color: var(--navy-500);
+  font-weight: 500;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 100px;
+}
+
+.badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
 
 .badge-cs{ background:var(--unit-cs-bg); color:var(--unit-cs-text); }
 .badge-cs .dot{ background:var(--unit-cs-text); }
@@ -238,25 +486,72 @@ td{ padding:15px 20px; font-size:13.5px; vertical-align:middle; }
 .status-suspended{ background:var(--red-bg); color:var(--red); }
 .status-suspended .dot{ background:var(--red); }
 
-.actions-cell{display:flex; align-items:center; gap:6px;}
-.action-btn{
-  width:31px;height:31px;border-radius:8px; border:1px solid var(--hairline); background:var(--white);
-  display:flex; align-items:center; justify-content:center; color:var(--slate-400);
-  transition:all .12s ease;
+/* Keep the edit and delete buttons beside each other. */
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.action-btn:hover{ background:var(--surface-alt); color:var(--navy-700); }
-.action-btn.danger:hover{ background:var(--red-bg); color:var(--red); border-color:#F0C6C1; }
 
-.table-footer{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:14px 20px; font-size:12.5px; color:var(--slate-400); font-weight:500;
+.action-btn {
+  width: 31px;
+  height: 31px;
+  border-radius: 8px;
+  border: 1px solid var(--hairline);
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--slate-400);
+  transition: all .12s ease;
 }
-.page-btns{display:flex; gap:6px;}
-.page-btn{
-  width:29px;height:29px; border-radius:8px; border:1px solid var(--hairline); background:var(--white);
-  font-size:12.5px; font-weight:700; color:var(--navy-500); display:flex; align-items:center; justify-content:center;
+
+.action-btn:hover {
+  background: var(--surface-alt);
+  color: var(--navy-700);
 }
-.page-btn.active{ background:var(--navy-900); color:var(--white); border-color:var(--navy-900); }
+
+.action-btn.danger:hover {
+  background: var(--red-bg);
+  color: var(--red);
+  border-color: #F0C6C1;
+}
+
+/* Footer below the staff table. */
+.table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  font-size: 12.5px;
+  color: var(--slate-400);
+  font-weight: 500;
+}
+
+.page-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.page-btn {
+  width: 29px;
+  height: 29px;
+  border-radius: 8px;
+  border: 1px solid var(--hairline);
+  background: var(--white);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--navy-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-btn.active {
+  background: var(--navy-900);
+  color: var(--white);
+  border-color: var(--navy-900);
+}
 
 .empty-row td{
   text-align:center; padding:52px 20px; color:var(--slate-400); font-weight:500; font-size:13.5px;

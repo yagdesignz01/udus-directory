@@ -1,17 +1,16 @@
 const currentStaffId = localStorage.getItem('currentStaffId');
 
-// Redirect if not logged in
+// Send the user back to login when no staff ID is stored.
 if (!currentStaffId) {
     window.location.replace('/lecturer-login/');
 }
 
-// ==========================================
-// 1. ACTIVATE ALL BUTTONS SAFELY
-// ==========================================
+// Remove the saved staff ID and return to the login page.
 function handleLogout() {
     localStorage.removeItem('currentStaffId');
     window.location.href = '/lecturer-login/';
 }
+
 document.getElementById('logoutLink')?.addEventListener('click', handleLogout);
 document.getElementById('mobileLogoutBtn')?.addEventListener('click', handleLogout);
 
@@ -19,136 +18,205 @@ document.getElementById('discardBtn')?.addEventListener('click', () => {
     window.location.reload();
 });
 
-// Sidebar scrolling
+// Scroll to a dashboard section when a sidebar link is clicked.
 document.querySelectorAll('.nav-link[data-target]').forEach(link => {
     link.addEventListener('click', () => {
-        document.querySelectorAll('.nav-link[data-target]').forEach(l => l.classList.remove('active'));
+        document.querySelectorAll('.nav-link[data-target]').forEach(sidebarLink => {
+            sidebarLink.classList.remove('active');
+        });
+
         link.classList.add('active');
-        const target = document.getElementById(link.dataset.target);
-        if (target) {
-            const y = target.getBoundingClientRect().top + window.scrollY - 100;
-            window.scrollTo({top: y, behavior: 'smooth'});
+        const targetSection = document.getElementById(link.dataset.target);
+
+        if (targetSection) {
+            const targetPosition = (
+                targetSection.getBoundingClientRect().top
+                + window.scrollY
+                - 100
+            );
+
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
         }
     });
 });
 
-// Image Upload Trigger
+// Open the hidden file input when the upload button is clicked.
 document.getElementById('uploadTriggerBtn')?.addEventListener('click', () => {
     document.getElementById('imageUpload')?.click();
 });
 
-document.getElementById('imageUpload')?.addEventListener('change', function(e) {
+// Show a preview when a new profile image is selected.
+document.getElementById('imageUpload')?.addEventListener('change', function() {
     if (this.files && this.files[0]) {
         const reader = new FileReader();
+
         reader.onload = function(event) {
             const displayPhoto = document.getElementById('displayPhoto');
-            if(displayPhoto) displayPhoto.innerHTML = `<img src="${event.target.result}" style="width:100%; height:100%; object-fit:cover; border-radius:20px;">`;
-            
+            if (displayPhoto) {
+                displayPhoto.innerHTML = `<img src="${event.target.result}" style="width:100%; height:100%; object-fit:cover; border-radius:20px;">`;
+            }
+
             const saveStatus = document.querySelector('.save-status');
-            if(saveStatus) saveStatus.innerHTML = '<span class="dot" style="background:var(--udus-plum)"></span> Unsaved photo changes';
+            if (saveStatus) {
+                saveStatus.innerHTML = '<span class="dot" style="background:var(--udus-plum)"></span> Unsaved photo changes';
+            }
         };
+
         reader.readAsDataURL(this.files[0]);
     }
 });
 
-// Tags
+// These elements are used to add and remove course chips.
 const tagShell = document.getElementById('tagShell');
 const tagInput = document.getElementById('tagInput');
 
 function addChip(value) {
     if (!value.trim() || !tagShell || !tagInput) return;
+
     const chip = document.createElement('span');
     chip.className = 'tag-chip';
     chip.innerHTML = `${value.trim().toUpperCase()}<button data-remove="${value.trim()}">✕</button>`;
+
     tagShell.insertBefore(chip, tagInput);
     tagInput.value = '';
 }
 
-tagInput?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ',') {
-        e.preventDefault();
+// Show the same profile image in the main preview and the sidebar avatar.
+function showProfileImage(imageUrl, displayPhoto, sidebarAvatar) {
+    const imageHTML = `<img src="${imageUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;">`;
+
+    if (displayPhoto) {
+        displayPhoto.innerHTML = imageHTML;
+    }
+
+    if (sidebarAvatar) {
+        sidebarAvatar.innerHTML = imageHTML;
+    }
+}
+
+// Show initials when the lecturer has not uploaded a profile image.
+function showProfileInitials(name, displayPhoto, sidebarAvatar) {
+    const safeName = name || 'User';
+
+    const nameParts = safeName
+        .replace(/^(Dr\.|Prof\.|Mr\.|Mrs\.)\s*/i, '')
+        .trim()
+        .split(' ');
+
+    const initials = (
+        nameParts[0][0]
+        + (nameParts[1] ? nameParts[1][0] : '')
+    ).toUpperCase();
+
+    if (displayPhoto) {
+        displayPhoto.innerHTML = initials;
+    }
+
+    if (sidebarAvatar) {
+        sidebarAvatar.innerHTML = initials;
+    }
+}
+
+// Put the profile values into the matching HTML input fields.
+function fillProfileFields(profileData) {
+    // Match each HTML input ID with the value from the server.
+    const profileFields = {
+        profName: profileData.name,
+        profRank: profileData.rank,
+        profQual: profileData.highest_qualification,
+        profResearch: profileData.research_interests,
+        profBuilding: profileData.building,
+        profFloor: profileData.floor,
+        profOffice: profileData.office_number,
+        profGuidance: profileData.guidance,
+        profOfficeHours: profileData.working_hours,
+        profEmail: profileData.email,
+        profWhatsapp: profileData.whatsapp
+    };
+
+    for (const [fieldId, fieldValue] of Object.entries(profileFields)) {
+        const field = document.getElementById(fieldId);
+
+        if (field) {
+            field.value = fieldValue || '';
+        }
+    }
+}
+
+tagInput?.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ',') {
+        event.preventDefault();
         addChip(tagInput.value);
     }
 });
 
-tagShell?.addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-remove]');
-    if (btn) btn.closest('.tag-chip').remove();
+tagShell?.addEventListener('click', event => {
+    const removeButton = event.target.closest('button[data-remove]');
+
+    if (removeButton) {
+        removeButton.closest('.tag-chip').remove();
+    }
 });
 
-// ==========================================
-// 2. FETCH DATA WITHOUT FREEZING
-// ==========================================
+// Load the current lecturer profile from the server.
 async function loadProfileData() {
     if (!currentStaffId) return;
-    
+
     try {
         const response = await fetch(`/api/lecturer/profile/${currentStaffId}/`);
         const data = await response.json();
 
         if (response.ok) {
-            // Safely inject text
+            // Update the lecturer name and rank in the sidebar.
             const nameEl = document.querySelector('.sidebar-profile .name');
             const rankEl = document.querySelector('.sidebar-profile .rank');
-            if(nameEl) nameEl.textContent = data.name;
-            if(rankEl) rankEl.textContent = `${data.rank} · ${data.unit}`;
 
-            const fields = {
-                'profName': data.name,
-                'profRank': data.rank,
-                'profQual': data.highest_qualification,
-                'profResearch': data.research_interests,
-                'profBuilding': data.building,
-                'profFloor': data.floor,
-                'profOffice': data.office_number,
-                'profGuidance': data.guidance,
-                'profOfficeHours': data.working_hours,
-                'profEmail': data.email,
-                'profWhatsapp': data.whatsapp
-            };
+            if (nameEl) nameEl.textContent = data.name;
+            if (rankEl) rankEl.textContent = `${data.rank} · ${data.unit}`;
 
-            for (const [id, value] of Object.entries(fields)) {
-                const el = document.getElementById(id);
-                if (el) el.value = value || '';
-            }
+            fillProfileFields(data);
 
             const displayPhoto = document.getElementById('displayPhoto');
             const sidebarAvatar = document.querySelector('.sidebar-avatar');
-            
-            if (data.profile_image && data.profile_image.trim() !== "") {
-                const imgHTML = `<img src="${data.profile_image}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;">`;
-                if(displayPhoto) displayPhoto.innerHTML = imgHTML;
-                if(sidebarAvatar) sidebarAvatar.innerHTML = imgHTML;
+
+            if (data.profile_image && data.profile_image.trim() !== '') {
+                showProfileImage(data.profile_image, displayPhoto, sidebarAvatar);
             } else {
-                const parts = (data.name || "User").replace(/^(Dr\.|Prof\.|Mr\.|Mrs\.)\s*/i, '').trim().split(' ');
-                const init = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
-                if(displayPhoto) displayPhoto.innerHTML = init;
-                if(sidebarAvatar) sidebarAvatar.innerHTML = init;
+                showProfileInitials(data.name, displayPhoto, sidebarAvatar);
             }
 
-            if(tagShell && data.courses_taught) {
-                tagShell.querySelectorAll('.tag-chip').forEach(chip => chip.remove()); 
-                const courses = data.courses_taught.split(',').map(c => c.trim()).filter(c => c);
+            if (tagShell && data.courses_taught) {
+                tagShell.querySelectorAll('.tag-chip').forEach(chip => chip.remove());
+
+                const courses = data.courses_taught
+                    .split(',')
+                    .map(course => course.trim())
+                    .filter(course => course);
+
                 courses.forEach(course => addChip(course));
             }
         } else {
-            console.warn("Could not fetch profile. Ensure server is running.", data.error);
+            console.warn(
+                'Could not fetch profile. Ensure server is running.',
+                data.error
+            );
         }
     } catch (error) {
-        console.error("Network error fetching profile:", error);
+        console.error('Network error fetching profile:', error);
     }
 }
 
-// Start fetching data immediately
+// Start loading the profile immediately.
 loadProfileData();
 
-// ==========================================
-// 3. SAVE DATA
-// ==========================================
+// Save the changed profile information.
 document.getElementById('publishBtn')?.addEventListener('click', async () => {
     const formData = new FormData();
-    
-    // Safely append text data
+
+    // Add the text fields to the form data.
     formData.append('highest_qualification', document.getElementById('profQual')?.value || '');
     formData.append('research_interests', document.getElementById('profResearch')?.value || '');
     formData.append('building', document.getElementById('profBuilding')?.value || '');
@@ -160,8 +228,11 @@ document.getElementById('publishBtn')?.addEventListener('click', async () => {
     formData.append('whatsapp', document.getElementById('profWhatsapp')?.value || '');
     formData.append('password', document.getElementById('profPassword')?.value || '');
 
-    if(tagShell) {
-        const courseChips = Array.from(tagShell.querySelectorAll('.tag-chip')).map(chip => chip.textContent.replace('✕', '').trim());
+    if (tagShell) {
+        const courseChips = Array.from(
+            tagShell.querySelectorAll('.tag-chip')
+        ).map(chip => chip.textContent.replace('✕', '').trim());
+
         formData.append('courses_taught', courseChips.join(', '));
     }
 
@@ -178,20 +249,23 @@ document.getElementById('publishBtn')?.addEventListener('click', async () => {
 
         if (response.ok) {
             const statusText = document.querySelector('.save-status');
-            if(statusText) statusText.innerHTML = '<span class="dot" style="background:var(--udus-dark-green)"></span> All changes published';
-            
-            // Clear password box after saving
+            if (statusText) {
+                statusText.innerHTML = '<span class="dot" style="background:var(--udus-dark-green)"></span> All changes published';
+            }
+
+            // Clear the password box after a successful save.
             const pwBox = document.getElementById('profPassword');
-            if(pwBox) pwBox.value = '';
-            
+            if (pwBox) pwBox.value = '';
+
             Swal.fire({
                 title: 'Success!',
                 text: 'Profile updated successfully!',
                 icon: 'success',
                 confirmButtonColor: '#008001',
                 borderRadius: '12px'
-        });
-            loadProfileData(); 
+            });
+
+            loadProfileData();
         } else {
             Swal.fire({
                 title: 'Access Denied',
@@ -199,10 +273,10 @@ document.getElementById('publishBtn')?.addEventListener('click', async () => {
                 icon: 'error',
                 confirmButtonColor: '#D32F2F',
                 borderRadius: '12px'
-        });
+            });
         }
     } catch (error) {
-        console.error("Error saving profile:", error);
-        alert("Network Error: Failed to connect to server.");
+        console.error('Error saving profile:', error);
+        alert('Network Error: Failed to connect to server.');
     }
 });

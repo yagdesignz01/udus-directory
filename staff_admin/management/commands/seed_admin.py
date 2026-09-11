@@ -6,15 +6,17 @@ from staff_admin.models import SystemAdmin
 
 
 class Command(BaseCommand):
-    help = 'Create or update the SystemAdmin account from ADMIN_* environment variables.'
+    help = 'Create or update the admin account from ADMIN_* environment variables.'
 
     def handle(self, *args, **options):
+        # Read the login details from the environment.
         email = os.environ.get('ADMIN_EMAIL')
         password = os.environ.get('ADMIN_PASSWORD')
         if not email or not password:
             self.stdout.write('ADMIN_EMAIL/ADMIN_PASSWORD not set, skipping admin seed.')
             return
 
+        # The application keeps the main admin account at database ID 1.
         admin, created = SystemAdmin.objects.get_or_create(
             id=1, defaults={'email': email, 'password': password}
         )

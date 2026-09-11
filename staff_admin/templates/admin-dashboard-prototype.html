@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-<!-- UDUS BRANDED DASHBOARD CSS OVERRIDES -->
+<!-- Dashboard styles that add the UDUS colours and metric cards. -->
 <style>
   :root {
     --udus-plum: #9F4A71;
@@ -17,28 +17,68 @@
     --udus-dgreen: #008001;
   }
   
-  /* Sidebar Branding */
-  .sidebar { background: var(--udus-dgreen) !important; }
-  .sidebar-brand { border-bottom: 1px solid rgba(255,255,255,0.15) !important; }
-  .nav-link.active { 
-    background: rgba(139, 194, 74, 0.2) !important; /* Light green tint */
+  /* Sidebar branding. */
+  .sidebar {
+    background: var(--udus-dgreen) !important;
+  }
+
+  .sidebar-brand {
+    border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+  }
+
+  .nav-link.active {
+    background: rgba(139, 194, 74, 0.2) !important;
     color: #FFFFFF !important;
     box-shadow: inset 4px 0 0 var(--udus-lgreen) !important;
   }
-  .nav-link.active svg { color: var(--udus-lgreen) !important; }
-  .admin-avatar { background: var(--udus-lgreen) !important; color: var(--udus-dgreen) !important; }
-  .admin-role { color: var(--udus-lgreen) !important; }
 
-  /* Buttons & Accents */
-  .add-btn, .save-btn { background: var(--udus-dgreen) !important; }
-  .add-btn:hover, .save-btn:hover { background: #006000 !important; }
-  .nav-badge { background: var(--udus-plum) !important; color: #FFF !important; }
+  .nav-link.active svg {
+    color: var(--udus-lgreen) !important;
+  }
 
-  /* Status Badges */
-  .status-active { background: #E8F5E9 !important; color: var(--udus-dgreen) !important; }
-  .status-active .dot { background: var(--udus-dgreen) !important; }
-  .status-suspended { background: #F8EBF0 !important; color: var(--udus-plum) !important; }
-  .status-suspended .dot { background: var(--udus-plum) !important; }
+  .admin-avatar {
+    background: var(--udus-lgreen) !important;
+    color: var(--udus-dgreen) !important;
+  }
+
+  .admin-role {
+    color: var(--udus-lgreen) !important;
+  }
+
+  /* Buttons and small accent elements. */
+  .add-btn,
+  .save-btn {
+    background: var(--udus-dgreen) !important;
+  }
+
+  .add-btn:hover,
+  .save-btn:hover {
+    background: #006000 !important;
+  }
+
+  .nav-badge {
+    background: var(--udus-plum) !important;
+    color: #FFF !important;
+  }
+
+  /* Status badges. */
+  .status-active {
+    background: #E8F5E9 !important;
+    color: var(--udus-dgreen) !important;
+  }
+
+  .status-active .dot {
+    background: var(--udus-dgreen) !important;
+  }
+
+  .status-suspended {
+    background: #F8EBF0 !important;
+    color: var(--udus-plum) !important;
+  }
+
+  .status-suspended .dot {
+    background: var(--udus-plum) !important;
+  }
 
   /* Bento Box Grid */
   .bento-metrics {
@@ -127,40 +167,65 @@
 <body>
 <div class="shell">
 
-  <!-- ================= SIDEBAR ================= -->
+  <!-- Left menu for dashboard sections and logout. -->
   <aside class="sidebar">
     <div class="sidebar-brand">
-      <div class="brand-mark"><img src="{% static 'images/udus_logo.png' %}" alt="UDUS Logo" style="width: 40px; height: 40px; margin-bottom: 16px; object-fit: contain;"> </div>
+      <div class="brand-mark">
+        <img
+          src="{% static 'images/udus_logo.png' %}"
+          alt="UDUS Logo"
+          style="width: 40px; height: 40px; margin-bottom: 16px; object-fit: contain;"
+        >
+      </div>
       <div class="brand-copy">
         <div class="l1">UDUS CS Directory</div>
         <div class="l2">Admin Console</div>
       </div>
     </div>
 
+    <!-- These links are used by admin.js to switch dashboard sections. -->
     <nav class="nav-group" id="sidebarNav">
       <div class="nav-label">Overview</div>
-      <a class="nav-link active" href="#" data-target="section-dashboard">
+      <a
+        class="nav-link active"
+        href="#"
+        data-target="section-dashboard"
+      >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
         Dashboard
       </a>
       
       <div class="nav-label" style="margin-top:12px;">Manage</div>
-      <a class="nav-link" href="#" data-target="section-manage" data-status="all">
+      <a
+        class="nav-link"
+        href="#"
+        data-target="section-manage"
+        data-status="all"
+      >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         Staff Management
       </a>
-      <a class="nav-link" href="#" data-target="section-manage" data-status="suspended">
+      <a
+        class="nav-link"
+        href="#"
+        data-target="section-manage"
+        data-status="suspended"
+      >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M4.9 4.9l14.2 14.2"/></svg>
         Suspended Staffs
         <span class="nav-badge" id="sidebarSuspendedCount">0</span>
       </a>
       
       <div class="nav-label" style="margin-top:12px;">System</div>
-      <a class="nav-link" href="#" data-target="section-settings">
+      <a
+        class="nav-link"
+        href="#"
+        data-target="section-settings"
+      >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         System Settings
       </a>
-      <!-- SECURE LOGOUT BUTTON (Pinned to bottom left) -->
+      <!-- Logout link stays at the bottom of the menu. -->
       <div style="position: absolute; bottom: 30px; width: calc(100% - 40px); left: 20px;">
         <a href="{% url 'admin_logout' %}" style="display: flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.15); color: #FFD4D4; text-decoration: none; font-weight: 600; font-size: 14px; padding: 12px 16px; border-radius: 8px; transition: background 0.2s;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -174,26 +239,31 @@
     </nav>
   </aside>
 
-  <!-- ================= MAIN ================= -->
+  <!-- Main area containing the search bar and dashboard sections. -->
   <main class="main">
     <div class="topbar">
       <div>
         <h1>Staff Management &amp; Overview</h1>
         <div class="subtitle">Manage academic staff accounts, roles, and access</div>
       </div>
+      <!-- The admin can search by staff name or staff ID. -->
       <div class="topbar-search">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input id="searchInput" type="text" placeholder="Search staff accounts by name or ID..." />
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search staff accounts by name or ID..."
+        >
       </div>
     </div>
 
     <div class="content">
       
-      <!-- BENTO DASHBOARD OVERVIEW SECTION -->
+      <!-- Dashboard overview and staff totals. -->
       <div id="section-dashboard" class="content-section active">
         <div class="bento-metrics">
           
-          <!-- Tall Card: Total Staff (UDUS Light Green) -->
+          <!-- Card showing the total number of academic staff. -->
           <div class="bento-card card-tall">
             <div>
               <div class="bento-label">Total Academic Staff</div>
@@ -204,10 +274,15 @@
               <div class="ring"></div><div class="ring"></div><div class="ring"></div>
             </div>
             
-            <button class="bento-btn" onclick="document.querySelector('[data-target=\'section-manage\']').click()">Manage Staff →</button>
+            <button
+              class="bento-btn"
+              onclick="document.querySelector('[data-target=\'section-manage\']').click()"
+            >
+              Manage Staff →
+            </button>
           </div>
 
-          <!-- Wide Card Top: Active Accounts (White) -->
+          <!-- Card showing active accounts and their percentage. -->
           <div class="bento-card card-wide-top">
             <div style="flex:1;">
               <div class="bento-label">Active Accounts</div>
@@ -219,7 +294,7 @@
             </div>
           </div>
 
-          <!-- Wide Card Bottom: Suspended Accounts (UDUS Plum) -->
+          <!-- Card showing suspended accounts. -->
           <div class="bento-card card-wide-bottom">
             <div style="flex:1; margin-bottom: 24px;">
               <div class="bento-label" style="color: #F8EBF0;">Suspended Accounts</div>
@@ -227,7 +302,7 @@
               <div class="bento-sub">Flagged for security review</div>
             </div>
             
-            <!-- NEW MASSIVE BANNED ICON -->
+            <!-- Simple icon for suspended accounts. -->
             <div class="banned-icon-wrapper">
               <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
@@ -239,7 +314,7 @@
         </div>
       </div>
 
-      <!-- STAFF MANAGEMENT SECTION -->
+      <!-- Staff list, filters, export, and add-staff controls. -->
       <div id="section-manage" class="content-section" style="display:none;">
         <h2 id="tableSectionTitle" style="margin-top:0; font-size:18px; margin-bottom: 20px;">All Academic Staff</h2>
         <div class="table-card">
@@ -274,9 +349,7 @@
         </div>
       </div>
 
-      <!-- ========================================== -->
-      <!-- SYSTEM SETTINGS SECTION (Properly Hidden!) -->
-      <!-- ========================================== -->
+      <!-- System settings section. It starts hidden until selected. -->
       <div id="section-settings" class="content-section" style="display:none;">
         <h2 style="margin-top:0; font-size:22px; margin-bottom: 24px;">Super Admin Settings</h2>
         <div class="settings-card">
@@ -318,13 +391,13 @@
           </form>
         </div>
       </div>
-      <!-- END SYSTEM SETTINGS SECTION -->
+      <!-- End of system settings section. -->
 
     </div>
   </main>
 </div>
 
-<!-- ADD STAFF MODAL -->
+<!-- Window for adding a new staff member. -->
 <div class="modal-overlay" id="addStaffModal">
   <div class="modal-box">
     <h3>Add New Staff Member</h3>
@@ -363,7 +436,7 @@
   </div>
 </div>
 
-<!-- EDIT STATUS MODAL -->
+<!-- Window for changing a staff member's status. -->
 <div class="modal-overlay" id="editStatusModal">
   <div class="modal-box">
     <h3>Update Staff Status</h3>
@@ -382,7 +455,7 @@
   </div>
 </div>
 
-<!-- Link to external JavaScript file -->
+<!-- Load the dashboard behavior after the page elements exist. -->
 <script src="{% static 'js/admin.js' %}"></script>
 </body>
 </html>

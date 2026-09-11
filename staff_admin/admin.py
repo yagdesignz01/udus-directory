@@ -1,22 +1,25 @@
 from django.contrib import admin
+from django.http import JsonResponse
+from django.shortcuts import render
+
 from .models import AcademicStaff
 
-# This makes your table visible in the Django admin panel
+# Register the staff model in Django's built-in admin panel.
 admin.site.register(AcademicStaff)
 
-from django.shortcuts import render
-from django.http import JsonResponse
-from .models import AcademicStaff
 
-# 1. Render the HTML dashboard
 def dashboard_view(request):
+    """Display the admin dashboard page."""
     return render(request, 'admin-dashboard-prototype.html')
 
-# 2. API to send data to your JavaScript
+
 def get_staff_data(request):
+    """Send all staff records as JSON for the dashboard JavaScript."""
+
+    # Get every staff record from the database.
     staff_records = AcademicStaff.objects.all()
-    
-    # Format the data into a list of dictionaries for JavaScript
+
+    # Convert each database record into a simple dictionary.
     data = []
     for staff in staff_records:
         data.append({
@@ -26,5 +29,5 @@ def get_staff_data(request):
             "unit": staff.unit,
             "status": staff.status
         })
-        
+
     return JsonResponse(data, safe=False)

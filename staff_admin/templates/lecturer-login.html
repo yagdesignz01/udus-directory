@@ -5,16 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lecturer Login | UDUS Directory</title>
-    
-    <!-- 1. EXTERNAL LIBRARIES -->
-    <!-- This imports our professional fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- This imports SweetAlert2 for our beautiful popup boxes -->
+
+    <!-- Load the font used by the login page. -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Load SweetAlert2 for the login messages. -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- 2. CSS STYLING -->
+    <!-- Page styles. -->
     <style>
-        /* Define our main UDUS colors so we can reuse them easily */
+        /* These colours are reused throughout the page. */
         :root {
             --udus-green: #008001;
             --udus-dark-green: #005A01;
@@ -25,7 +28,7 @@
             --hairline: #E1E5EC;
         }
         
-        /* The main page background - Flexbox keeps the login card perfectly centered */
+        /* Center the login card on the page. */
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
@@ -35,16 +38,16 @@
             justify-content: center;
             min-height: 100vh;
             color: var(--text-dark);
-            padding: 20px; /* Gives breathing room on mobile phones */
+            padding: 20px;
             box-sizing: border-box;
         }
 
-        /* The white card holding the form */
+        /* White card that contains the login form. */
         .login-container {
             background: var(--white);
             padding: 40px 30px; 
             border-radius: 20px;
-            box-shadow: 0 10px 40px -10px rgba(0, 90, 1, 0.15); /* Soft green shadow */
+            box-shadow: 0 10px 40px -10px rgba(0, 90, 1, 0.15);
             width: 100%;
             max-width: 400px;
             text-align: center;
@@ -52,14 +55,43 @@
             box-sizing: border-box; /* Prevents the box from breaking on mobile */
         }
 
-        /* Typography (Text styles) */
-        h1 { font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0 0 8px; }
-        p { font-size: 14px; color: var(--text-muted); margin: 0 0 24px; }
+        /* Keep the logo size in one CSS class. */
+        .udus-logo {
+            width: 65px;
+            height: 65px;
+            margin-bottom: 16px;
+            object-fit: contain;
+        }
 
-        /* Form input fields */
-        .form-group { text-align: left; margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
-        .form-group input { 
+        /* Heading and paragraph styles. */
+        h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin: 0 0 8px;
+        }
+
+        p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 0 0 24px;
+        }
+
+        /* Form labels and input fields. */
+        .form-group {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
             width: 100%; 
             padding: 14px 16px; 
             border: 1.5px solid var(--hairline); 
@@ -69,10 +101,13 @@
             box-sizing: border-box; 
             transition: border-color 0.2s; 
         }
-        .form-group input:focus { outline: none; border-color: var(--udus-green); } /* Green border when typing */
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--udus-green);
+        }
 
-        /* The Submit Button */
-        .btn { 
+        /* Main submit button. */
+        .btn {
             width: 100%; 
             padding: 14px; 
             background: var(--udus-green); 
@@ -85,61 +120,83 @@
             margin-top: 10px; 
             transition: background 0.2s; 
         }
-        .btn:hover { background: var(--udus-dark-green); }
+        .btn:hover {
+            background: var(--udus-dark-green);
+        }
     </style>
 </head>
 <body>
 
-    <!-- 3. HTML BODY & FORM -->
+    <!-- Login card and form. -->
     <div class="login-container">
-        
-        <!-- UDUS Logo from your local media folder -->
-        <img src="{% static 'images/udus_logo.png' %}" alt="UDUS Logo" style="width: 65px; height: 65px; margin-bottom: 16px; object-fit: contain;">
-        
+
+        <!-- Local UDUS logo. -->
+        <img
+            src="{% static 'images/udus_logo.png' %}"
+            alt="UDUS Logo"
+            class="udus-logo"
+        >
+
         <h1>UDUS Academic Staff Portal</h1>
         <p>Sign in to manage your directory profile</p>
 
-        <!-- The ID here allows our JavaScript to connect to this specific form -->
+        <!-- JavaScript listens to this form ID. -->
         <form id="lecturerLoginForm">
-            <!-- Django Security Token -->
+            <!-- Django security token. -->
             {% csrf_token %}
-            
+
             <div class="form-group">
                 <label>Staff ID / Username</label>
-                <!-- We add ID to inputs so JavaScript can read what the user types -->
-                <input type="text" id="staff_id" placeholder="e.g. STF-1001" required>
+
+                <input
+                    type="text"
+                    id="staff_id"
+                    placeholder="e.g. STF-1001"
+                    required
+                >
             </div>
-            
+
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" id="password" placeholder="Enter your password" required>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    required
+                >
             </div>
-            
-            <button type="submit" class="btn">Secure Login</button>
+
+            <button
+                type="submit"
+                class="btn"
+            >
+                Secure Login
+            </button>
         </form>
 
         <p style="font-size: 11px; margin-top: 24px; margin-bottom: 0;">Protected by UDUS institutional access control</p>
     </div>
 
-    <!-- 4. JAVASCRIPT & ALERTS -->
+    <!-- Login JavaScript and alert messages. -->
     <script>
-        // Step A: Find the form in the HTML document
+        // Find the login form.
         const loginForm = document.getElementById('lecturerLoginForm');
 
-        // Step B: Listen for the moment the user clicks the "Submit" button
+        // Run this code when the form is submitted.
         loginForm.addEventListener('submit', function(event) {
-            
-            // 1. Stop the page from reloading instantly (default browser behavior)
+
+            // Stop the browser from reloading the page.
             event.preventDefault();
 
-            // 2. Grab the exact text the user typed into the input boxes
+            // Read the values entered by the user.
             const typedStaffId = document.getElementById('staff_id').value;
             const typedPassword = document.getElementById('password').value;
-            
-            // 3. Grab the hidden Django security token from the form
+
+            // Read the Django security token from the form.
             const djangoCsrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-            // 4. Show a loading popup so the user knows the system is thinking
+            // Show a loading message while the server checks the login.
             Swal.fire({
                 title: 'Authenticating...',
                 text: 'Please wait while we verify your credentials.',
@@ -149,38 +206,39 @@
                 }
             });
 
-            // 5. Send the data to your Django backend API
+            // Send the login details to the Django API.
             fetch('/api/lecturer/login/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': djangoCsrfToken // Send the security token
+                    'X-CSRFToken': djangoCsrfToken
                 },
                 body: JSON.stringify({
                     staff_id: typedStaffId,
                     password: typedPassword
                 })
             })
-            .then(response => response.json()) // Convert the server's response into JavaScript format
+            .then(response => response.json())
             .then(data => {
-                
-                // 6. Check if the backend said the login was successful
+
+                // Check whether the login was successful.
                 if (data.success) {
                     localStorage.setItem('currentStaffId', data.staff_id);
-                    // Success Popup!
+
+                    // Show the success message.
                     Swal.fire({
                         title: 'Welcome Back!',
                         text: 'Login successful. Redirecting to your dashboard...',
                         icon: 'success',
-                        confirmButtonColor: '#008001', // UDUS Green
-                        timer: 2000, // Closes automatically after 2 seconds
+                        confirmButtonColor: '#008001',
+                        timer: 2000,
                         showConfirmButton: false
                     }).then(() => {
-                        // Send them to the dashboard URL
+                        // Open the lecturer dashboard.
                         window.location.href = '/lecturer-dashboard/';
                     });
                 } else {
-                    // Error Popup (e.g., wrong password or suspended account)
+                    // Show an error for invalid or suspended accounts.
                     Swal.fire({
                         title: 'Access Denied',
                         text: data.message || 'Invalid Staff ID or Password.',
@@ -191,7 +249,7 @@
                 }
             })
             .catch(error => {
-                // Failsafe Popup if the internet disconnects or server crashes
+                // Show an error when the server cannot be reached.
                 Swal.fire({
                     title: 'System Error',
                     text: 'Could not connect to the server. Please try again.',

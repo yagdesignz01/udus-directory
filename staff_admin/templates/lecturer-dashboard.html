@@ -2,17 +2,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UDUS Academic Staff Portal — Profile Editor</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'css/lecturer.css' %}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UDUS Academic Staff Portal — Profile Editor</title>
+
+  <!-- Load the external fonts and the dashboard stylesheet. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  >
+  <link
+    rel="stylesheet"
+    href="{% static 'css/lecturer.css' %}"
+  >
 </head>
 <body>
 
   <div class="shell">
-    <!-- SIDEBAR -->
+    <!-- Left navigation area. The JavaScript uses the existing link targets. -->
     <aside class="sidebar">
       <div class="sidebar-profile">
         <div class="sidebar-avatar">AO</div>
@@ -22,21 +30,34 @@
         </div>
       </div>
 
+      <!-- Each link scrolls to one profile section. -->
       <nav class="nav-group">
-        <a class="nav-link active" data-target="section-basic">
+        <a
+          class="nav-link active"
+          data-target="section-basic"
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           <span>Edit Profile</span>
         </a>
-        <a class="nav-link" data-target="section-location">
+        <a
+          class="nav-link"
+          data-target="section-location"
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
           <span>Guidance</span>
         </a>
-        <a class="nav-link" data-target="section-contact">
+        <a
+          class="nav-link"
+          data-target="section-contact"
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
           <span>Contact</span>
         </a>
-        <!-- NEW SECURITY TAB -->
-        <a class="nav-link" data-target="section-security">
+        <!-- Security settings are kept as a separate section. -->
+        <a
+          class="nav-link"
+          data-target="section-security"
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           <span>Security</span>
         </a>
@@ -50,7 +71,7 @@
       </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
+    <!-- Main profile editing area. -->
     <main class="main">
       <div class="main-header">
         <div class="header-content">
@@ -63,7 +84,7 @@
       </div>
 
       <div class="form-wrap">
-        <!-- 1. BASIC INFORMATION -->
+        <!-- 1. Basic information and profile photo. -->
         <div class="form-section" id="section-basic">
           <div class="section-head">
             <div class="section-icon">
@@ -101,7 +122,7 @@
 
         <div class="divider"></div>
 
-        <!-- 2. ACADEMIC ASSIGNMENT -->
+        <!-- 2. Academic assignment and research information. -->
         <div class="form-section">
           <div class="section-head">
             <div class="section-icon">
@@ -125,7 +146,7 @@
 
         <div class="divider"></div>
 
-        <!-- 3. DIRECTIONAL GUIDANCE -->
+        <!-- 3. Office location and directions. -->
         <div class="form-section" id="section-location">
           <div class="section-head">
             <div class="section-icon">
@@ -137,27 +158,46 @@
           <div class="field-grid cols-3">
             <div class="form-field">
               <label>Building Name</label>
-              <input class="text-input" id="profBuilding" type="text" placeholder="e.g. Main Faculty Block" />
+              <input
+                class="text-input"
+                id="profBuilding"
+                type="text"
+                placeholder="e.g. Main Faculty Block"
+              >
             </div>
             <div class="form-field">
               <label>Floor Level</label>
-              <input class="text-input" id="profFloor" type="text" placeholder="e.g. 2nd Floor" />
+              <input
+                class="text-input"
+                id="profFloor"
+                type="text"
+                placeholder="e.g. 2nd Floor"
+              >
             </div>
             <div class="form-field">
               <label>Office Number</label>
-              <input class="text-input" id="profOffice" type="text" placeholder="e.g. Room 204" />
+              <input
+                class="text-input"
+                id="profOffice"
+                type="text"
+                placeholder="e.g. Room 204"
+              >
             </div>
           </div>
 
           <div class="form-field">
             <label>Step-by-Step Directional Guidance</label>
-            <textarea id="profGuidance" class="guidance-textarea" placeholder="Type the exact pathway..."></textarea>
+            <textarea
+              id="profGuidance"
+              class="guidance-textarea"
+              placeholder="Type the exact pathway..."
+            ></textarea>
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <!-- 4. DIRECT COMMUNICATION -->
+        <!-- 4. Office hours and contact details. -->
         <div class="form-section" id="section-contact">
           <div class="section-head">
             <div class="section-icon">
@@ -168,25 +208,39 @@
 
           <div class="form-field">
             <label>Office Hours</label>
-            <textarea id="profOfficeHours" rows="3" placeholder="Mon: 10:00 - 12:00&#10;Wed: 14:00 - 16:00"></textarea>
+            <textarea
+              id="profOfficeHours"
+              rows="3"
+              placeholder="Mon: 10:00 - 12:00&#10;Wed: 14:00 - 16:00"
+            ></textarea>
             <div class="helper">Type each day on a new line. Separate the day and time with a colon (:).</div>
           </div>
 
           <div class="field-grid">
               <div class="form-field">
                 <label>Official University Email</label>
-                <input class="text-input" id="profEmail" type="email" placeholder="email@udus.edu.ng" />
+                <input
+                  class="text-input"
+                  id="profEmail"
+                  type="email"
+                  placeholder="email@udus.edu.ng"
+                >
               </div>
               <div class="form-field">
                 <label>WhatsApp Contact Number</label>
-                <input class="text-input" id="profWhatsapp" type="tel" placeholder="+234..." />
+                <input
+                  class="text-input"
+                  id="profWhatsapp"
+                  type="tel"
+                  placeholder="+234..."
+                >
               </div>
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <!-- 5. SECURITY SETTINGS (NEW) -->
+        <!-- 5. Password settings. -->
         <div class="form-section" id="section-security">
           <div class="section-head">
             <div class="section-icon">
@@ -198,23 +252,42 @@
           
           <div class="form-field">
             <label>New Password</label>
-            <input class="text-input" id="profPassword" type="password" placeholder="Leave blank to keep your current password" />
+            <input
+              class="text-input"
+              id="profPassword"
+              type="password"
+              placeholder="Leave blank to keep your current password"
+            >
           </div>
         </div>
 
       </div>
 
-      <!-- STICKY ACTION BAR -->
+      <!-- The save controls remain visible while the page is scrolled. -->
       <div class="action-bar">
-        <div class="save-status"><span class="dot"></span> Unsaved changes</div>
+        <div class="save-status">
+          <span class="dot"></span>
+          Unsaved changes
+        </div>
         <div class="action-buttons">
-          <button class="btn-discard" id="discardBtn">Discard</button>
-          <button class="btn-publish" id="publishBtn">Save &amp; Publish</button>
+          <button
+            class="btn-discard"
+            id="discardBtn"
+          >
+            Discard
+          </button>
+          <button
+            class="btn-publish"
+            id="publishBtn"
+          >
+            Save &amp; Publish
+          </button>
         </div>
       </div>
     </main>
   </div>
 
+<!-- Load dashboard behavior after all page elements exist. -->
 <script src="{% static 'js/lecturer-dashboard.js' %}"></script>
 </body>
 </html>

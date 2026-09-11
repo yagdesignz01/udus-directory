@@ -2,20 +2,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UDUS | Department of Computing Directory</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UDUS | Department of Computing Directory</title>
+
+  <!-- Load the fonts used by the directory page. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
 <style>
+  /* Colours, sizes, and shadows used by the whole page. */
   :root {
-    /* UDUS BRAND COLORS */
+    /* UDUS brand colours. */
     --udus-green: #008001;
     --udus-dark-green: #005A01;
     --udus-light-green: #8BC24A;
     --udus-plum: #9F4A71;
     --udus-plum-light: rgba(159, 74, 113, 0.1);
-    
+
     --text-dark: #12233F;
     --text-muted: #6B7A94;
     --surface: #F4F9EE;
@@ -24,40 +30,72 @@
     --white: #FFFFFF;
     --hairline: #E1E5EC;
 
-    --radius-lg: 20px; --radius-md: 14px; --radius-sm: 10px;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
     --shadow-card: 0 1px 2px rgba(0, 128, 1, 0.04), 0 8px 24px -12px rgba(0, 128, 1, 0.12);
     --shadow-pop: 0 24px 60px -16px rgba(0, 90, 1, 0.25);
   }
-  
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;font-family:'Inter',system-ui,sans-serif;background:var(--surface);color:var(--text-dark);-webkit-font-smoothing:antialiased;}
-  .mono{font-family:'JetBrains Mono',monospace;}
-  button{font-family:inherit;cursor:pointer;outline:none;}
-  a{text-decoration:none;color:inherit;}
-  .app{max-width:1180px;margin:0 auto;position:relative;}
 
-  /* Header & Search */
-  .topbar{
-    position:sticky;
-    top:0;z-index:50;
-    background:rgba(255,255,255,0.94);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--hairline);
+  /* Give every element predictable sizing. */
+  * {
+    box-sizing: border-box;
   }
 
-  .topbar-inner{
-    max-width:1180px;
-    margin:0 auto;
-    padding:14px 20px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--surface);
+    color: var(--text-dark);
+    -webkit-font-smoothing: antialiased;
   }
 
-  .brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
+  .mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .app {
+    max-width: 1180px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* Top header with the logo and live database badge. */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255,255,255,0.94);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .topbar-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
   .brand-mark{
@@ -66,188 +104,371 @@
     display: flex;
   }
 
-  .brand-text .eyebrow{
-    font-size:10px;
-    letter-spacing:.1em;
-    text-transform:uppercase;
-    color:var(--text-muted);
-    font-weight:700;
+  .brand-text .eyebrow {
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 700;
   }
 
-  .brand-text .title{
-    font-size:14.5px;
-    font-weight:800;
-    display:none;
-    color:var(--text-dark);
+  .brand-text .title {
+    font-size: 14.5px;
+    font-weight: 800;
+    display: none;
+    color: var(--text-dark);
   }
 
-  @media(min-width:540px){
-    .brand-text .title{
-      display:block;
+  /* Show the full title on wider screens. */
+  @media (min-width: 540px) {
+    .brand-text .title {
+      display: block;
     }
   }
 
-  .topbar-badge{
-    font-size:11px;
-    font-weight:700;
-    color:var(--udus-dark-green);
-    background:var(--surface-alt);
-    padding:5px 10px;
-    border-radius:100px;
-    display:flex;
-    align-items:center;
-    gap:6px;
+  .topbar-badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--udus-dark-green);
+    background: var(--surface-alt);
+    padding: 5px 10px;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
-  .topbar-badge .dot{
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    background:var(--udus-green);
+  .topbar-badge .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--udus-green);
   }
 
-
-  .hero{
-    padding:40px 20px 8px;
+  /* Main page introduction. */
+  .hero {
+    padding: 40px 20px 8px;
   }
 
-  .hero-eyebrow{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    font-size:11.5px;
-    font-weight:700;
-    color:var(--udus-plum);
-    text-transform:uppercase;
-    letter-spacing:.08em;
-    background:var(--udus-plum-light);
-    padding:6px 12px;
-    border-radius:100px;
-    margin-bottom:16px;
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--udus-plum);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    background: var(--udus-plum-light);
+    padding: 6px 12px;
+    border-radius: 100px;
+    margin-bottom: 16px;
   }
-  .hero h1{
-    font-size:32px;
-    font-weight:800;
-    letter-spacing:-0.02em;
-    line-height:1.12;
-    margin:0 0 12px;
-    max-width:15ch;
-    color:var(--udus-dark-green);
+
+  .hero h1 {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    margin: 0 0 12px;
+    max-width: 15ch;
+    color: var(--udus-dark-green);
   }
-  .hero p{
-    font-size:15px;
-    color:var(--text-muted);
-    font-weight:500;
-    max-width:46ch;
-    margin:0 0 4px;
+
+  .hero p {
+    font-size: 15px;
+    color: var(--text-muted);
+    font-weight: 500;
+    max-width: 46ch;
+    margin: 0 0 4px;
   }
-  @media(min-width:720px){
-    .hero h1{
-      font-size:42px;
+
+  /* Make the heading larger on wider screens. */
+  @media (min-width: 720px) {
+    .hero h1 {
+      font-size: 42px;
     }
   }
 
-  .search-zone{
-    position:sticky;
-    top:61px;
-    z-index:40;
-    background:var(--surface);
-    padding:20px 20px 12px;
+  /* Search box and unit filter buttons. */
+  .search-zone {
+    position: sticky;
+    top: 61px;
+    z-index: 40;
+    background: var(--surface);
+    padding: 20px 20px 12px;
   }
 
-  .search-zone::after{
-    content:"";
-    position:absolute;
-    left:0;right:0;
-    bottom:-14px;height:14px;
-    background:linear-gradient(to bottom,
-    var(--surface),rgba(244,249,238,0));
-    pointer-events:none;
+  /* Add a soft fade below the search box. */
+  .search-zone::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -14px;
+    height: 14px;
+    background: linear-gradient(
+      to bottom,
+      var(--surface),
+      rgba(244,249,238,0)
+    );
+    pointer-events: none;
   }
 
-  .search-box{
-    display:flex;
-    align-items:center;
-    gap:11px;
-    background:var(--white);
-    border:1.5px solid var(--hairline);
-    border-radius:16px;
-    padding:15px 17px;
-    box-shadow:var(--shadow-card);
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    background: var(--white);
+    border: 1.5px solid var(--hairline);
+    border-radius: 16px;
+    padding: 15px 17px;
+    box-shadow: var(--shadow-card);
   }
 
-  .search-box:focus-within{
-    border-color:var(--udus-green);
-    box-shadow:0 0 0 4px rgba(0,128,1,0.08);
+  /* Highlight the search box when it is active. */
+  .search-box:focus-within {
+    border-color: var(--udus-green);
+    box-shadow: 0 0 0 4px rgba(0,128,1,0.08);
   }
 
-  .search-box svg{
-    flex-shrink:0;
-    color:var(--text-muted);
+  .search-box svg {
+    flex-shrink: 0;
+    color: var(--text-muted);
   }
 
-  .search-box input{
-    border:none;
-    outline:none;
-    flex:1;
-    font-size:15.5px;
-    font-weight:500;
-    background:transparent;
-    color:var(--text-dark);
-    min-width:0;
+  .search-box input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 15.5px;
+    font-weight: 500;
+    background: transparent;
+    color: var(--text-dark);
+    min-width: 0;
   }
 
-  .search-box input::placeholder{
-    color:var(--text-muted);
-    font-weight:450;
+  .search-box input::placeholder {
+    color: var(--text-muted);
+    font-weight: 450;
   }
 
-  .search-clear{
-    display:none;
-    width:24px;
-    height:24px;
-    border-radius:50%;
-    background:var(--surface-alt);
-    align-items:center;
-    justify-content:center;
-    color:var(--text-muted);
-    flex-shrink:0;
+  /* Small button used to clear the search text. */
+  .search-clear {
+    display: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--surface-alt);
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    flex-shrink: 0;
   }
-  
-  .filters{display:flex;gap:8px;padding:14px 0 2px;overflow-x:auto;scrollbar-width:none;}
-  .filters::-webkit-scrollbar{display:none;}
-  .chip{flex-shrink:0;padding:10px 16px;border-radius:100px;min-height:40px;border:1.5px solid var(--hairline);background:var(--white);font-size:13.5px;font-weight:700;color:var(--text-muted);display:flex;align-items:center;gap:7px;}
-  .chip .dot{width:6px;height:6px;border-radius:50%;background:var(--hairline);}
-  .chip.active{background:var(--udus-green);border-color:var(--udus-green);color:var(--white);}
-  .chip.active .dot{background:var(--udus-light-green);}
 
-  .results-meta{padding:16px 20px 4px;display:flex;align-items:center;justify-content:space-between;}
-  .results-meta span{font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;}
-  .grid{padding:12px 20px 80px;display:grid;grid-template-columns:1fr;gap:14px;}
-  @media(min-width:640px){.grid{grid-template-columns:1fr 1fr;}}
-  @media(min-width:980px){.grid{grid-template-columns:1fr 1fr 1fr;}}
+  /* Row of unit filter buttons. */
+  .filters {
+    display: flex;
+    gap: 8px;
+    padding: 14px 0 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
 
-  .staff-card{background:var(--white);border:1px solid var(--hairline);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-card);display:flex;flex-direction:column;gap:13px;transition:transform .15s ease,box-shadow .15s ease;}
-  .staff-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-pop);}
-  .staff-top{display:flex;gap:12px;align-items:flex-start;}
-  .avatar{width:52px;height:52px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:var(--white);font-family:'JetBrains Mono',monospace;overflow:hidden;}
-  .staff-name-block{flex:1;min-width:0;}
-  .staff-name{font-size:15px;font-weight:700;line-height:1.3;color:var(--udus-dark-green);}
-  .staff-rank{font-size:11.5px;font-weight:700;color:var(--udus-plum);text-transform:uppercase;letter-spacing:.04em;margin-top:2px;}
-  .unit-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:100px;text-transform:uppercase;letter-spacing:.03em;background:var(--surface-alt);color:var(--udus-dark-green);}
-  .unit-badge .dot{width:5px;height:5px;border-radius:50%;background:var(--udus-dark-green);}
-  .quick-info{font-size:12.5px;color:var(--text-muted);font-weight:500;line-height:1.6;}
-  .quick-info b{color:var(--text-dark);font-weight:700;}
-  .staff-cta{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--udus-green);color:var(--white);font-weight:700;font-size:13.5px;padding:13px 14px;border-radius:12px;border:none;min-height:46px;transition:background .15s ease;}
-  .staff-cta:hover{background:var(--udus-dark-green);}
+  .filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chip {
+    flex-shrink: 0;
+    padding: 10px 16px;
+    border-radius: 100px;
+    min-height: 40px;
+    border: 1.5px solid var(--hairline);
+    background: var(--white);
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .chip .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--hairline);
+  }
+
+  .chip.active {
+    background: var(--udus-green);
+    border-color: var(--udus-green);
+    color: var(--white);
+  }
+
+  .chip.active .dot {
+    background: var(--udus-light-green);
+  }
+
+  /* Result count and lecturer card grid. */
+  .results-meta {
+    padding: 16px 20px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .results-meta span {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  .grid {
+    padding: 12px 20px 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* Use more columns when the screen becomes wider. */
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 980px) {
+    .grid {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  /* One lecturer card in the directory. */
+  .staff-card {
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+
+  .staff-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-pop);
+  }
+
+  .staff-top {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--white);
+    font-family: 'JetBrains Mono', monospace;
+    overflow: hidden;
+  }
+
+  .staff-name-block {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .staff-name {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--udus-dark-green);
+  }
+
+  .staff-rank {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--udus-plum);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-top: 2px;
+  }
+
+  .unit-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 4px 9px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    background: var(--surface-alt);
+    color: var(--udus-dark-green);
+  }
+
+  .unit-badge .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--udus-dark-green);
+  }
+
+  .quick-info {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 500;
+    line-height: 1.6;
+  }
+
+  .quick-info b {
+    color: var(--text-dark);
+    font-weight: 700;
+  }
+
+  .staff-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--udus-green);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 13px 14px;
+    border-radius: 12px;
+    border: none;
+    min-height: 46px;
+    transition: background .15s ease;
+  }
+
+  .staff-cta:hover {
+    background: var(--udus-dark-green);
+  }
 
   /* ==========================================
-     DRAWER (MODAL) PERFECT UI MATCH
+     DRAWER (the side panel that slides in when
+     you click "View Profile & Directions")
      ========================================== */
   .overlay{position:fixed;inset:0;background:rgba(0,30,0,0.6);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:90;}
   .overlay.open{opacity:1;pointer-events:auto;}
   .drawer{position:fixed;z-index:100;background:var(--white);box-shadow:var(--shadow-pop);display:flex;flex-direction:column;left:0;right:0;bottom:0;top:8%;border-radius:24px 24px 0 0;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);}
   .drawer.open{transform:translateY(0);}
+  /* On wider screens, the drawer slides in from the right side instead of the bottom */
   @media(min-width:760px){
     .drawer{top:0;bottom:0;left:auto;right:0;width:480px;border-radius:0;transform:translateX(100%);}
     .drawer.open{transform:translateX(0);}
@@ -256,29 +477,29 @@
   @media(min-width:760px){.drawer-handle{display:none;}}
   .drawer-close{position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:10px;border:1px solid var(--hairline);background:var(--white);display:none;align-items:center;justify-content:center;color:var(--text-muted);z-index:2;}
   @media(min-width:760px){.drawer-close{display:flex;}}
-  
+
   .drawer-scroll{flex:1;overflow-y:auto;padding:16px 26px 0;}
-  
-  /* Profile Header */
+
+  /* Profile Header inside the drawer */
   .drawer-profile{display:flex;gap:16px;align-items:flex-start;padding:14px 0 20px;}
   .drawer-photo{width:72px;height:72px;border-radius:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:800;font-size:24px;font-family:'JetBrains Mono',monospace;background:var(--udus-dark-green);overflow:hidden;}
   .drawer-id h3{margin:0 0 4px;font-size:19px;font-weight:800;letter-spacing:-0.01em;color:var(--text-dark);}
   .drawer-id .rank{font-size:12px;font-weight:800;color:var(--udus-plum);text-transform:uppercase;letter-spacing:.06em;}
-  
-  /* Grey Tag Pills Match */
+
+  /* Small grey pill tags for research interests */
   .drawer-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
   .drawer-tag{font-size:12.5px;font-weight:600;color:var(--text-dark);background:var(--surface-grey);padding:6px 12px;border-radius:8px;}
-  
-  /* Section Headers Match */
+
+  /* Section titles like "Getting there", "Office Hours", "Courses taught" */
   .drawer-section-title{display:flex;align-items:center;gap:8px;margin:28px 0 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dark);}
   .drawer-section-title .bar{width:14px;height:3px;border-radius:2px;background:var(--udus-plum);}
-  
-  /* Dark Pathway Card (School Colors) */
+
+  /* Dark green "how to get to the office" step-by-step card */
   .pathway-card{background:var(--udus-dark-green);border-radius:16px;padding:22px 20px;margin-bottom:8px;}
   .pathway-eyebrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
   .pathway-eyebrow .label{font-size:11px;font-weight:800;color:var(--udus-light-green);text-transform:uppercase;letter-spacing:.09em;}
   .pathway-eyebrow .eta{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:rgba(255,255,255,0.6);}
-  
+
   .pathway-step{display:flex;gap:16px;position:relative;padding-bottom:24px;}
   .pathway-step:last-child{padding-bottom:0;}
   .step-rail{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
@@ -289,20 +510,20 @@
   .step-value{font-size:15px;font-weight:700;color:var(--white);}
   .step-code{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--udus-light-green);font-weight:700;margin-top:4px;}
   .step-final .step-node{background:var(--udus-light-green);border-color:var(--udus-light-green);color:var(--udus-dark-green);}
-  
-  /* Office Hours Match */
+
+  /* Office Hours list rows */
   .oh-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--surface-grey);font-size:14.5px;color:var(--text-dark);}
   .oh-row:last-child{border-bottom:none;}
   .oh-day{font-weight:800;}
   .oh-time{font-family:'JetBrains Mono',monospace;color:var(--text-muted);font-weight:600;font-size:13.5px;}
 
-  /* Courses Match */
+  /* Courses list rows */
   .course-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--surface-grey);}
   .course-row:last-child{border-bottom:none;}
   .course-code2{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:12px;color:var(--white);background:var(--udus-dark-green);padding:4px 10px;border-radius:8px;flex-shrink:0;}
   .course-name2{font-size:14.5px;font-weight:500;color:var(--text-dark);}
 
-  /* Comms Buttons Match */
+  /* "Send Email" / "WhatsApp" buttons at the bottom of the drawer */
   .drawer-comms{padding:16px 26px calc(20px + env(safe-area-inset-bottom));display:flex;gap:12px;border-top:1px solid var(--hairline);background:var(--white);flex-shrink:0;}
   .comms-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:12px;font-weight:800;font-size:14.5px;border:none;min-height:52px;transition:opacity .15s;}
   .comms-btn:hover{opacity:0.9;}
@@ -313,7 +534,7 @@
 <body>
 <div class="app">
 
-  <!-- Header -->
+  <!-- Header: logo + page title + "Live Database Connection" badge -->
   <div class="topbar">
     <div class="topbar-inner">
       <div class="brand">
@@ -327,14 +548,14 @@
     </div>
   </div>
 
-  <!-- Hero -->
+  <!-- Hero: big heading and short description -->
   <div class="hero">
     <span class="hero-eyebrow">Usmanu Danfodiyo University, Sokoto</span>
     <h1>Find Your Lecturers &amp; Office Locations</h1>
     <p>Search academic staff across Computer Science, Software Engineering, and Cyber Security — with step-by-step directions to their office.</p>
   </div>
 
-  <!-- Search & Filters -->
+  <!-- Search box and unit filter buttons -->
   <div class="search-zone">
     <div class="search-box">
       <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
@@ -352,15 +573,17 @@
     </div>
   </div>
 
+  <!-- Shows how many lecturers matched the current search/filter -->
   <div class="results-meta">
     <span id="resultsCount">Loading...</span>
     <span>Sorted A–Z</span>
   </div>
 
+  <!-- All the lecturer cards get inserted here by JavaScript -->
   <div class="grid" id="staffGrid"></div>
 </div>
 
-<!-- Drawer / Modal -->
+<!-- Drawer / Modal: slides in with full lecturer details -->
 <div class="overlay" id="overlay"></div>
 <div class="drawer" id="drawer">
   <div class="drawer-handle"></div>
@@ -369,6 +592,7 @@
   </button>
 
   <div class="drawer-scroll">
+    <!-- Lecturer name, rank, photo, and research tags go here -->
     <div class="drawer-profile" id="drawerProfile"></div>
 
     <div class="drawer-section-title"><span class="bar"></span>Getting there</div>
@@ -377,6 +601,7 @@
         <span class="label">Step-by-step pathway</span>
         <span class="eta">≈ 3 min walk</span>
       </div>
+      <!-- Step-by-step directions to the office go here -->
       <div id="pathwaySteps"></div>
     </div>
 
@@ -389,6 +614,7 @@
     <div id="coursesTaught" style="margin-bottom:24px;"></div>
   </div>
 
+  <!-- Email / WhatsApp contact buttons -->
   <div class="drawer-comms">
     <button class="comms-btn email" id="emailBtn">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
@@ -402,9 +628,13 @@
 </div>
 
 <script>
+  // This will hold the list of staff members once we fetch it from the server
   let STAFF = [];
+
+  // Colors used for the little circle avatars when a staff member has no photo
   const AVATAR_COLORS = ['#9F4A71','#005A01','#8BC24A','#12233F','#008001','#6B7A94'];
 
+  // Small SVG icons used in the "Getting there" step-by-step directions
   const ICONS = {
     building: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22v-4h6v4M9 6h.01M9 10h.01M9 14h.01M15 6h.01M15 10h.01M15 14h.01"/></svg>',
     stairs: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20h4v-4h4v-4h4V8h4V4"/></svg>',
@@ -412,16 +642,22 @@
     door: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="1"/><circle cx="14.5" cy="12" r="1" fill="currentColor" stroke="none"/></svg>'
   };
 
+  // Turns a full name into 2-letter initials for the avatar circle
+  // Example: "Dr. John Smith" -> "JS"
   function initials(name){
     const parts = (name || "UDUS Staff").replace(/^(Dr\.|Prof\.|Mr\.|Mrs\.)\s*/i, '').trim().split(' ');
     return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
   }
 
+  // Gets the live list of active staff from the Django backend (JSON API)
   async function fetchLiveDirectory() {
       try {
           const response = await fetch('/api/directory/');
           const data = await response.json();
+
+          // Sort staff alphabetically by name (A to Z)
           STAFF = data.staff.sort((a, b) => a.name.localeCompare(b.name));
+
           renderGrid();
       } catch (error) {
           console.error("Error fetching directory:", error);
@@ -429,29 +665,49 @@
       }
   }
 
+  // Grab the main page elements we'll need to update
   const grid = document.getElementById('staffGrid');
   const resultsCount = document.getElementById('resultsCount');
   const searchInput = document.getElementById('searchInput');
   const clearBtn = document.getElementById('clearBtn');
+
+  // Keeps track of the current filter and search text
   let activeUnit = 'all';
   let query = '';
 
-  function renderGrid(){
-    const filtered = STAFF.filter(s => {
-      const unitMatch = activeUnit === 'all' || s.unit === activeUnit;
-      const q = query.trim().toLowerCase();
-      const matchString = (s.name + " " + s.courses_taught + " " + s.research_interests).toLowerCase();
-      const qMatch = !q || matchString.includes(q);
-      return unitMatch && qMatch;
-    });
+  // Return the staff records that match the current search and unit filter.
+  function getFilteredStaff() {
+    const searchText = query.trim().toLowerCase();
 
+    return STAFF.filter(staff => {
+      const unitMatches = activeUnit === 'all' || staff.unit === activeUnit;
+      const searchableText = (
+        staff.name + ' ' + staff.courses_taught + ' ' + staff.research_interests
+      ).toLowerCase();
+      const searchMatches = !searchText || searchableText.includes(searchText);
+
+      return unitMatches && searchMatches;
+    });
+  }
+
+  // Draws all the lecturer cards on the page, based on the
+  // current search text and selected unit filter
+  function renderGrid(){
+    const filtered = getFilteredStaff();
+
+    // Update the "X lecturers" counter text
     resultsCount.textContent = `${filtered.length} lecturer${filtered.length!==1?'s':''}`;
 
+    // Build the HTML for every matching staff card
     grid.innerHTML = filtered.map((s, index) => {
+
+      // Use the uploaded profile photo if there is one,
+      // otherwise show a colored circle with the person's initials
       let avatarHTML = `<div class="avatar" style="background:${AVATAR_COLORS[index % AVATAR_COLORS.length]}">${initials(s.name)}</div>`;
       if (s.profile_image) {
           avatarHTML = `<div class="avatar"><img src="${s.profile_image}" style="width:100%; height:100%; object-fit:cover;"></div>`;
       }
+
       return `
       <div class="staff-card">
         <div class="staff-top">
@@ -471,16 +727,33 @@
     }).join('') || `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-muted);font-weight:500;">No lecturers match your search.</div>`;
   }
 
-  searchInput.addEventListener('input', e=>{ query = e.target.value; clearBtn.style.display = query ? 'flex' : 'none'; renderGrid(); });
-  clearBtn.addEventListener('click', ()=>{ searchInput.value = ''; query=''; clearBtn.style.display='none'; renderGrid(); });
+  // Re-draw the grid every time the user types in the search box
+  searchInput.addEventListener('input', e=>{
+    query = e.target.value;
+    clearBtn.style.display = query ? 'flex' : 'none';
+    renderGrid();
+  });
+
+  // Clear the search box when the "X" button is clicked
+  clearBtn.addEventListener('click', ()=>{
+    searchInput.value = '';
+    query='';
+    clearBtn.style.display='none';
+    renderGrid();
+  });
+
+  // Switch the active unit filter when a filter chip is clicked
   document.getElementById('filterChips').addEventListener('click', e=>{
     const chip = e.target.closest('.chip');
     if(!chip) return;
+
     document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
     chip.classList.add('active');
     activeUnit = chip.dataset.unit;
     renderGrid();
   });
+
+  // Open the details drawer when a "View Profile & Directions" button is clicked
   grid.addEventListener('click', e=>{
     const btn = e.target.closest('[data-id]');
     if(!btn) return;
@@ -490,17 +763,18 @@
   const overlay = document.getElementById('overlay');
   const drawer = document.getElementById('drawer');
 
+  // Fills in and opens the side drawer with one staff member's full details
   function openDrawer(id){
     const s = STAFF.find(x => x.id === id);
     if(!s) return;
 
-    // 1. Setup Profile Header & Tags
+    // 1. Set up the profile photo, name, rank, and research tags
     let avatarHTML = `<div class="drawer-photo" style="background:var(--udus-dark-green)">${initials(s.name)}</div>`;
     if (s.profile_image) {
         avatarHTML = `<div class="drawer-photo"><img src="${s.profile_image}" style="width:100%; height:100%; object-fit:cover;"></div>`;
     }
-    
-    // Parse Research Tags
+
+    // Split the research interests text into separate tag pills
     const tagsArray = s.research_interests ? s.research_interests.split(',').map(t => t.trim()).filter(t=>t) : [];
     const tagsHTML = tagsArray.map(tag => `<span class="drawer-tag">${tag}</span>`).join('');
 
@@ -513,7 +787,7 @@
       </div>
     `;
 
-    // 2. Setup Dark Pathway Card (School Colors)
+    // 2. Build the "Getting there" step-by-step directions card
     let pathwaySteps = [];
     if(s.building) pathwaySteps.push({ icon: "building", label: "Enter via", value: s.building, code: s.building.substring(0, 7).toUpperCase() });
     if(s.floor) pathwaySteps.push({ icon: "stairs", label: "Take the stairs to", value: s.floor, code: "LEVEL 0" + s.floor.replace(/\D/g,'') });
@@ -536,14 +810,14 @@
       </div>
     `).join('');
 
-    // 3. Office Hours Format (Dynamic)
+    // 3. Build the Office Hours list (one row per line of text entered by the lecturer)
     let officeHoursHTML = '';
     if (s.working_hours) {
          const lines = s.working_hours.split('\n').map(l => l.trim()).filter(l => l);
          officeHoursHTML = lines.map(line => {
              const parts = line.split(':');
-             const day = parts.shift().trim(); // Gets "Mon"
-             const time = parts.join(':').trim(); // Gets "10:00 - 12:00"
+             const day = parts.shift().trim();       // Gets "Mon"
+             const time = parts.join(':').trim();    // Gets "10:00 - 12:00"
              return `<div class="oh-row"><span class="oh-day">${day}</span><span class="oh-time mono">${time}</span></div>`;
          }).join('');
     } else {
@@ -551,10 +825,11 @@
     }
     document.getElementById('officeHours').innerHTML = officeHoursHTML;
 
-    // 4. Setup Courses Split formatting (Pill + Text)
+    // 4. Build the Courses Taught list, splitting each entry into
+    //    a course code pill (e.g. "CMP 401") and the course name
     const courseArray = s.courses_taught ? s.courses_taught.split(',').map(c => c.trim()).filter(c=>c) : [];
     document.getElementById('coursesTaught').innerHTML = courseArray.map(course => {
-      // Split "CMP 401 Machine Learning" into "CMP 401" and "Machine Learning"
+      // Try to split "CMP 401 Machine Learning" into "CMP 401" and "Machine Learning"
       const match = course.match(/^([a-zA-Z]{3}\s*\d{3})\s+(.*)/i);
       if (match) {
         return `<div class="course-row"><span class="course-code2">${match[1].toUpperCase()}</span><span class="course-name2">${match[2]}</span></div>`;
@@ -562,30 +837,49 @@
       return `<div class="course-row"><span class="course-code2">${course}</span></div>`;
     }).join('') || `<div style="font-size:14px; color:var(--text-muted);">No courses listed.</div>`;
 
-    // 5. Communication Buttons
+    // 5. Show/hide and wire up the Email and WhatsApp buttons
     const emailBtn = document.getElementById('emailBtn');
     const waBtn = document.getElementById('waBtn');
-    
-    if(s.email) { emailBtn.style.display = 'flex'; emailBtn.onclick = () => window.location.href = `mailto:${s.email}`; } 
-    else { emailBtn.style.display = 'none'; }
+
+    if(s.email) {
+      emailBtn.style.display = 'flex';
+      emailBtn.onclick = () => window.location.href = `mailto:${s.email}`;
+    } else {
+      emailBtn.style.display = 'none';
+    }
 
     if(s.whatsapp) {
         waBtn.style.display = 'flex';
+
+        // Clean up the phone number and convert a leading "0" into Nigeria's "234" country code
         let cleanNumber = s.whatsapp.replace(/[^0-9]/g, '');
         if (cleanNumber.startsWith('0')) { cleanNumber = '234' + cleanNumber.substring(1); }
-        waBtn.onclick = () => window.open(`https://wa.me/${cleanNumber}`, '_blank');
-    } else { waBtn.style.display = 'none'; }
 
+        waBtn.onclick = () => window.open(`https://wa.me/${cleanNumber}`, '_blank');
+    } else {
+        waBtn.style.display = 'none';
+    }
+
+    // Finally, slide the drawer into view and lock page scrolling
     overlay.classList.add('open');
     drawer.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
 
-  function closeDrawer(){ overlay.classList.remove('open'); drawer.classList.remove('open'); document.body.style.overflow = ''; }
+  // Closes the drawer and restores normal page scrolling
+  function closeDrawer(){
+    overlay.classList.remove('open');
+    drawer.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
   overlay.addEventListener('click', closeDrawer);
   document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+
+  // Also allow closing the drawer by pressing the Escape key
   document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeDrawer(); });
 
+  // Load the staff directory as soon as the page runs this script
   fetchLiveDirectory();
 </script>
 </body>
