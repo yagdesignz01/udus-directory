@@ -214,6 +214,7 @@ loadProfileData();
 
 // Save the changed profile information.
 document.getElementById('publishBtn')?.addEventListener('click', async () => {
+    event.preventDefault();
     const formData = new FormData();
 
     // Add the text fields to the form data.

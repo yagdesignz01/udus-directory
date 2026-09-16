@@ -210,7 +210,10 @@ def lecturer_profile(request, staff_id):
             staff.profile_image = request.FILES['profile_image']
 
         staff.save()
-        return JsonResponse({"message": "Profile updated successfully!"})
+        return JsonResponse({
+         "success": True, 
+         "message": "Profile updated successfully!"
+        })
 
 
 # ==========================================
