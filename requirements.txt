@@ -1,6 +1,7 @@
-Django>=6.1,<6.2
-gunicorn>=23.0
-whitenoise>=6.9
-dj-database-url>=3.0
-psycopg[binary]>=3.2
-Pillow>=11.0
+asgiref==3.12.1
+Django==6.1
+pillow==12.3.0
+psycopg2-binary==2.9.12
+sqlparse==0.6.0
+tzdata==2026.3
+whitenoise==6.12.0
