@@ -1,11 +1,9 @@
 const currentStaffId = localStorage.getItem('currentStaffId');
 
-// Send the user back to login when no staff ID is stored.
 if (!currentStaffId) {
     window.location.replace('/lecturer-login/');
 }
 
-// Remove the saved staff ID and return to the login page.
 function handleLogout() {
     localStorage.removeItem('currentStaffId');
     window.location.href = '/lecturer-login/';
@@ -18,7 +16,6 @@ document.getElementById('discardBtn')?.addEventListener('click', () => {
     window.location.reload();
 });
 
-// Scroll to a dashboard section when a sidebar link is clicked.
 document.querySelectorAll('.nav-link[data-target]').forEach(link => {
     link.addEventListener('click', () => {
         document.querySelectorAll('.nav-link[data-target]').forEach(sidebarLink => {
@@ -43,12 +40,10 @@ document.querySelectorAll('.nav-link[data-target]').forEach(link => {
     });
 });
 
-// Open the hidden file input when the upload button is clicked.
 document.getElementById('uploadTriggerBtn')?.addEventListener('click', () => {
     document.getElementById('imageUpload')?.click();
 });
 
-// Show a preview when a new profile image is selected.
 document.getElementById('imageUpload')?.addEventListener('change', function() {
     if (this.files && this.files[0]) {
         const reader = new FileReader();
@@ -69,7 +64,6 @@ document.getElementById('imageUpload')?.addEventListener('change', function() {
     }
 });
 
-// These elements are used to add and remove course chips.
 const tagShell = document.getElementById('tagShell');
 const tagInput = document.getElementById('tagInput');
 
@@ -84,7 +78,6 @@ function addChip(value) {
     tagInput.value = '';
 }
 
-// Show the same profile image in the main preview and the sidebar avatar.
 function showProfileImage(imageUrl, displayPhoto, sidebarAvatar) {
     const imageHTML = `<img src="${imageUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;">`;
 
@@ -97,7 +90,6 @@ function showProfileImage(imageUrl, displayPhoto, sidebarAvatar) {
     }
 }
 
-// Show initials when the lecturer has not uploaded a profile image.
 function showProfileInitials(name, displayPhoto, sidebarAvatar) {
     const safeName = name || 'User';
 
@@ -120,14 +112,11 @@ function showProfileInitials(name, displayPhoto, sidebarAvatar) {
     }
 }
 
-// Put the profile values into the matching HTML input fields.
 function fillProfileFields(profileData) {
-    // Match each HTML input ID with the value from the server.
     const profileFields = {
         profName: profileData.name,
-        profRank: profileData.rank,
+        profTitle: profileData.title,
         profQual: profileData.highest_qualification,
-        profResearch: profileData.research_interests,
         profBuilding: profileData.building,
         profFloor: profileData.floor,
         profOffice: profileData.office_number,
@@ -161,7 +150,18 @@ tagShell?.addEventListener('click', event => {
     }
 });
 
-// Load the current lecturer profile from the server.
+document.getElementById('otherSpecCheckbox')?.addEventListener('change', function() {
+    const otherInput = document.getElementById('otherSpecInput');
+    if(otherInput) {
+        otherInput.disabled = !this.checked;
+        if (this.checked) {
+            otherInput.focus();
+        } else {
+            otherInput.value = '';
+        }
+    }
+});
+
 async function loadProfileData() {
     if (!currentStaffId) return;
 
@@ -170,14 +170,37 @@ async function loadProfileData() {
         const data = await response.json();
 
         if (response.ok) {
-            // Update the lecturer name and rank in the sidebar.
             const nameEl = document.querySelector('.sidebar-profile .name');
-            const rankEl = document.querySelector('.sidebar-profile .rank');
+            const titleEl = document.getElementById('sidebarTitle');
 
             if (nameEl) nameEl.textContent = data.name;
-            if (rankEl) rankEl.textContent = `${data.rank} · ${data.unit}`;
+            if (titleEl) titleEl.textContent = data.title || 'Academic Staff';
 
             fillProfileFields(data);
+
+            if (data.research_interests) {
+                const specs = data.research_interests.split(',').map(s => s.trim());
+                const checkboxes = document.querySelectorAll('#specializationCheckboxes input[type="checkbox"]');
+                const otherInput = document.getElementById('otherSpecInput');
+                const otherCheckbox = document.getElementById('otherSpecCheckbox');
+
+                specs.forEach(spec => {
+                    let matched = false;
+                    checkboxes.forEach(cb => {
+                        if (cb.value !== 'Other' && cb.value.toLowerCase() === spec.toLowerCase()) {
+                            cb.checked = true;
+                            matched = true;
+                        }
+                    });
+                    if (!matched && spec !== '') {
+                        if(otherCheckbox) otherCheckbox.checked = true;
+                        if(otherInput) {
+                            otherInput.disabled = false;
+                            otherInput.value = spec;
+                        }
+                    }
+                });
+            }
 
             const displayPhoto = document.getElementById('displayPhoto');
             const sidebarAvatar = document.querySelector('.sidebar-avatar');
@@ -209,17 +232,168 @@ async function loadProfileData() {
     }
 }
 
-// Start loading the profile immediately.
 loadProfileData();
 
-// Save the changed profile information.
-document.getElementById('publishBtn')?.addEventListener('click', async () => {
+// --- VALIDATION & SAVE LOGIC ---
+const emailInput = document.getElementById('profEmail');
+const emailError = document.getElementById('emailError');
+const phoneInput = document.getElementById('profWhatsapp');
+const phoneError = document.getElementById('phoneError');
+const otherInput = document.getElementById('otherSpecInput');
+const otherError = document.getElementById('otherSpecError');
+const publishBtn = document.getElementById('publishBtn');
+
+function validateContactInfo() {
+    let isValid = true;
+    
+    // Email Validation
+    const emailVal = emailInput?.value.trim().toLowerCase() || '';
+    if (emailVal !== '' && !emailVal.endsWith('@udusok.edu.ng')) {
+        if(emailError) emailError.style.display = 'block';
+        isValid = false;
+    } else {
+        if(emailError) emailError.style.display = 'none';
+    }
+
+    // Phone Validation
+    const phoneVal = phoneInput?.value.trim() || '';
+    const phoneRegex = /^\+?[0-9\s\-]+$/;
+    if (phoneVal !== '' && !phoneRegex.test(phoneVal)) {
+        if(phoneError) phoneError.style.display = 'block';
+        isValid = false;
+    } else {
+        if(phoneError) phoneError.style.display = 'none';
+    }
+
+    // --- PASSWORD STRENGTH LOGIC ---
+    const passwordInput = document.getElementById('profPassword');
+    const strengthContainer = document.getElementById('passwordStrengthContainer');
+    const strengthBar = document.getElementById('passwordStrengthBar');
+    const strengthLabel = document.getElementById('strengthLabel');
+
+    passwordInput?.addEventListener('input', function() {
+    const val = this.value;
+    
+    // Hide the bar if the password field is empty
+    if (val.length === 0) {
+        strengthContainer.style.display = 'none';
+        return;
+    }
+
+    strengthContainer.style.display = 'block';
+
+    // Calculate points based on complexity
+    let score = 0;
+    if (val.length >= 8) score++; // Good length
+    if (/[a-z]/.test(val)) score++; // Has lowercase
+    if (/[A-Z]/.test(val)) score++; // Has uppercase
+    if (/[0-9]/.test(val)) score++; // Has number
+    if (/[^A-Za-z0-9]/.test(val)) score++; // Has special character
+
+    let strengthText = 'Weak';
+    let barColor = '#D32F2F'; // Red
+    let barWidth = '33%';
+
+    if (score >= 4 && val.length >= 8) {
+        strengthText = 'Great';
+        barColor = 'var(--udus-dgreen)'; // UDUS Green
+        barWidth = '100%';
+    } else if (score >= 3 && val.length >= 6) {
+        strengthText = 'Good';
+        barColor = '#F59E0B'; // Orange
+        barWidth = '66%';
+    }
+
+    // Update the UI
+    strengthBar.style.width = barWidth;
+    strengthBar.style.backgroundColor = barColor;
+    strengthLabel.textContent = strengthText;
+    strengthLabel.style.color = barColor;
+    });
+    
+    // "Other" Specialization Validation
+    const otherVal = otherInput?.value.trim() || '';
+    const nameRegex = /^[A-Za-z\s']+$/; // Letters, spaces, apostrophes only
+    if (otherInput && !otherInput.disabled && otherVal !== '' && !nameRegex.test(otherVal)) {
+        if(otherError) otherError.style.display = 'block';
+        isValid = false;
+    } else {
+        if(otherError) otherError.style.display = 'none';
+    }
+
+    // Lock Submit Button if anything is invalid
+    if (publishBtn) {
+        if (!isValid) {
+            publishBtn.disabled = true;
+            publishBtn.style.opacity = '0.5';
+        } else {
+            publishBtn.disabled = false;
+            publishBtn.style.opacity = '1';
+        }
+    }
+    
+    return isValid;
+}
+
+// Trigger checks in real-time as the lecturer types
+emailInput?.addEventListener('input', validateContactInfo);
+phoneInput?.addEventListener('input', validateContactInfo);
+otherInput?.addEventListener('input', validateContactInfo);
+
+// Re-check validation when the checkbox is toggled
+document.getElementById('otherSpecCheckbox')?.addEventListener('change', function() {
+    if(otherInput) {
+        otherInput.disabled = !this.checked;
+        if (this.checked) {
+            otherInput.focus();
+        } else {
+            otherInput.value = '';
+        }
+    }
+    validateContactInfo();
+});
+
+document.getElementById('publishBtn')?.addEventListener('click', async (event) => {
     event.preventDefault();
+    
+    if (!validateContactInfo()) {
+        Swal.fire({
+            title: 'Validation Error',
+            text: 'Please fix the errors in your inputs before saving.',
+            icon: 'error',
+            confirmButtonColor: '#D32F2F',
+            borderRadius: '12px'
+        });
+        return;
+    }
+
     const formData = new FormData();
 
-    // Add the text fields to the form data.
+    const selectedTitle = document.getElementById('profTitle')?.value;
+    if (!selectedTitle) {
+        Swal.fire({
+            title: 'Action Required',
+            text: 'Please select your Academic Title before saving.',
+            icon: 'warning',
+            confirmButtonColor: '#9F4A71',
+            borderRadius: '12px'
+        });
+        return;
+    }
+
+    const selectedSpecs = [];
+    document.querySelectorAll('#specializationCheckboxes input[type="checkbox"]:checked').forEach(cb => {
+        if (cb.value === 'Other') {
+            const otherVal = document.getElementById('otherSpecInput')?.value.trim();
+            if (otherVal) selectedSpecs.push(otherVal.replace(/,/g, '')); // Strip commas to protect database format
+        } else {
+            selectedSpecs.push(cb.value);
+        }
+    });
+
+    formData.append('title', selectedTitle);
     formData.append('highest_qualification', document.getElementById('profQual')?.value || '');
-    formData.append('research_interests', document.getElementById('profResearch')?.value || '');
+    formData.append('research_interests', selectedSpecs.join(', '));
     formData.append('building', document.getElementById('profBuilding')?.value || '');
     formData.append('floor', document.getElementById('profFloor')?.value || '');
     formData.append('office_number', document.getElementById('profOffice')?.value || '');
@@ -254,7 +428,6 @@ document.getElementById('publishBtn')?.addEventListener('click', async () => {
                 statusText.innerHTML = '<span class="dot" style="background:var(--udus-dark-green)"></span> All changes published';
             }
 
-            // Clear the password box after a successful save.
             const pwBox = document.getElementById('profPassword');
             if (pwBox) pwBox.value = '';
 
@@ -269,8 +442,8 @@ document.getElementById('publishBtn')?.addEventListener('click', async () => {
             loadProfileData();
         } else {
             Swal.fire({
-                title: 'Access Denied',
-                text: 'Invalid Staff ID or Password',
+                title: 'Save Failed',
+                text: 'There was an issue updating your profile.',
                 icon: 'error',
                 confirmButtonColor: '#D32F2F',
                 borderRadius: '12px'

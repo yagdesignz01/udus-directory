@@ -24,11 +24,10 @@ class AcademicStaff(models.Model):
     # These basic details are entered by the administrator.
     staff_id = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=200)
-    rank = models.CharField(max_length=100)
-    unit = models.CharField(max_length=100)
     status = models.CharField(max_length=50, default='Active')
 
     # These details can be completed by the lecturer.
+    title = models.CharField(max_length=100, blank=True, null=True) # Moved here and made optional for Admin
     password = models.CharField(max_length=128, blank=True)
     profile_image = models.ImageField(upload_to=profile_image_path, null=True, blank=True)
     highest_qualification = models.CharField(max_length=200, blank=True, null=True)
@@ -38,7 +37,10 @@ class AcademicStaff(models.Model):
     floor = models.CharField(max_length=100, blank=True, null=True)
     office_number = models.CharField(max_length=100, blank=True, null=True)
     guidance = models.TextField(blank=True, null=True)
-    email = models.EmailField(blank=True, null=True)
+    
+    # Added unique=True per supervisor feedback while safely keeping staff_id logic intact
+    email = models.EmailField(blank=True, null=True, unique=True)
+    
     whatsapp = models.CharField(max_length=50, blank=True, null=True)
     working_hours = models.TextField(blank=True, null=True)
 

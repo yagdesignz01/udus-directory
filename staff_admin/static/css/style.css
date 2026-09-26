@@ -1,16 +1,18 @@
-/* Shared colours, sizes, and shadows used by the admin dashboard. */
+/* ==========================================
+   GLOBAL COLORS, SHADOWS, AND BASIC STYLES
+========================================== */
 :root {
-  --navy-900:#0B1B33;
-  --navy-800:#12233F;
-  --navy-700:#16294A;
-  --navy-500:#33415C;
-  --slate-400:#6B7A94;
-  --slate-300:#95A2B8;
-  --surface:#F5F6F9;
-  --surface-alt:#EEF1F5;
-  --white:#FFFFFF;
-  --hairline:#E4E7EE;
-  --gold:#C6A15B;
+  --navy-900: #0B1B33;
+  --navy-800: #12233F;
+  --navy-700: #16294A;
+  --navy-500: #33415C;
+  --slate-400: #6B7A94;
+  --slate-300: #95A2B8;
+  --surface: #F5F6F9;
+  --surface-alt: #EEF1F5;
+  --white: #FFFFFF;
+  --hairline: #E4E7EE;
+  --gold: #C6A15B;
 
   --green: #1D9A6C;
   --green-bg: #E5F5EE;
@@ -29,10 +31,9 @@
   --radius-lg: 18px;
   --radius-md: 12px;
   --radius-sm: 8px;
-  --shadow-card: 0 1px 2px rgba(11,27,51,0.04), 0 8px 24px -14px rgba(11,27,51,0.14);
+  --shadow-card: 0 1px 2px rgba(11, 27, 51, 0.04), 0 8px 24px -14px rgba(11, 27, 51, 0.14);
 }
 
-/* Give all elements predictable sizing. */
 * {
   box-sizing: border-box;
 }
@@ -50,7 +51,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Reuse the page font in controls and links. */
 button {
   font-family: inherit;
   cursor: pointer;
@@ -60,17 +60,33 @@ a {
   text-decoration: none;
   color: inherit;
 }
+
 .mono {
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* The shell places the sidebar beside the main dashboard content. */
+/* ==========================================
+   DASHBOARD LAYOUT
+========================================== */
 .shell {
   display: flex;
   min-height: 100vh;
 }
 
-/* The sidebar contains the brand, navigation links, and admin account. */
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  padding: 26px 32px 60px;
+}
+
+/* ==========================================
+   SIDEBAR
+========================================== */
 .sidebar {
   width: 252px;
   flex-shrink: 0;
@@ -83,80 +99,164 @@ a {
   height: 100vh;
 }
 
-/* Brand area at the top of the sidebar. */
 .sidebar-brand {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 22px 20px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
-.brand-mark{
+
+.brand-mark {
   width: 34px;
   height: 34px;
   display: flex;
 }
 
-.brand-copy{line-height:1.2;}
-.brand-copy .l1{font-size:13.5px; font-weight:800; color:var(--white);}
-.brand-copy .l2{font-size:10.5px; font-weight:600; color:rgba(255,255,255,0.45); text-transform:uppercase; letter-spacing:.07em;}
+.brand-copy {
+  line-height: 1.2;
+}
 
-/* Navigation links fill the space between the brand and footer. */
+.brand-copy .l1 {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--white);
+}
+
+.brand-copy .l2 {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
 .nav-group {
   padding: 16px 12px;
   flex: 1;
 }
-.nav-label{
-  font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
-  color:rgba(255,255,255,0.32); padding:6px 10px 10px;
-}
-.nav-link{
-  display:flex; align-items:center; gap:11px;
-  padding:10px 12px; border-radius:10px; margin-bottom:2px;
-  font-size:13.5px; font-weight:600; color:rgba(255,255,255,0.68);
-  transition:background .15s ease, color .15s ease;
-}
-.nav-link svg{flex-shrink:0; opacity:.85;}
-.nav-link:hover{ background:rgba(255,255,255,0.06); color:var(--white); }
-.nav-link.active{
-  background:rgba(198,161,91,0.14); color:var(--white);
-  box-shadow:inset 3px 0 0 var(--gold);
-}
-.nav-link.active svg{color:var(--gold); opacity:1;}
-.nav-badge{
-  margin-left:auto; font-size:10.5px; font-weight:700; font-family:'JetBrains Mono',monospace;
-  background:var(--amber); color:#2A1A03; padding:1px 6px; border-radius:6px;
+
+.nav-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.32);
+  padding: 6px 10px 10px;
 }
 
-.sidebar-footer{
-  padding:14px 16px 18px; border-top:1px solid rgba(255,255,255,0.08);
-  display:flex; align-items:center; gap:10px;
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 2px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.68);
+  transition: background 0.15s ease, color 0.15s ease;
 }
-.admin-avatar{
-  width:36px;height:36px;border-radius:10px; flex-shrink:0;
-  background:linear-gradient(135deg, var(--gold), #8A6A1B);
-  display:flex;align-items:center;justify-content:center;
-  font-weight:800; font-size:13px; color:var(--navy-900); font-family:'JetBrains Mono',monospace;
-}
-.admin-meta{flex:1; min-width:0; line-height:1.25;}
-.admin-name{font-size:13px; font-weight:700; color:var(--white); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.admin-role{font-size:10.5px; font-weight:700; color:var(--gold); text-transform:uppercase; letter-spacing:.05em;}
-.logout-btn{
-  width:32px; height:32px; border-radius:9px; flex-shrink:0;
-  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
-  display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.6);
-}
-.logout-btn:hover{ background:rgba(192,69,58,0.25); color:#F3B4AE; }
 
-/* Main area beside the sidebar. */
-.main {
+.nav-link svg {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--white);
+}
+
+.nav-link.active {
+  background: rgba(198, 161, 91, 0.14);
+  color: var(--white);
+  box-shadow: inset 3px 0 0 var(--gold);
+}
+
+.nav-link.active svg {
+  color: var(--gold);
+  opacity: 1;
+}
+
+.nav-badge {
+  margin-left: auto;
+  font-size: 10.5px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--amber);
+  color: #2A1A03;
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+
+.sidebar-footer {
+  padding: 14px 16px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--gold), #8A6A1B);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--navy-900);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.admin-meta {
   flex: 1;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
+  line-height: 1.25;
 }
 
-/* The top bar stays visible while the admin scrolls. */
+.admin-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-role {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.logout-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.logout-btn:hover {
+  background: rgba(192, 69, 58, 0.25);
+  color: #F3B4AE;
+}
+
+/* ==========================================
+   TOP BAR
+========================================== */
 .topbar {
   background: var(--white);
   border-bottom: 1px solid var(--hairline);
@@ -184,7 +284,6 @@ a {
   margin-top: 2px;
 }
 
-/* Search box used to find staff by name or ID. */
 .topbar-search {
   flex: 1;
   max-width: 420px;
@@ -196,28 +295,59 @@ a {
   border-radius: 11px;
   padding: 9px 13px;
 }
-.topbar-search svg{color:var(--slate-300); flex-shrink:0;}
-.topbar-search input{
-  border:none; outline:none; background:transparent; flex:1; font-size:13.5px; font-weight:500; color:var(--navy-900);
-}
-.topbar-search input::placeholder{color:var(--slate-300);}
 
-.topbar-actions{display:flex; align-items:center; gap:10px;}
-.bell-btn{
-  position:relative; width:38px;height:38px;border-radius:10px;
-  border:1px solid var(--hairline); background:var(--white); color:var(--navy-500);
-  display:flex;align-items:center;justify-content:center;
-}
-.bell-dot{
-  position:absolute; top:8px; right:8px; width:7px;height:7px;border-radius:50%;
-  background:var(--red); border:1.5px solid var(--white);
+.topbar-search svg {
+  color: var(--slate-300);
+  flex-shrink: 0;
 }
 
-.content {
-  padding: 26px 32px 60px;
+.topbar-search input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--navy-900);
 }
 
-/* ---------- Summary metric cards ---------- */
+.topbar-search input::placeholder {
+  color: var(--slate-300);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bell-btn {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--hairline);
+  background: var(--white);
+  color: var(--navy-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bell-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+  border: 1.5px solid var(--white);
+}
+
+/* ==========================================
+   METRIC CARDS
+========================================== */
 .metrics {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -256,7 +386,7 @@ a {
   font-weight: 700;
   color: var(--slate-400);
   text-transform: uppercase;
-  letter-spacing: .05em;
+  letter-spacing: 0.05em;
 }
 
 .metric-value {
@@ -270,6 +400,7 @@ a {
   font-size: 12px;
   font-weight: 600;
 }
+
 .metric-sub.up {
   color: var(--green);
 }
@@ -282,7 +413,9 @@ a {
   color: var(--slate-400);
 }
 
-/* ---------- Staff table card ---------- */
+/* ==========================================
+   STAFF TABLE AND TOOLBAR
+========================================== */
 .table-card {
   background: var(--white);
   border: 1px solid var(--hairline);
@@ -291,7 +424,6 @@ a {
   overflow: hidden;
 }
 
-/* The toolbar contains unit filters and action buttons. */
 .table-toolbar {
   display: flex;
   align-items: center;
@@ -321,22 +453,21 @@ a {
   display: flex;
   align-items: center;
   gap: 7px;
-  transition: all .15s ease;
+  transition: all 0.15s ease;
 }
+
 .unit-tab .count {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
-  opacity: .75;
+  opacity: 0.75;
 }
 
-/* The active tab is shown with a white background. */
 .unit-tab.active {
   background: var(--white);
   color: var(--navy-900);
   box-shadow: var(--shadow-card);
 }
 
-/* Keep the export and add buttons together. */
 .toolbar-right {
   display: flex;
   align-items: center;
@@ -377,7 +508,6 @@ a {
   background: var(--navy-700);
 }
 
-/* Basic table layout. */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -388,7 +518,7 @@ thead th {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .06em;
+  letter-spacing: 0.06em;
   color: var(--slate-400);
   padding: 13px 20px;
   background: var(--surface);
@@ -398,7 +528,7 @@ thead th {
 
 tbody tr {
   border-bottom: 1px solid var(--hairline);
-  transition: background .12s ease;
+  transition: background 0.12s ease;
 }
 
 tbody tr:last-child {
@@ -415,14 +545,12 @@ td {
   vertical-align: middle;
 }
 
-/* Keep the staff photo and text next to each other. */
 .staff-cell {
   display: flex;
   align-items: center;
   gap: 11px;
 }
 
-/* Show initials when a staff photo is not available. */
 .staff-thumb {
   width: 38px;
   height: 38px;
@@ -450,7 +578,6 @@ td {
   margin-top: 1px;
 }
 
-/* Style the academic rank shown in the table. */
 .rank-text {
   color: var(--navy-500);
   font-weight: 500;
@@ -472,21 +599,60 @@ td {
   border-radius: 50%;
 }
 
-.badge-cs{ background:var(--unit-cs-bg); color:var(--unit-cs-text); }
-.badge-cs .dot{ background:var(--unit-cs-text); }
-.badge-se{ background:var(--unit-se-bg); color:var(--unit-se-text); }
-.badge-se .dot{ background:var(--unit-se-text); }
-.badge-cyb{ background:var(--unit-cyb-bg); color:var(--unit-cyb-text); }
-.badge-cyb .dot{ background:var(--unit-cyb-text); }
+.badge-cs {
+  background: var(--unit-cs-bg);
+  color: var(--unit-cs-text);
+}
 
-.status-active{ background:var(--green-bg); color:var(--green); }
-.status-active .dot{ background:var(--green); }
-.status-pending{ background:var(--amber-bg); color:var(--amber); }
-.status-pending .dot{ background:var(--amber); }
-.status-suspended{ background:var(--red-bg); color:var(--red); }
-.status-suspended .dot{ background:var(--red); }
+.badge-cs .dot {
+  background: var(--unit-cs-text);
+}
 
-/* Keep the edit and delete buttons beside each other. */
+.badge-se {
+  background: var(--unit-se-bg);
+  color: var(--unit-se-text);
+}
+
+.badge-se .dot {
+  background: var(--unit-se-text);
+}
+
+.badge-cyb {
+  background: var(--unit-cyb-bg);
+  color: var(--unit-cyb-text);
+}
+
+.badge-cyb .dot {
+  background: var(--unit-cyb-text);
+}
+
+.status-active {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.status-active .dot {
+  background: var(--green);
+}
+
+.status-pending {
+  background: var(--amber-bg);
+  color: var(--amber);
+}
+
+.status-pending .dot {
+  background: var(--amber);
+}
+
+.status-suspended {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.status-suspended .dot {
+  background: var(--red);
+}
+
 .actions-cell {
   display: flex;
   align-items: center;
@@ -503,7 +669,7 @@ td {
   align-items: center;
   justify-content: center;
   color: var(--slate-400);
-  transition: all .12s ease;
+  transition: all 0.12s ease;
 }
 
 .action-btn:hover {
@@ -517,7 +683,6 @@ td {
   border-color: #F0C6C1;
 }
 
-/* Footer below the staff table. */
 .table-footer {
   display: flex;
   align-items: center;
@@ -553,64 +718,122 @@ td {
   border-color: var(--navy-900);
 }
 
-.empty-row td{
-  text-align:center; padding:52px 20px; color:var(--slate-400); font-weight:500; font-size:13.5px;
+.empty-row td {
+  text-align: center;
+  padding: 52px 20px;
+  color: var(--slate-400);
+  font-weight: 500;
+  font-size: 13.5px;
 }
-
-/* ---------- Modal Styles ---------- */
-.modal-overlay {
-  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(11, 27, 51, 0.6); backdrop-filter: blur(4px);
-  display: none; align-items: center; justify-content: center; z-index: 100;
-}
-.modal-box {
-  background: var(--white); padding: 30px; border-radius: var(--radius-lg);
-  width: 100%; max-width: 400px; box-shadow: var(--shadow-card);
-}
-.modal-box h3 { margin-top: 0; margin-bottom: 20px; font-weight: 800; }
-.modal-box input, .modal-box select {
-  width: 100%; padding: 12px; margin-bottom: 15px; border-radius: var(--radius-sm);
-  border: 1px solid var(--hairline); font-family: 'Inter', sans-serif;
-}
-.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
-.cancel-btn { padding: 10px 15px; border: 1px solid var(--hairline); background: transparent; border-radius: var(--radius-sm); font-weight: 600; }
-.save-btn { padding: 10px 15px; border: none; background: var(--navy-900); color: var(--white); border-radius: var(--radius-sm); font-weight: 600; }
 
 /* ==========================================
-   MASSIVE 3 DASHBOARD GRID
+   MODAL STYLES
+========================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(11, 27, 51, 0.6);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-box {
+  background: var(--white);
+  padding: 30px;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-card);
+}
+
+.modal-box h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: 800;
+}
+
+.modal-box input,
+.modal-box select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--hairline);
+  font-family: 'Inter', sans-serif;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cancel-btn {
+  padding: 10px 15px;
+  border: 1px solid var(--hairline);
+  background: transparent;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.save-btn {
+  padding: 10px 15px;
+  border: none;
+  background: var(--navy-900);
+  color: var(--white);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+/* ==========================================
+   THREE-COLUMN DASHBOARD GRID
 ========================================== */
 #section-dashboard .metrics {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Forces exactly 3 equal columns */
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
+
 #section-dashboard .metric-card {
   padding: 40px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Pushes content apart */
+  justify-content: space-between;
 }
+
 #section-dashboard .metric-top {
   align-items: center;
 }
+
 #section-dashboard .metric-label {
-  font-size: 15px; /* Larger label */
+  font-size: 15px;
   letter-spacing: 0.1em;
 }
+
 #section-dashboard .metric-value {
-  font-size: 84px; /* Massive numbers */
+  font-size: 84px;
   line-height: 1;
   margin-top: 12px;
 }
+
 #section-dashboard .metric-icon {
   width: 72px;
   height: 72px;
   border-radius: 18px;
 }
+
 #section-dashboard .metric-icon svg {
   width: 32px;
   height: 32px;
 }
+
 #section-dashboard .metric-sub {
   font-size: 16px;
   padding-top: 24px;
@@ -619,7 +842,7 @@ td {
 }
 
 /* ==========================================
-   SYSTEM SETTINGS FORM STYLING
+   SETTINGS PAGE STYLES
 ========================================== */
 .settings-card {
   background: var(--white);
@@ -629,6 +852,7 @@ td {
   box-shadow: var(--shadow-card);
   max-width: 800px;
 }
+
 .settings-form .avatar-group {
   display: flex;
   align-items: center;
@@ -637,65 +861,76 @@ td {
   padding-bottom: 32px;
   border-bottom: 1px solid var(--hairline);
 }
+
 .admin-avatar.large {
-  width: 86px; 
-  height: 86px; 
-  font-size: 28px; 
+  width: 86px;
+  height: 86px;
+  font-size: 28px;
   border-radius: 24px;
 }
+
 .change-photo-btn {
-  padding: 10px 16px; 
+  padding: 10px 16px;
   border: 1px solid var(--hairline);
-  background: var(--surface); 
+  background: var(--surface);
   border-radius: var(--radius-sm);
-  font-weight: 600; 
+  font-weight: 600;
   color: var(--navy-700);
   transition: background 0.2s ease;
 }
+
 .change-photo-btn:hover {
   background: var(--hairline);
 }
+
 .settings-subheading {
   font-size: 15px;
   color: var(--navy-900);
   margin: 32px 0 16px;
 }
+
 .form-grid {
-  display: grid; 
-  grid-template-columns: 1fr 1fr; 
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 24px;
 }
-.input-group { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 8px; 
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.input-group label { 
-  font-size: 13px; 
-  font-weight: 700; 
-  color: var(--slate-400); 
+
+.input-group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slate-400);
 }
-.input-group input { 
-  padding: 14px 16px; 
-  border: 1px solid var(--hairline); 
-  border-radius: var(--radius-sm); 
-  font-family: 'Inter', sans-serif; 
+
+.input-group input {
+  padding: 14px 16px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif;
   font-size: 14.5px;
   color: var(--navy-900);
   background: var(--surface-alt);
 }
+
 .input-group input:focus {
   outline: none;
   border-color: var(--navy-500);
   background: var(--white);
 }
-.settings-footer { 
-  margin-top: 40px; 
-  display: flex; 
-  justify-content: flex-end; 
+
+.settings-footer {
+  margin-top: 40px;
+  display: flex;
+  justify-content: flex-end;
 }
-.save-btn.large { 
-  padding: 16px 32px; 
-  font-size: 15px; 
+
+.save-btn.large {
+  padding: 16px 32px;
+  font-size: 15px;
   cursor: pointer;
 }

@@ -6,58 +6,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>UDUS Academic Staff Portal — Profile Editor</title>
 
-  <!-- Load the external fonts and the dashboard stylesheet. -->
+  <!-- Load external fonts and dashboard styling -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap"
     rel="stylesheet"
   >
-  <link
-    rel="stylesheet"
-    href="{% static 'css/lecturer.css' %}"
-  >
+  <link rel="stylesheet" href="{% static 'css/lecturer.css' %}">
 </head>
 <body>
-
   <div class="shell">
-    <!-- Left navigation area. The JavaScript uses the existing link targets. -->
+    <!-- Left sidebar navigation -->
     <aside class="sidebar">
       <div class="sidebar-profile">
         <div class="sidebar-avatar">AO</div>
         <div class="sidebar-profile-text">
-            <div class="name">Loading...</div>
-            <div class="rank">Academic Staff</div>
+          <div class="name">Loading...</div>
+          <div class="title" id="sidebarTitle">Academic Staff</div>
         </div>
       </div>
 
-      <!-- Each link scrolls to one profile section. -->
       <nav class="nav-group">
-        <a
-          class="nav-link active"
-          data-target="section-basic"
-        >
+        <a class="nav-link active" data-target="section-basic">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           <span>Edit Profile</span>
         </a>
-        <a
-          class="nav-link"
-          data-target="section-location"
-        >
+        <a class="nav-link" data-target="section-location">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
           <span>Guidance</span>
         </a>
-        <a
-          class="nav-link"
-          data-target="section-contact"
-        >
+        <a class="nav-link" data-target="section-contact">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg>
           <span>Contact</span>
         </a>
-        <!-- Security settings are kept as a separate section. -->
-        <a
-          class="nav-link"
-          data-target="section-security"
-        >
+        <a class="nav-link" data-target="section-security">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           <span>Security</span>
         </a>
@@ -71,7 +53,7 @@
       </div>
     </aside>
 
-    <!-- Main profile editing area. -->
+    <!-- Main dashboard content -->
     <main class="main">
       <div class="main-header">
         <div class="header-content">
@@ -84,7 +66,7 @@
       </div>
 
       <div class="form-wrap">
-        <!-- 1. Basic information and profile photo. -->
+        <!-- Basic information section -->
         <div class="form-section" id="section-basic">
           <div class="section-head">
             <div class="section-icon">
@@ -92,7 +74,7 @@
             </div>
             <h2>Basic Information</h2>
           </div>
-          <div class="section-desc">Your name, rank, and photo as they'll appear to students.</div>
+          <div class="section-desc">Your name, title, and photo as they'll appear to students.</div>
 
           <div class="photo-row">
             <div class="photo-preview" id="displayPhoto"></div>
@@ -110,8 +92,16 @@
 
           <div class="field-grid">
             <div class="form-field">
-              <label>Academic Rank (Managed by Admin)</label>
-              <input class="text-input" id="profRank" type="text" disabled />
+              <label>Academic Title <span style="color: var(--udus-plum);">*</span></label>
+              <select class="text-input" id="profTitle" style="padding: 12px 16px; border: 1.5px solid var(--hairline); border-radius: 12px; background: var(--surface-grey); outline: none; width: 100%; font-family: inherit; font-size: 15px; color: var(--text-dark);" required>
+                <option value="" disabled selected>Select Title</option>
+                <option value="Prof.">Prof.</option>
+                <option value="Dr.">Dr.</option>
+                <option value="Mal.">Mal.</option>
+                <option value="Mr.">Mr.</option>
+                <option value="Mrs.">Mrs.</option>
+                <option value="Others">Others</option>
+              </select>
             </div>
             <div class="form-field">
               <label>Highest Qualification</label>
@@ -122,7 +112,7 @@
 
         <div class="divider"></div>
 
-        <!-- 2. Academic assignment and research information. -->
+        <!-- Academic assignment section -->
         <div class="form-section">
           <div class="section-head">
             <div class="section-icon">
@@ -139,14 +129,58 @@
           </div>
 
           <div class="form-field">
-            <label>Core Research Interests</label>
-            <textarea id="profResearch" rows="3" placeholder="e.g. Machine learning, neural networks..."></textarea>
+            <label>Core Research Specializations <span style="color: var(--udus-plum);">*</span></label>
+            <div class="section-desc" style="margin-bottom:12px; margin-top:-4px;">Select all research areas that represent your current core specialization(s).</div>
+            <div class="checkbox-group" id="specializationCheckboxes" style="display:flex; flex-direction:column; gap:14px; padding:10px 0;">
+              <label style="display:flex; align-items:center; gap:12px; font-weight:500; font-size:15px; color:var(--text-dark); cursor:pointer;">
+                <input type="checkbox" value="Artificial Intelligence" style="width:18px; height:18px; accent-color:var(--udus-dgreen);"> Artificial Intelligence
+              </label>
+              <label style="display:flex; align-items:center; gap:12px; font-weight:500; font-size:15px; color:var(--text-dark); cursor:pointer;">
+                <input type="checkbox" value="Machine Learning" style="width:18px; height:18px; accent-color:var(--udus-dgreen);"> Machine Learning
+              </label>
+              <label style="display:flex; align-items:center; gap:12px; font-weight:500; font-size:15px; color:var(--text-dark); cursor:pointer;">
+                <input type="checkbox" value="Data Science" style="width:18px; height:18px; accent-color:var(--udus-dgreen);"> Data Science
+              </label>
+              <label style="display:flex; align-items:center; gap:12px; font-weight:500; font-size:15px; color:var(--text-dark); cursor:pointer;">
+                <input type="checkbox" value="Cybersecurity" style="width:18px; height:18px; accent-color:var(--udus-dgreen);"> Cybersecurity
+              </label>
+              <label style="display:flex; align-items:center; gap:12px; font-weight:500; font-size:15px; color:var(--text-dark); cursor:pointer;">
+                <input type="checkbox" value="Network Security" style="width:18px; height:18px; accent-color:var(--udus-dgreen);"> Network Security
+              </label>
+              <label style="display:flex; align-items:center; gap:12px; font-weight:500; font-size:15px; color:var(--text-dark); cursor:pointer;">
+                <input type="checkbox" value="Computer Networks" style="width:18px; height:18px; accent-color:var(--udus-dgreen);"> Computer Networks
+              </label>
+              <label style="display:flex; align-items:center; gap:12px; font-weight:500; font-size:15px; color:var(--text-dark); cursor:pointer;">
+                <input type="checkbox" value="Software Engineering" style="width:18px; height:18px; accent-color:var(--udus-dgreen);"> Software Engineering
+              </label>
+              <label style="display:flex; align-items:center; gap:12px; font-weight:500; font-size:15px; color:var(--text-dark); cursor:pointer;">
+                <input type="checkbox" value="Database Systems" style="width:18px; height:18px; accent-color:var(--udus-dgreen);"> Database Systems
+              </label>
+              <label style="display:flex; align-items:center; gap:12px; font-weight:500; font-size:15px; color:var(--text-dark); cursor:pointer;">
+                <input type="checkbox" value="Formal Methods" style="width:18px; height:18px; accent-color:var(--udus-dgreen);"> Formal Methods
+              </label>
+              <label style="display:flex; align-items:center; gap:12px; font-weight:500; font-size:15px; color:var(--text-dark); cursor:pointer;">
+                <input type="checkbox" value="Human-Computer Interaction" style="width:18px; height:18px; accent-color:var(--udus-dgreen);"> Human-Computer Interaction
+              </label>
+
+              <div style="display:flex; align-items:flex-start; gap:12px; margin-top:4px;">
+                <label style="display:flex; align-items:center; gap:12px; font-weight:500; font-size:15px; color:var(--text-dark); cursor:pointer; margin-top:2px;">
+                  <input type="checkbox" id="otherSpecCheckbox" value="Other" style="width:18px; height:18px; accent-color:var(--udus-dgreen);"> Other:
+                </label>
+                <div style="flex:1;">
+                  <input type="text" id="otherSpecInput" placeholder="Specify other area..." style="width:100%; border:none; border-bottom:1.5px dashed var(--text-muted); background:transparent; outline:none; font-size:15px; color:var(--text-dark); padding-bottom:2px;" disabled>
+                  <div id="otherSpecError" style="color: #D32F2F; font-size: 12px; font-weight: 600; margin-top: 6px; display: none;">
+                    Only letters and spaces are allowed.
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <!-- 3. Office location and directions. -->
+        <!-- Location and guidance section -->
         <div class="form-section" id="section-location">
           <div class="section-head">
             <div class="section-icon">
@@ -158,46 +192,27 @@
           <div class="field-grid cols-3">
             <div class="form-field">
               <label>Building Name</label>
-              <input
-                class="text-input"
-                id="profBuilding"
-                type="text"
-                placeholder="e.g. Main Faculty Block"
-              >
+              <input class="text-input" id="profBuilding" type="text" placeholder="e.g. Main Faculty Block">
             </div>
             <div class="form-field">
               <label>Floor Level</label>
-              <input
-                class="text-input"
-                id="profFloor"
-                type="text"
-                placeholder="e.g. 2nd Floor"
-              >
+              <input class="text-input" id="profFloor" type="text" placeholder="e.g. 2nd Floor">
             </div>
             <div class="form-field">
               <label>Office Number</label>
-              <input
-                class="text-input"
-                id="profOffice"
-                type="text"
-                placeholder="e.g. Room 204"
-              >
+              <input class="text-input" id="profOffice" type="text" placeholder="e.g. Room 204">
             </div>
           </div>
 
           <div class="form-field">
             <label>Step-by-Step Directional Guidance</label>
-            <textarea
-              id="profGuidance"
-              class="guidance-textarea"
-              placeholder="Type the exact pathway..."
-            ></textarea>
+            <textarea id="profGuidance" class="guidance-textarea" placeholder="Type the exact pathway..."></textarea>
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <!-- 4. Office hours and contact details. -->
+        <!-- Contact section -->
         <div class="form-section" id="section-contact">
           <div class="section-head">
             <div class="section-icon">
@@ -208,39 +223,32 @@
 
           <div class="form-field">
             <label>Office Hours</label>
-            <textarea
-              id="profOfficeHours"
-              rows="3"
-              placeholder="Mon: 10:00 - 12:00&#10;Wed: 14:00 - 16:00"
-            ></textarea>
+            <textarea id="profOfficeHours" rows="3" placeholder="Mon: 10:00 - 12:00&#10;Wed: 14:00 - 16:00"></textarea>
             <div class="helper">Type each day on a new line. Separate the day and time with a colon (:).</div>
           </div>
 
           <div class="field-grid">
-              <div class="form-field">
-                <label>Official University Email</label>
-                <input
-                  class="text-input"
-                  id="profEmail"
-                  type="email"
-                  placeholder="email@udus.edu.ng"
-                >
+            <div class="form-field">
+              <label>Official University Email</label>
+              <input class="text-input" id="profEmail" type="email" placeholder="email@udus.edu.ng">
+              <div id="emailError" style="color: #D32F2F; font-size: 12px; font-weight: 600; margin-top: 6px; display: none;">
+                Email must end with @udusok.edu.ng
               </div>
-              <div class="form-field">
-                <label>WhatsApp Contact Number</label>
-                <input
-                  class="text-input"
-                  id="profWhatsapp"
-                  type="tel"
-                  placeholder="+234..."
-                >
+            </div>
+
+            <div class="form-field">
+              <label>WhatsApp Contact Number</label>
+              <input class="text-input" id="profWhatsapp" type="tel" placeholder="+234...">
+              <div id="phoneError" style="color: #D32F2F; font-size: 12px; font-weight: 600; margin-top: 6px; display: none;">
+                Enter a valid phone number (digits, spaces, and + only).
               </div>
+            </div>
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <!-- 5. Password settings. -->
+        <!-- Security section -->
         <div class="form-section" id="section-security">
           <div class="section-head">
             <div class="section-icon">
@@ -249,46 +257,36 @@
             <h2>Security Settings</h2>
           </div>
           <div class="section-desc">Change your default portal password to something secure.</div>
-          
+
           <div class="form-field">
             <label>New Password</label>
-            <input
-              class="text-input"
-              id="profPassword"
-              type="password"
-              placeholder="Leave blank to keep your current password"
-            >
+            <input class="text-input" id="profPassword" type="password" placeholder="Leave blank to keep your current password">
+            <div id="passwordStrengthContainer" style="display: none; margin-top: 10px;">
+              <div style="height: 6px; width: 100%; background: var(--surface-grey); border-radius: 4px; overflow: hidden;">
+                <div id="passwordStrengthBar" style="height: 100%; width: 0%; background: transparent; transition: width 0.3s ease, background-color 0.3s ease;"></div>
+              </div>
+              <div style="font-size: 12px; font-weight: 600; margin-top: 6px; color: var(--text-muted);">
+                Password strength: <span id="strengthLabel">None</span>
+              </div>
+            </div>
           </div>
         </div>
-
       </div>
 
-      <!-- The save controls remain visible while the page is scrolled. -->
       <div class="action-bar">
         <div class="save-status">
           <span class="dot"></span>
           Unsaved changes
         </div>
         <div class="action-buttons">
-          <button
-            class="btn-discard"
-            id="discardBtn"
-          >
-            Discard
-          </button>
-          <button
-            class="btn-publish"
-            id="publishBtn"
-          >
-            Save &amp; Publish
-          </button>
+          <button class="btn-discard" id="discardBtn">Discard</button>
+          <button class="btn-publish" id="publishBtn">Save &amp; Publish</button>
         </div>
       </div>
     </main>
   </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- Load dashboard behavior after all page elements exist. -->
-<script src="{% static 'js/lecturer-dashboard.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'js/lecturer-dashboard.js' %}"></script>
 </body>
 </html>

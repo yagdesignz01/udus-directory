@@ -6,18 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lecturer Login | UDUS Directory</title>
 
-    <!-- Load the font used by the login page. -->
+    <!-- Load the font used by the page -->
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
 
-    <!-- Load SweetAlert2 for the login messages. -->
+    <!-- Load SweetAlert2 for login messages -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Page styles. -->
     <style>
-        /* These colours are reused throughout the page. */
         :root {
             --udus-green: #008001;
             --udus-dark-green: #005A01;
@@ -27,8 +25,7 @@
             --text-muted: #6B7A94;
             --hairline: #E1E5EC;
         }
-        
-        /* Center the login card on the page. */
+
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
@@ -42,20 +39,18 @@
             box-sizing: border-box;
         }
 
-        /* White card that contains the login form. */
         .login-container {
             background: var(--white);
-            padding: 40px 30px; 
+            padding: 40px 30px;
             border-radius: 20px;
             box-shadow: 0 10px 40px -10px rgba(0, 90, 1, 0.15);
             width: 100%;
             max-width: 400px;
             text-align: center;
             border: 1px solid var(--hairline);
-            box-sizing: border-box; /* Prevents the box from breaking on mobile */
+            box-sizing: border-box;
         }
 
-        /* Keep the logo size in one CSS class. */
         .udus-logo {
             width: 65px;
             height: 65px;
@@ -63,7 +58,6 @@
             object-fit: contain;
         }
 
-        /* Heading and paragraph styles. */
         h1 {
             font-size: 22px;
             font-weight: 800;
@@ -77,7 +71,6 @@
             margin: 0 0 24px;
         }
 
-        /* Form labels and input fields. */
         .form-group {
             text-align: left;
             margin-bottom: 16px;
@@ -92,45 +85,44 @@
         }
 
         .form-group input {
-            width: 100%; 
-            padding: 14px 16px; 
-            border: 1.5px solid var(--hairline); 
-            border-radius: 12px; 
-            font-size: 14px; 
-            font-family: inherit; 
-            box-sizing: border-box; 
-            transition: border-color 0.2s; 
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid var(--hairline);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
         }
+
         .form-group input:focus {
             outline: none;
             border-color: var(--udus-green);
         }
 
-        /* Main submit button. */
         .btn {
-            width: 100%; 
-            padding: 14px; 
-            background: var(--udus-green); 
-            color: var(--white); 
-            border: none; 
-            border-radius: 12px; 
-            font-size: 15px; 
-            font-weight: 700; 
-            cursor: pointer; 
-            margin-top: 10px; 
-            transition: background 0.2s; 
+            width: 100%;
+            padding: 14px;
+            background: var(--udus-green);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
         }
+
         .btn:hover {
             background: var(--udus-dark-green);
         }
     </style>
 </head>
 <body>
-
-    <!-- Login card and form. -->
+    <!-- Login card -->
     <div class="login-container">
-
-        <!-- Local UDUS logo. -->
+        <!-- University logo -->
         <img
             src="{% static 'images/udus_logo.png' %}"
             alt="UDUS Logo"
@@ -140,14 +132,12 @@
         <h1>UDUS Academic Staff Portal</h1>
         <p>Sign in to manage your directory profile</p>
 
-        <!-- JavaScript listens to this form ID. -->
+        <!-- Login form -->
         <form id="lecturerLoginForm">
-            <!-- Django security token. -->
             {% csrf_token %}
 
             <div class="form-group">
                 <label>Staff ID / Username</label>
-
                 <input
                     type="text"
                     id="staff_id"
@@ -158,7 +148,6 @@
 
             <div class="form-group">
                 <label>Password</label>
-
                 <input
                     type="password"
                     id="password"
@@ -167,36 +156,26 @@
                 >
             </div>
 
-            <button
-                type="submit"
-                class="btn"
-            >
+            <button type="submit" class="btn">
                 Secure Login
             </button>
         </form>
 
-        <p style="font-size: 11px; margin-top: 24px; margin-bottom: 0;">Protected by UDUS institutional access control</p>
+        <p style="font-size: 11px; margin-top: 24px; margin-bottom: 0;">
+            Protected by UDUS institutional access control
+        </p>
     </div>
 
-    <!-- Login JavaScript and alert messages. -->
     <script>
-        // Find the login form.
         const loginForm = document.getElementById('lecturerLoginForm');
 
-        // Run this code when the form is submitted.
         loginForm.addEventListener('submit', function(event) {
-
-            // Stop the browser from reloading the page.
             event.preventDefault();
 
-            // Read the values entered by the user.
             const typedStaffId = document.getElementById('staff_id').value;
             const typedPassword = document.getElementById('password').value;
-
-            // Read the Django security token from the form.
             const djangoCsrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-            // Show a loading message while the server checks the login.
             Swal.fire({
                 title: 'Authenticating...',
                 text: 'Please wait while we verify your credentials.',
@@ -206,7 +185,6 @@
                 }
             });
 
-            // Send the login details to the Django API.
             fetch('/api/lecturer/login/', {
                 method: 'POST',
                 headers: {
@@ -220,12 +198,9 @@
             })
             .then(response => response.json())
             .then(data => {
-
-                // Check whether the login was successful.
                 if (data.success) {
                     localStorage.setItem('currentStaffId', data.staff_id);
 
-                    // Show the success message.
                     Swal.fire({
                         title: 'Welcome Back!',
                         text: 'Login successful. Redirecting to your dashboard...',
@@ -234,22 +209,19 @@
                         timer: 2000,
                         showConfirmButton: false
                     }).then(() => {
-                        // Open the lecturer dashboard.
                         window.location.href = '/lecturer-dashboard/';
                     });
                 } else {
-                    // Show an error for invalid or suspended accounts.
                     Swal.fire({
                         title: 'Access Denied',
                         text: data.message || 'Invalid Staff ID or Password.',
                         icon: 'error',
-                        confirmButtonColor: '#D32F2F', // Red for errors
+                        confirmButtonColor: '#D32F2F',
                         borderRadius: '12px'
                     });
                 }
             })
             .catch(error => {
-                // Show an error when the server cannot be reached.
                 Swal.fire({
                     title: 'System Error',
                     text: 'Could not connect to the server. Please try again.',
@@ -259,6 +231,5 @@
             });
         });
     </script>
-
 </body>
 </html>
