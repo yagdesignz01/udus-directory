@@ -26,7 +26,8 @@ def get_staff_profile_data(staff):
         "profile_image": get_image_url(staff.profile_image),
         "highest_qualification": staff.highest_qualification or "",
         "courses_taught": staff.courses_taught or "",
-        "research_interests": staff.research_interests or "",
+        "specializations": staff.specializations or "",
+        "administrative_roles": staff.administrative_roles or "",
         "building": staff.building or "",
         "floor": staff.floor or "",
         "office_number": staff.office_number or "",
@@ -80,8 +81,13 @@ def lecturer_login(request):
         staff = AcademicStaff.objects.filter(staff_id=input_id).first()
 
         if staff:
-            if staff.status.lower() == 'suspended':
-                return JsonResponse({"error": "Account suspended. Please contact the administrator."}, status=403)
+            # Bulletproof check: handles None types and accidental spaces in the database
+            if staff.status and staff.status.strip().lower() == 'suspended':
+                return JsonResponse(
+                    {"error": "Account suspended. Please contact the administrator."},
+                    status=403
+                )
+            
             if str(staff.password).strip() == input_pw:
                 return JsonResponse({"success": True, "message": "Login successful", "staff_id": staff.staff_id})
             else:
@@ -102,14 +108,21 @@ def lecturer_profile(request, staff_id):
         staff.title = request.POST.get('title', staff.title)
         staff.highest_qualification = request.POST.get('highest_qualification', staff.highest_qualification)
         staff.courses_taught = request.POST.get('courses_taught', staff.courses_taught)
-        staff.research_interests = request.POST.get('research_interests', staff.research_interests)
+        staff.specializations = request.POST.get('specializations', staff.specializations)
+        staff.administrative_roles = request.POST.get('administrative_roles', staff.administrative_roles)
         staff.building = request.POST.get('building', staff.building)
         staff.floor = request.POST.get('floor', staff.floor)
         staff.office_number = request.POST.get('office_number', staff.office_number)
         staff.guidance = request.POST.get('guidance', staff.guidance)
-        staff.email = request.POST.get('email', staff.email)
-        staff.whatsapp = request.POST.get('whatsapp', staff.whatsapp)
         staff.working_hours = request.POST.get('working_hours', staff.working_hours)
+        
+        # Safely handle unique fields so empty strings don't crash the database
+        email_input = request.POST.get('email', '').strip()
+        staff.email = email_input if email_input else None
+
+        whatsapp_input = request.POST.get('whatsapp', '').strip()
+        staff.whatsapp = whatsapp_input if whatsapp_input else None
+        
 
         new_password = request.POST.get('password', '').strip()
         if new_password:
@@ -187,7 +200,8 @@ def public_directory_api(request):
             "name": s.name.title(), # Forces Title Case for the public grid
             "title": s.title,
             "highest_qualification": s.highest_qualification or "Not specified",
-            "research_interests": s.research_interests or "Not specified",
+            "specializations": s.specializations or "Not specified",
+            "administrative_roles": s.administrative_roles or "Not specified",
             "courses_taught": s.courses_taught or "",
             "building": s.building or "", "floor": s.floor or "",
             "office_number": s.office_number or "", "guidance": s.guidance or "",

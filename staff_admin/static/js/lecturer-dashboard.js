@@ -1,8 +1,6 @@
 const currentStaffId = localStorage.getItem('currentStaffId');
 
-if (!currentStaffId) {
-    window.location.replace('/lecturer-login/');
-}
+if (!currentStaffId) window.location.replace('/lecturer-login/');
 
 function handleLogout() {
     localStorage.removeItem('currentStaffId');
@@ -11,55 +9,28 @@ function handleLogout() {
 
 document.getElementById('logoutLink')?.addEventListener('click', handleLogout);
 document.getElementById('mobileLogoutBtn')?.addEventListener('click', handleLogout);
-
-document.getElementById('discardBtn')?.addEventListener('click', () => {
-    window.location.reload();
-});
+document.getElementById('discardBtn')?.addEventListener('click', () => window.location.reload());
 
 document.querySelectorAll('.nav-link[data-target]').forEach(link => {
     link.addEventListener('click', () => {
-        document.querySelectorAll('.nav-link[data-target]').forEach(sidebarLink => {
-            sidebarLink.classList.remove('active');
-        });
-
+        document.querySelectorAll('.nav-link[data-target]').forEach(sl => sl.classList.remove('active'));
         link.classList.add('active');
-        const targetSection = document.getElementById(link.dataset.target);
-
-        if (targetSection) {
-            const targetPosition = (
-                targetSection.getBoundingClientRect().top
-                + window.scrollY
-                - 100
-            );
-
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-        }
+        const ts = document.getElementById(link.dataset.target);
+        if (ts) window.scrollTo({ top: ts.getBoundingClientRect().top + window.scrollY - 100, behavior: 'smooth' });
     });
 });
 
-document.getElementById('uploadTriggerBtn')?.addEventListener('click', () => {
-    document.getElementById('imageUpload')?.click();
-});
+document.getElementById('uploadTriggerBtn')?.addEventListener('click', () => document.getElementById('imageUpload')?.click());
 
 document.getElementById('imageUpload')?.addEventListener('change', function() {
     if (this.files && this.files[0]) {
         const reader = new FileReader();
-
-        reader.onload = function(event) {
-            const displayPhoto = document.getElementById('displayPhoto');
-            if (displayPhoto) {
-                displayPhoto.innerHTML = `<img src="${event.target.result}" style="width:100%; height:100%; object-fit:cover; border-radius:20px;">`;
-            }
-
-            const saveStatus = document.querySelector('.save-status');
-            if (saveStatus) {
-                saveStatus.innerHTML = '<span class="dot" style="background:var(--udus-plum)"></span> Unsaved photo changes';
-            }
+        reader.onload = function(e) {
+            const dp = document.getElementById('displayPhoto');
+            if (dp) dp.innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover; border-radius:20px;">`;
+            const ss = document.querySelector('.save-status');
+            if (ss) ss.innerHTML = '<span class="dot" style="background:var(--udus-plum)"></span> Unsaved photo changes';
         };
-
         reader.readAsDataURL(this.files[0]);
     }
 });
@@ -69,331 +40,126 @@ const tagInput = document.getElementById('tagInput');
 
 function addChip(value) {
     if (!value.trim() || !tagShell || !tagInput) return;
-
     const chip = document.createElement('span');
     chip.className = 'tag-chip';
     chip.innerHTML = `${value.trim().toUpperCase()}<button data-remove="${value.trim()}">✕</button>`;
-
     tagShell.insertBefore(chip, tagInput);
     tagInput.value = '';
 }
 
-function showProfileImage(imageUrl, displayPhoto, sidebarAvatar) {
-    const imageHTML = `<img src="${imageUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;">`;
+tagInput?.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addChip(tagInput.value); } });
+tagShell?.addEventListener('click', e => { const rb = e.target.closest('button[data-remove]'); if (rb) rb.closest('.tag-chip').remove(); });
 
-    if (displayPhoto) {
-        displayPhoto.innerHTML = imageHTML;
-    }
-
-    if (sidebarAvatar) {
-        sidebarAvatar.innerHTML = imageHTML;
-    }
-}
-
-function showProfileInitials(name, displayPhoto, sidebarAvatar) {
-    const safeName = name || 'User';
-
-    const nameParts = safeName
-        .replace(/^(Dr\.|Prof\.|Mr\.|Mrs\.)\s*/i, '')
-        .trim()
-        .split(' ');
-
-    const initials = (
-        nameParts[0][0]
-        + (nameParts[1] ? nameParts[1][0] : '')
-    ).toUpperCase();
-
-    if (displayPhoto) {
-        displayPhoto.innerHTML = initials;
-    }
-
-    if (sidebarAvatar) {
-        sidebarAvatar.innerHTML = initials;
-    }
-}
-
-function fillProfileFields(profileData) {
-    const profileFields = {
-        profName: profileData.name,
-        profTitle: profileData.title,
-        profQual: profileData.highest_qualification,
-        profBuilding: profileData.building,
-        profFloor: profileData.floor,
-        profOffice: profileData.office_number,
-        profGuidance: profileData.guidance,
-        profOfficeHours: profileData.working_hours,
-        profEmail: profileData.email,
-        profWhatsapp: profileData.whatsapp
-    };
-
-    for (const [fieldId, fieldValue] of Object.entries(profileFields)) {
-        const field = document.getElementById(fieldId);
-
-        if (field) {
-            field.value = fieldValue || '';
-        }
-    }
-}
-
-tagInput?.addEventListener('keydown', event => {
-    if (event.key === 'Enter' || event.key === ',') {
-        event.preventDefault();
-        addChip(tagInput.value);
-    }
-});
-
-tagShell?.addEventListener('click', event => {
-    const removeButton = event.target.closest('button[data-remove]');
-
-    if (removeButton) {
-        removeButton.closest('.tag-chip').remove();
-    }
-});
-
+// Checkboxes Logic
 document.getElementById('otherSpecCheckbox')?.addEventListener('change', function() {
-    const otherInput = document.getElementById('otherSpecInput');
-    if(otherInput) {
-        otherInput.disabled = !this.checked;
-        if (this.checked) {
-            otherInput.focus();
-        } else {
-            otherInput.value = '';
-        }
+    const input = document.getElementById('otherSpecInput');
+    if(input) { input.disabled = !this.checked; if (this.checked) input.focus(); else input.value = ''; }
+});
+document.getElementById('otherAdminCheckbox')?.addEventListener('change', function() {
+    const input = document.getElementById('otherAdminInput');
+    if(input) { input.disabled = !this.checked; if (this.checked) input.focus(); else input.value = ''; }
+});
+document.getElementById('roleNoneCheckbox')?.addEventListener('change', function() {
+    if (this.checked) {
+        document.querySelectorAll('#adminRoleCheckboxes input[type="checkbox"]').forEach(cb => {
+            if (cb.id !== 'roleNoneCheckbox') {
+                cb.checked = false;
+                if (cb.id === 'otherAdminCheckbox') { const inp = document.getElementById('otherAdminInput'); if (inp) { inp.disabled = true; inp.value = ''; } }
+            }
+        });
     }
+});
+document.querySelectorAll('#adminRoleCheckboxes input[type="checkbox"]:not(#roleNoneCheckbox)').forEach(cb => {
+    cb.addEventListener('change', function() { if (this.checked) { const ncb = document.getElementById('roleNoneCheckbox'); if (ncb) ncb.checked = false; } });
 });
 
 async function loadProfileData() {
     if (!currentStaffId) return;
-
     try {
         const response = await fetch(`/api/lecturer/profile/${currentStaffId}/`);
         const data = await response.json();
-
         if (response.ok) {
             const nameEl = document.querySelector('.sidebar-profile .name');
             const titleEl = document.getElementById('sidebarTitle');
-
             if (nameEl) nameEl.textContent = data.name;
             if (titleEl) titleEl.textContent = data.title || 'Academic Staff';
 
-            fillProfileFields(data);
+            const fields = { profName: data.name, profTitle: data.title, profQual: data.highest_qualification, profBuilding: data.building, profFloor: data.floor, profOffice: data.office_number, profGuidance: data.guidance, profOfficeHours: data.working_hours, profEmail: data.email, profWhatsapp: data.whatsapp };
+            for (const [id, val] of Object.entries(fields)) { const f = document.getElementById(id); if (f) f.value = val || ''; }
 
-            if (data.research_interests) {
-                const specs = data.research_interests.split(',').map(s => s.trim());
-                const checkboxes = document.querySelectorAll('#specializationCheckboxes input[type="checkbox"]');
-                const otherInput = document.getElementById('otherSpecInput');
-                const otherCheckbox = document.getElementById('otherSpecCheckbox');
-
-                specs.forEach(spec => {
-                    let matched = false;
-                    checkboxes.forEach(cb => {
-                        if (cb.value !== 'Other' && cb.value.toLowerCase() === spec.toLowerCase()) {
-                            cb.checked = true;
-                            matched = true;
-                        }
-                    });
-                    if (!matched && spec !== '') {
-                        if(otherCheckbox) otherCheckbox.checked = true;
-                        if(otherInput) {
-                            otherInput.disabled = false;
-                            otherInput.value = spec;
-                        }
-                    }
+            if (data.specializations) {
+                const specs = data.specializations.split(',').map(s => s.trim());
+                document.querySelectorAll('#specializationCheckboxes input[type="checkbox"]').forEach(cb => {
+                    if (cb.value !== 'Other' && specs.includes(cb.value)) cb.checked = true;
                 });
+                const otherSpecs = specs.filter(s => ![...document.querySelectorAll('#specializationCheckboxes input[type="checkbox"]')].map(c=>c.value).includes(s));
+                if(otherSpecs.length > 0) { document.getElementById('otherSpecCheckbox').checked = true; document.getElementById('otherSpecInput').disabled = false; document.getElementById('otherSpecInput').value = otherSpecs[0]; }
             }
 
-            const displayPhoto = document.getElementById('displayPhoto');
-            const sidebarAvatar = document.querySelector('.sidebar-avatar');
+            if (data.administrative_roles) {
+                const roles = data.administrative_roles.split(',').map(s => s.trim());
+                document.querySelectorAll('#adminRoleCheckboxes input[type="checkbox"]').forEach(cb => {
+                    if (cb.value !== 'Other' && roles.includes(cb.value)) cb.checked = true;
+                });
+                const otherRoles = roles.filter(s => ![...document.querySelectorAll('#adminRoleCheckboxes input[type="checkbox"]')].map(c=>c.value).includes(s));
+                if(otherRoles.length > 0) { document.getElementById('otherAdminCheckbox').checked = true; document.getElementById('otherAdminInput').disabled = false; document.getElementById('otherAdminInput').value = otherRoles[0]; }
+            }
 
-            if (data.profile_image && data.profile_image.trim() !== '') {
-                showProfileImage(data.profile_image, displayPhoto, sidebarAvatar);
+            const dp = document.getElementById('displayPhoto');
+            const sa = document.querySelector('.sidebar-avatar');
+            if (data.profile_image) {
+                const img = `<img src="${data.profile_image}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;">`;
+                if(dp) dp.innerHTML = img; if(sa) sa.innerHTML = img;
             } else {
-                showProfileInitials(data.name, displayPhoto, sidebarAvatar);
+                const inits = (data.name||"U").replace(/^(Dr\.|Prof\.|Mr\.|Mrs\.)\s*/i, '').trim().split(' ');
+                const res = (inits[0][0] + (inits[1]?inits[1][0]:'')).toUpperCase();
+                if(dp) dp.innerHTML = res; if(sa) sa.innerHTML = res;
             }
 
             if (tagShell && data.courses_taught) {
-                tagShell.querySelectorAll('.tag-chip').forEach(chip => chip.remove());
-
-                const courses = data.courses_taught
-                    .split(',')
-                    .map(course => course.trim())
-                    .filter(course => course);
-
-                courses.forEach(course => addChip(course));
+                tagShell.querySelectorAll('.tag-chip').forEach(c => c.remove());
+                data.courses_taught.split(',').map(c => c.trim()).filter(c=>c).forEach(c => addChip(c));
             }
-        } else {
-            console.warn(
-                'Could not fetch profile. Ensure server is running.',
-                data.error
-            );
         }
-    } catch (error) {
-        console.error('Network error fetching profile:', error);
-    }
+    } catch (e) { console.error('Error fetching profile:', e); }
 }
-
 loadProfileData();
 
-// --- VALIDATION & SAVE LOGIC ---
-const emailInput = document.getElementById('profEmail');
-const emailError = document.getElementById('emailError');
-const phoneInput = document.getElementById('profWhatsapp');
-const phoneError = document.getElementById('phoneError');
-const otherInput = document.getElementById('otherSpecInput');
-const otherError = document.getElementById('otherSpecError');
-const publishBtn = document.getElementById('publishBtn');
-
-function validateContactInfo() {
-    let isValid = true;
-    
-    // Email Validation
-    const emailVal = emailInput?.value.trim().toLowerCase() || '';
-    if (emailVal !== '' && !emailVal.endsWith('@udusok.edu.ng')) {
-        if(emailError) emailError.style.display = 'block';
-        isValid = false;
-    } else {
-        if(emailError) emailError.style.display = 'none';
-    }
-
-    // Phone Validation
-    const phoneVal = phoneInput?.value.trim() || '';
-    const phoneRegex = /^\+?[0-9\s\-]+$/;
-    if (phoneVal !== '' && !phoneRegex.test(phoneVal)) {
-        if(phoneError) phoneError.style.display = 'block';
-        isValid = false;
-    } else {
-        if(phoneError) phoneError.style.display = 'none';
-    }
-
-    // --- PASSWORD STRENGTH LOGIC ---
-    const passwordInput = document.getElementById('profPassword');
-    const strengthContainer = document.getElementById('passwordStrengthContainer');
-    const strengthBar = document.getElementById('passwordStrengthBar');
-    const strengthLabel = document.getElementById('strengthLabel');
-
-    passwordInput?.addEventListener('input', function() {
+const passwordInput = document.getElementById('profPassword');
+passwordInput?.addEventListener('input', function() {
     const val = this.value;
-    
-    // Hide the bar if the password field is empty
-    if (val.length === 0) {
-        strengthContainer.style.display = 'none';
-        return;
-    }
-
-    strengthContainer.style.display = 'block';
-
-    // Calculate points based on complexity
+    const cont = document.getElementById('passwordStrengthContainer');
+    const bar = document.getElementById('passwordStrengthBar');
+    const lbl = document.getElementById('strengthLabel');
+    if (val.length === 0) { cont.style.display = 'none'; return; }
+    cont.style.display = 'block';
     let score = 0;
-    if (val.length >= 8) score++; // Good length
-    if (/[a-z]/.test(val)) score++; // Has lowercase
-    if (/[A-Z]/.test(val)) score++; // Has uppercase
-    if (/[0-9]/.test(val)) score++; // Has number
-    if (/[^A-Za-z0-9]/.test(val)) score++; // Has special character
-
-    let strengthText = 'Weak';
-    let barColor = '#D32F2F'; // Red
-    let barWidth = '33%';
-
-    if (score >= 4 && val.length >= 8) {
-        strengthText = 'Great';
-        barColor = 'var(--udus-dgreen)'; // UDUS Green
-        barWidth = '100%';
-    } else if (score >= 3 && val.length >= 6) {
-        strengthText = 'Good';
-        barColor = '#F59E0B'; // Orange
-        barWidth = '66%';
-    }
-
-    // Update the UI
-    strengthBar.style.width = barWidth;
-    strengthBar.style.backgroundColor = barColor;
-    strengthLabel.textContent = strengthText;
-    strengthLabel.style.color = barColor;
-    });
-    
-    // "Other" Specialization Validation
-    const otherVal = otherInput?.value.trim() || '';
-    const nameRegex = /^[A-Za-z\s']+$/; // Letters, spaces, apostrophes only
-    if (otherInput && !otherInput.disabled && otherVal !== '' && !nameRegex.test(otherVal)) {
-        if(otherError) otherError.style.display = 'block';
-        isValid = false;
-    } else {
-        if(otherError) otherError.style.display = 'none';
-    }
-
-    // Lock Submit Button if anything is invalid
-    if (publishBtn) {
-        if (!isValid) {
-            publishBtn.disabled = true;
-            publishBtn.style.opacity = '0.5';
-        } else {
-            publishBtn.disabled = false;
-            publishBtn.style.opacity = '1';
-        }
-    }
-    
-    return isValid;
-}
-
-// Trigger checks in real-time as the lecturer types
-emailInput?.addEventListener('input', validateContactInfo);
-phoneInput?.addEventListener('input', validateContactInfo);
-otherInput?.addEventListener('input', validateContactInfo);
-
-// Re-check validation when the checkbox is toggled
-document.getElementById('otherSpecCheckbox')?.addEventListener('change', function() {
-    if(otherInput) {
-        otherInput.disabled = !this.checked;
-        if (this.checked) {
-            otherInput.focus();
-        } else {
-            otherInput.value = '';
-        }
-    }
-    validateContactInfo();
+    if (val.length >= 8) score++; if (/[a-z]/.test(val)) score++; if (/[A-Z]/.test(val)) score++; if (/[0-9]/.test(val)) score++; if (/[^A-Za-z0-9]/.test(val)) score++;
+    let txt = 'Weak', col = '#D32F2F', w = '33%';
+    if (score >= 4 && val.length >= 8) { txt = 'Great'; col = 'var(--udus-dgreen)'; w = '100%'; } 
+    else if (score >= 3 && val.length >= 6) { txt = 'Good'; col = '#F59E0B'; w = '66%'; }
+    bar.style.width = w; bar.style.backgroundColor = col; lbl.textContent = txt; lbl.style.color = col;
 });
 
 document.getElementById('publishBtn')?.addEventListener('click', async (event) => {
     event.preventDefault();
-    
-    if (!validateContactInfo()) {
-        Swal.fire({
-            title: 'Validation Error',
-            text: 'Please fix the errors in your inputs before saving.',
-            icon: 'error',
-            confirmButtonColor: '#D32F2F',
-            borderRadius: '12px'
-        });
-        return;
-    }
-
     const formData = new FormData();
-
     const selectedTitle = document.getElementById('profTitle')?.value;
-    if (!selectedTitle) {
-        Swal.fire({
-            title: 'Action Required',
-            text: 'Please select your Academic Title before saving.',
-            icon: 'warning',
-            confirmButtonColor: '#9F4A71',
-            borderRadius: '12px'
-        });
-        return;
-    }
+    if (!selectedTitle) return Swal.fire({ title: 'Action Required', text: 'Please select your Title.', icon: 'warning', confirmButtonColor: '#9F4A71' });
 
-    const selectedSpecs = [];
+    const specs = [];
     document.querySelectorAll('#specializationCheckboxes input[type="checkbox"]:checked').forEach(cb => {
-        if (cb.value === 'Other') {
-            const otherVal = document.getElementById('otherSpecInput')?.value.trim();
-            if (otherVal) selectedSpecs.push(otherVal.replace(/,/g, '')); // Strip commas to protect database format
-        } else {
-            selectedSpecs.push(cb.value);
-        }
+        if (cb.value === 'Other') { const v = document.getElementById('otherSpecInput')?.value.trim(); if(v) specs.push(v.replace(/,/g, '')); } else specs.push(cb.value);
+    });
+    const roles = [];
+    document.querySelectorAll('#adminRoleCheckboxes input[type="checkbox"]:checked').forEach(cb => {
+        if (cb.value === 'Other') { const v = document.getElementById('otherAdminInput')?.value.trim(); if(v) roles.push(v.replace(/,/g, '')); } else roles.push(cb.value);
     });
 
     formData.append('title', selectedTitle);
     formData.append('highest_qualification', document.getElementById('profQual')?.value || '');
-    formData.append('research_interests', selectedSpecs.join(', '));
+    formData.append('specializations', specs.join(', '));
+    formData.append('administrative_roles', roles.join(', '));
     formData.append('building', document.getElementById('profBuilding')?.value || '');
     formData.append('floor', document.getElementById('profFloor')?.value || '');
     formData.append('office_number', document.getElementById('profOffice')?.value || '');
@@ -402,55 +168,16 @@ document.getElementById('publishBtn')?.addEventListener('click', async (event) =
     formData.append('email', document.getElementById('profEmail')?.value || '');
     formData.append('whatsapp', document.getElementById('profWhatsapp')?.value || '');
     formData.append('password', document.getElementById('profPassword')?.value || '');
-
-    if (tagShell) {
-        const courseChips = Array.from(
-            tagShell.querySelectorAll('.tag-chip')
-        ).map(chip => chip.textContent.replace('✕', '').trim());
-
-        formData.append('courses_taught', courseChips.join(', '));
-    }
-
-    const fileInput = document.getElementById('imageUpload');
-    if (fileInput && fileInput.files.length > 0) {
-        formData.append('profile_image', fileInput.files[0]);
-    }
+    if (tagShell) formData.append('courses_taught', Array.from(tagShell.querySelectorAll('.tag-chip')).map(c => c.textContent.replace('✕', '').trim()).join(', '));
+    const fi = document.getElementById('imageUpload');
+    if (fi && fi.files.length > 0) formData.append('profile_image', fi.files[0]);
 
     try {
-        const response = await fetch(`/api/lecturer/profile/${currentStaffId}/`, {
-            method: 'POST',
-            body: formData
-        });
-
+        const response = await fetch(`/api/lecturer/profile/${currentStaffId}/`, { method: 'POST', body: formData });
         if (response.ok) {
-            const statusText = document.querySelector('.save-status');
-            if (statusText) {
-                statusText.innerHTML = '<span class="dot" style="background:var(--udus-dark-green)"></span> All changes published';
-            }
-
-            const pwBox = document.getElementById('profPassword');
-            if (pwBox) pwBox.value = '';
-
-            Swal.fire({
-                title: 'Success!',
-                text: 'Profile updated successfully!',
-                icon: 'success',
-                confirmButtonColor: '#008001',
-                borderRadius: '12px'
-            });
-
+            document.getElementById('profPassword').value = '';
+            Swal.fire({ title: 'Success!', text: 'Profile updated!', icon: 'success', confirmButtonColor: '#008001' });
             loadProfileData();
-        } else {
-            Swal.fire({
-                title: 'Save Failed',
-                text: 'There was an issue updating your profile.',
-                icon: 'error',
-                confirmButtonColor: '#D32F2F',
-                borderRadius: '12px'
-            });
-        }
-    } catch (error) {
-        console.error('Error saving profile:', error);
-        alert('Network Error: Failed to connect to server.');
-    }
+        } else Swal.fire({ title: 'Failed', text: 'Issue updating profile.', icon: 'error', confirmButtonColor: '#D32F2F' });
+    } catch (e) { alert('Network Error.'); }
 });

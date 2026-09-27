@@ -120,8 +120,7 @@
     </style>
 </head>
 <body>
-    <!-- Login card -->
-    <div class="login-container">
+    <main class="login-container">
         <!-- University logo -->
         <img
             src="{% static 'images/udus_logo.png' %}"
@@ -137,7 +136,7 @@
             {% csrf_token %}
 
             <div class="form-group">
-                <label>Staff ID / Username</label>
+                <label for="staff_id">Staff ID / Username</label>
                 <input
                     type="text"
                     id="staff_id"
@@ -147,7 +146,7 @@
             </div>
 
             <div class="form-group">
-                <label>Password</label>
+                <label for="password">Password</label>
                 <input
                     type="password"
                     id="password"
@@ -164,72 +163,101 @@
         <p style="font-size: 11px; margin-top: 24px; margin-bottom: 0;">
             Protected by UDUS institutional access control
         </p>
-    </div>
+    </main>
 
     <script>
         const loginForm = document.getElementById('lecturerLoginForm');
 
-        loginForm.addEventListener('submit', function(event) {
+        loginForm.addEventListener('submit', function (event) {
             event.preventDefault();
 
             const typedStaffId = document.getElementById('staff_id').value;
             const typedPassword = document.getElementById('password').value;
             const djangoCsrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
+            showLoadingMessage();
+            sendLoginRequest(typedStaffId, typedPassword, djangoCsrfToken);
+        });
+
+        function showLoadingMessage() {
             Swal.fire({
                 title: 'Authenticating...',
                 text: 'Please wait while we verify your credentials.',
                 allowOutsideClick: false,
-                didOpen: () => {
+                didOpen: function () {
                     Swal.showLoading();
                 }
             });
+        }
 
+        function sendLoginRequest(staffId, password, csrfToken) {
             fetch('/api/lecturer/login/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': djangoCsrfToken
+                    'X-CSRFToken': csrfToken
                 },
                 body: JSON.stringify({
-                    staff_id: typedStaffId,
-                    password: typedPassword
+                    staff_id: staffId,
+                    password: password
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    localStorage.setItem('currentStaffId', data.staff_id);
-
-                    Swal.fire({
-                        title: 'Welcome Back!',
-                        text: 'Login successful. Redirecting to your dashboard...',
-                        icon: 'success',
-                        confirmButtonColor: '#008001',
-                        timer: 2000,
-                        showConfirmButton: false
-                    }).then(() => {
-                        window.location.href = '/lecturer-dashboard/';
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Access Denied',
-                        text: data.message || 'Invalid Staff ID or Password.',
-                        icon: 'error',
-                        confirmButtonColor: '#D32F2F',
-                        borderRadius: '12px'
-                    });
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'System Error',
-                    text: 'Could not connect to the server. Please try again.',
-                    icon: 'error',
-                    confirmButtonColor: '#D32F2F'
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    handleLoginResponse(data);
+                })
+                .catch(function () {
+                    showSystemError();
                 });
+        }
+
+        function handleLoginResponse(data) {
+            if (data.success) {
+                saveStaffId(data.staff_id);
+                showSuccessMessage();
+                return;
+            }
+
+            showAccessDeniedMessage(data.message);
+        }
+
+        function saveStaffId(staffId) {
+            localStorage.setItem('currentStaffId', staffId);
+        }
+
+        function showSuccessMessage() {
+            Swal.fire({
+                title: 'Welcome Back!',
+                text: 'Login successful. Redirecting to your dashboard...',
+                icon: 'success',
+                confirmButtonColor: '#008001',
+                timer: 2000,
+                showConfirmButton: false
+            }).then(function () {
+                window.location.href = '/lecturer-dashboard/';
             });
-        });
+        }
+
+        function showAccessDeniedMessage(message) {
+            Swal.fire({
+                title: 'Access Denied',
+                text: message || 'Invalid Staff ID or Password.',
+                icon: 'error',
+                confirmButtonColor: '#D32F2F',
+                borderRadius: '12px'
+            });
+        }
+
+        function showSystemError() {
+            Swal.fire({
+                title: 'System Error',
+                text: 'Could not connect to the server. Please try again.',
+                icon: 'error',
+                confirmButtonColor: '#D32F2F'
+            });
+        }
     </script>
 </body>
 </html>

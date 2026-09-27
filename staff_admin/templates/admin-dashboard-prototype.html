@@ -244,18 +244,25 @@
           Dashboard
         </a>
 
-        <div class="nav-label" style="margin-top:12px;">Manage</div>
+        <div class="nav-label" style="margin-top: 12px;">Manage</div>
         <a class="nav-link" href="#" data-target="section-manage" data-status="all">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
           Staff Management
         </a>
         <a class="nav-link" href="#" data-target="section-manage" data-status="suspended">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M4.9 4.9l14.2 14.2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M4.9 4.9l14.2 14.2"></path>
+          </svg>
           Suspended Staffs
           <span class="nav-badge" id="sidebarSuspendedCount">0</span>
         </a>
 
-        <div class="nav-label" style="margin-top:12px;">System</div>
+        <div class="nav-label" style="margin-top: 12px;">System</div>
         <a class="nav-link" href="#" data-target="section-settings">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           System Settings
@@ -278,14 +285,17 @@
     <!-- Main area -->
     <main class="main">
       <div class="topbar">
-        <div>
+        <div class="header-content">
           <h1>Staff Management &amp; Overview</h1>
           <div class="subtitle">Manage academic staff accounts, roles, and access</div>
         </div>
 
         <!-- Search -->
         <div class="topbar-search">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
           <input
             id="searchInput"
             type="text"
@@ -318,7 +328,7 @@
 
             <!-- Active accounts -->
             <div class="bento-card card-wide-top">
-              <div style="flex:1;">
+              <div style="flex: 1;">
                 <div class="bento-label">Active Accounts</div>
                 <div class="bento-value" id="bentoActive">0</div>
                 <div class="bento-sub" style="color: #6B7A94;">Computer Science Department</div>
@@ -331,7 +341,7 @@
 
             <!-- Suspended accounts -->
             <div class="bento-card card-wide-bottom">
-              <div style="flex:1; margin-bottom: 24px;">
+              <div style="flex: 1; margin-bottom: 24px;">
                 <div class="bento-label" style="color: #F8EBF0;">Suspended Accounts</div>
                 <div class="bento-value" id="bentoSuspended">0</div>
                 <div class="bento-sub">Flagged for security review</div>
@@ -349,16 +359,26 @@
 
         <!-- Staff management table -->
         <div id="section-manage" class="content-section" style="display:none;">
-          <h2 id="tableSectionTitle" style="margin-top:0; font-size:18px; margin-bottom: 20px;">All Academic Staff</h2>
+          <h2 id="tableSectionTitle" style="margin-top: 0; font-size: 18px; margin-bottom: 20px;">
+            All Academic Staff
+          </h2>
 
           <div class="table-card">
             <div class="table-toolbar">
               <div class="toolbar-right" style="margin-left: auto;">
                 <button class="export-btn">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg> Export
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <path d="M7 10l5 5 5-5M12 15V3"></path>
+                  </svg>
+                  Export
                 </button>
+
                 <button class="add-btn">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg> Add Staff
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14M5 12h14"></path>
+                  </svg>
+                  Add Staff
                 </button>
               </div>
             </div>
@@ -378,7 +398,9 @@
 
         <!-- Settings -->
         <div id="section-settings" class="content-section" style="display:none;">
-          <h2 style="margin-top:0; font-size:22px; margin-bottom: 24px;">Super Admin Settings</h2>
+          <h2 style="margin-top: 0; font-size: 22px; margin-bottom: 24px;">
+            Super Admin Settings
+          </h2>
 
           <div class="settings-card">
             <form id="adminSettingsForm" class="settings-form">
@@ -386,21 +408,38 @@
                 <div class="admin-avatar large" id="adminDisplayPhoto">SA</div>
 
                 <div class="avatar-actions">
-                  <div class="admin-name" id="adminDisplayName" style="color: var(--navy-900); font-size: 16px; margin-bottom: 6px;">Sarah Aliyu</div>
+                  <div
+                    class="admin-name"
+                    id="adminDisplayName"
+                    style="color: var(--navy-900); font-size: 16px; margin-bottom: 6px;"
+                  >
+                    Sarah Aliyu
+                  </div>
 
-                  <input type="file" id="adminImageUpload" accept="image/png, image/jpeg" style="display:none;">
-                  <button type="button" class="change-photo-btn" onclick="document.getElementById('adminImageUpload').click()">Upload New Photo</button>
+                  <input
+                    type="file"
+                    id="adminImageUpload"
+                    accept="image/png, image/jpeg"
+                    style="display: none;"
+                  >
+                  <button
+                    type="button"
+                    class="change-photo-btn"
+                    onclick="document.getElementById('adminImageUpload').click()"
+                  >
+                    Upload New Photo
+                  </button>
                 </div>
               </div>
 
               <div class="form-grid">
                 <div class="input-group">
-                  <label>Full Name</label>
+                  <label for="adminNameInput">Full Name</label>
                   <input type="text" id="adminNameInput" required>
                 </div>
 
                 <div class="input-group">
-                  <label>Official Email Address</label>
+                  <label for="adminEmailInput">Official Email Address</label>
                   <input type="email" id="adminEmailInput" required>
                 </div>
               </div>
@@ -409,12 +448,12 @@
 
               <div class="form-grid">
                 <div class="input-group">
-                  <label>New Password</label>
+                  <label for="adminPasswordInput">New Password</label>
                   <input type="password" id="adminPasswordInput" placeholder="Leave blank to keep current password">
                 </div>
 
                 <div class="input-group">
-                  <label>Confirm New Password</label>
+                  <label for="adminConfirmPasswordInput">Confirm New Password</label>
                   <input type="password" id="adminConfirmPasswordInput" placeholder="Confirm your new password">
                 </div>
               </div>
@@ -429,44 +468,43 @@
     </main>
   </div>
 
-  <!-- Add staff modal -->
+  <!-- Window for adding a new staff member. -->
   <div class="modal-overlay" id="addStaffModal">
     <div class="modal-box">
       <h3>Add New Staff Member</h3>
-      <form id="addStaffForm">
-        <input type="text" id="newId" placeholder="Staff ID (e.g. STF-1004)" required>
-        <input type="text" id="newName" placeholder="Full Name" required>
 
-        <select id="newStatus" required>
-          <option value="Active">Active</option>
-          <option value="Suspended">Suspended</option>
-        </select>
-
-        <div class="modal-actions">
-          <button type="button" class="cancel-btn" id="closeAddModalBtn">Cancel</button>
-          <button type="submit" class="save-btn">Save Staff</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Add staff modal -->
-  <div class="modal-overlay" id="addStaffModal">
-    <div class="modal-box">
-      <h3>Add New Staff Member</h3>
       <form id="addStaffForm">
         <div style="margin-bottom: 12px; text-align: left;">
-          <input type="text" id="newId" placeholder="Staff ID (e.g. STF-1004)" required style="width: 100%;">
+          <label for="newId">Staff ID</label>
+          <input
+            type="text"
+            id="newId"
+            placeholder="Staff ID (e.g. STF-1004)"
+            required
+            style="width: 100%;"
+          >
         </div>
 
         <div style="margin-bottom: 12px; text-align: left;">
-          <input type="text" id="newName" placeholder="Full Name" required style="width: 100%;">
-          <div id="newNameError" style="color: #D32F2F; font-size: 12px; font-weight: 600; margin-top: 6px; display: none;">
+          <label for="newName">Full Name</label>
+          <input
+            type="text"
+            id="newName"
+            placeholder="Full Name"
+            required
+            style="width: 100%;"
+          >
+
+          <div
+            id="newNameError"
+            style="color: #D32F2F; font-size: 12px; font-weight: 600; margin-top: 6px; display: none;"
+          >
             Only letters and spaces are allowed.
           </div>
         </div>
 
         <div style="margin-bottom: 20px;">
+          <label for="newStatus">Account Status</label>
           <select id="newStatus" required style="width: 100%;">
             <option value="Active">Active</option>
             <option value="Suspended">Suspended</option>
@@ -481,24 +519,48 @@
     </div>
   </div>
 
-  <!-- Edit staff modal -->
+  <!-- Window for changing a staff member's name and status. -->
   <div class="modal-overlay" id="editStatusModal">
     <div class="modal-box">
       <h3>Update Staff Profile</h3>
+
       <form id="editStatusForm">
         <input type="hidden" id="editStaffId">
 
         <div style="margin-bottom: 15px; text-align: left;">
-          <label style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: var(--text-muted);">Staff Name</label>
-          <input type="text" id="editStaffNameInput" required style="width: 100%; padding: 10px; border: 1.5px solid var(--hairline); border-radius: 8px; outline: none;">
-          <div id="editNameError" style="color: #D32F2F; font-size: 12px; font-weight: 600; margin-top: 6px; display: none;">
+          <label
+            for="editStaffNameInput"
+            style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: var(--text-muted);"
+          >
+            Staff Name
+          </label>
+          <input
+            type="text"
+            id="editStaffNameInput"
+            required
+            style="width: 100%; padding: 10px; border: 1.5px solid var(--hairline); border-radius: 8px; outline: none;"
+          >
+
+          <div
+            id="editNameError"
+            style="color: #D32F2F; font-size: 12px; font-weight: 600; margin-top: 6px; display: none;"
+          >
             Only letters and spaces are allowed.
           </div>
         </div>
 
         <div style="margin-bottom: 20px; text-align: left;">
-          <label style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: var(--text-muted);">Account Status</label>
-          <select id="editStatusSelect" required style="width: 100%; padding: 10px; border: 1.5px solid var(--hairline); border-radius: 8px; outline: none;">
+          <label
+            for="editStatusSelect"
+            style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: var(--text-muted);"
+          >
+            Account Status
+          </label>
+          <select
+            id="editStatusSelect"
+            required
+            style="width: 100%; padding: 10px; border: 1.5px solid var(--hairline); border-radius: 8px; outline: none;"
+          >
             <option value="Active">Active</option>
             <option value="Suspended">Suspended</option>
           </select>

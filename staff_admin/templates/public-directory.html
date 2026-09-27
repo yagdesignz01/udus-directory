@@ -393,6 +393,13 @@
       color: var(--udus-dark-green);
     }
 
+    .staff-role {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--udus-plum);
+      margin-top: 4px;
+    }
+
     .staff-cta {
       display: flex;
       align-items: center;
@@ -558,6 +565,12 @@
       background: var(--surface-alt);
       padding: 6px 12px;
       border-radius: 100px;
+    }
+
+    .drawer-tag.role-tag {
+      color: var(--udus-plum);
+      background: var(--udus-plum-light);
+      border: 1px solid rgba(159, 74, 113, 0.2);
     }
 
     .drawer-section-title {
@@ -812,7 +825,7 @@
           <circle cx="11" cy="11" r="7"/>
           <path d="m21 21-4.3-4.3"/>
         </svg>
-        <input id="searchInput" type="text" placeholder="Search by staff name, course code, or specialization…" />
+        <input id="searchInput" type="text" placeholder="Search by staff name, course code, specialization or administrative role…" />
         <button class="search-clear" id="clearBtn">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
             <path d="M18 6 6 18M6 6l12 12"/>
@@ -888,227 +901,413 @@
   </div>
 
   <script>
-    let STAFF = [];
-    const AVATAR_COLORS = ['#9F4A71','#005A01','#8BC24A','#12233F','#008001','#6B7A94'];
+    let staffMembers = [];
+    let searchText = '';
+    let selectedTitle = 'all';
 
-    const ICONS = {
-      building: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="1"/><path d="M9 22v-4h6v4M9 6h.01M9 10h.01M9 14h.01M15 6h.01M15 10h.01M15 14h.01"/></svg>',
-      stairs: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20h4v-4h4v-4h4V8h4V4"/></svg>',
-      corridor: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20 12 4l8 16M8 20l4-8 4 8"/></svg>',
-      door: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="1"/><circle cx="14.5" cy="12" r="1" fill="currentColor" stroke="none"/></svg>'
+    const avatarColors = [
+      '#9F4A71',
+      '#005A01',
+      '#8BC24A',
+      '#12233F',
+      '#008001',
+      '#6B7A94'
+    ];
+
+    const icons = {
+      building: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="1"></rect><path d="M9 22v-4h6v4M9 6h.01M9 10h.01M9 14h.01M15 6h.01M15 10h.01M15 14h.01"></path></svg>',
+      stairs: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20h4v-4h4v-4h4V8h4V4"></path></svg>',
+      corridor: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20 12 4l8 16M8 20l4-8 4 8"></path></svg>',
+      door: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="1"></rect><circle cx="14.5" cy="12" r="1" fill="currentColor" stroke="none"></circle></svg>'
     };
-
-    function initials(name){
-      const parts = (name || "UDUS Staff").replace(/^(Dr\.|Prof\.|Mr\.|Mrs\.)\s*/i, '').trim().split(' ');
-      return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
-    }
-
-    async function fetchLiveDirectory() {
-        try {
-            const response = await fetch('/api/directory/');
-            const data = await response.json();
-            STAFF = data.staff.sort((a, b) => a.name.localeCompare(b.name));
-            renderGrid();
-        } catch (error) {
-            console.error("Error fetching directory:", error);
-            document.getElementById('staffGrid').innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;">Error connecting to database.</div>';
-        }
-    }
 
     const grid = document.getElementById('staffGrid');
     const resultsCount = document.getElementById('resultsCount');
     const searchInput = document.getElementById('searchInput');
-    const clearBtn = document.getElementById('clearBtn');
+    const clearButton = document.getElementById('clearBtn');
+    const overlay = document.getElementById('overlay');
+    const drawer = document.getElementById('drawer');
 
-    // Set the default filter state
-    let query = '';
-    let activeTitle = 'all';
+    function getInitials(name) {
+      const staffName = (name || 'UDUS Staff')
+        .replace(/^(Dr\.|Prof\.|Mr\.|Mrs\.)\s*/i, '')
+        .trim();
+
+      const nameParts = staffName.split(' ');
+      const firstLetter = nameParts[0] ? nameParts[0][0] : 'U';
+      const secondLetter = nameParts[1] ? nameParts[1][0] : '';
+
+      return (firstLetter + secondLetter).toUpperCase();
+    }
+
+    async function loadStaffMembers() {
+      try {
+        const response = await fetch('/api/directory/');
+        const data = await response.json();
+
+        staffMembers = data.staff.sort(function (firstStaff, secondStaff) {
+          return firstStaff.name.localeCompare(secondStaff.name);
+        });
+
+        displayStaffMembers();
+      } catch (error) {
+        console.error('Error fetching directory:', error);
+        grid.innerHTML = '<div style="padding: 40px; text-align: center;">Error connecting to database.</div>';
+      }
+    }
+
+    function staffMatchesTitle(staff) {
+      if (selectedTitle === 'all') {
+        return true;
+      }
+
+      if (selectedTitle === 'Others') {
+        return !staff.title || staff.title === 'Others';
+      }
+
+      return staff.title === selectedTitle;
+    }
+
+    function staffMatchesSearch(staff) {
+      const searchableText = [
+        staff.name,
+        staff.courses_taught || '',
+        staff.specializations || ''
+      ].join(' ').toLowerCase();
+
+      return !searchText || searchableText.includes(searchText);
+    }
 
     function getFilteredStaff() {
-      const searchText = query.trim().toLowerCase();
+      const typedText = searchText.trim().toLowerCase();
+      searchText = typedText;
 
-      return STAFF.filter(staff => {
-        // 1. Filter by Title Match
-        let matchesTitle = false;
-        if (activeTitle === 'all') {
-            matchesTitle = true;
-        } else if (activeTitle === 'Others') {
-            // If "Others" is selected, show staff who explicitly selected "Others" OR staff who haven't selected a title yet
-            matchesTitle = !staff.title || staff.title === 'Others';
-        } else {
-            matchesTitle = staff.title === activeTitle;
-        }
-
-        // 2. Filter by Search Text
-        const searchableText = (
-          staff.name + ' ' + staff.courses_taught + ' ' + staff.research_interests
-        ).toLowerCase();
-        const searchMatches = !searchText || searchableText.includes(searchText);
-
-        return matchesTitle && searchMatches;
+      return staffMembers.filter(function (staff) {
+        return staffMatchesTitle(staff) && staffMatchesSearch(staff);
       });
     }
 
-    function renderGrid(){
-      const filtered = getFilteredStaff();
-      resultsCount.textContent = `${filtered.length} lecturer${filtered.length!==1?'s':''}`;
+    function createAvatar(staff, index) {
+      if (staff.profile_image) {
+        return '<div class="avatar"><img src="' + staff.profile_image + '" style="width: 100%; height: 100%; object-fit: cover;"></div>';
+      }
 
-      grid.innerHTML = filtered.map((s, index) => {
-        let avatarHTML = `<div class="avatar" style="background:${AVATAR_COLORS[index % AVATAR_COLORS.length]}">${initials(s.name)}</div>`;
-        if (s.profile_image) {
-            avatarHTML = `<div class="avatar"><img src="${s.profile_image}" style="width:100%; height:100%; object-fit:cover;"></div>`;
-        }
+      const color = avatarColors[index % avatarColors.length];
+      return '<div class="avatar" style="background: ' + color + ';">' + getInitials(staff.name) + '</div>';
+    }
 
-        return `
+    function createAdministrativeRole(staff) {
+      const roles = staff.administrative_roles;
+
+      if (!roles || roles.trim() === '' || roles === 'None' || roles === 'Not specified') {
+        return '';
+      }
+
+      const roleText = roles.split(',').map(function (role) {
+        return role.trim();
+      }).join(' • ');
+
+      return '<div class="staff-role">' + roleText + '</div>';
+    }
+
+    function createStaffCard(staff, index) {
+      const avatarHTML = createAvatar(staff, index);
+      const roleHTML = createAdministrativeRole(staff);
+      const title = staff.title && staff.title !== 'Others' ? staff.title + ' ' : '';
+
+      return `
         <div class="staff-card">
           <div class="staff-top">
             ${avatarHTML}
             <div class="staff-name-block">
-              <div class="staff-name">${s.title ? s.title + ' ' : ''}${s.name}</div>
+              <div class="staff-name">${title}${staff.name}</div>
+              ${roleHTML}
             </div>
           </div>
-          <button class="staff-cta" data-id="${s.id}">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 21s-7-5.33-7-11a7 7 0 0 1 14 0c0 5.67-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+
+          <button class="staff-cta" data-id="${staff.id}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+              <path d="M12 21s-7-5.33-7-11a7 7 0 0 1 14 0c0 5.67-7 11-7 11z"></path>
+              <circle cx="12" cy="10" r="2.5"></circle>
+            </svg>
             View Profile &amp; Directions
           </button>
         </div>
-        `;
-      }).join('') || `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-muted);font-weight:500;">No lecturers match your search.</div>`;
+      `;
     }
 
-    // Toggle active filter button and trigger a re-render
-    document.getElementById('filterChips')?.addEventListener('click', e => {
-      const chip = e.target.closest('.chip');
-      if (!chip) return;
+    function displayStaffMembers() {
+      const filteredStaff = getFilteredStaff();
+      const lecturerLabel = filteredStaff.length === 1 ? 'lecturer' : 'lecturers';
 
-      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      activeTitle = chip.dataset.title;
-      renderGrid();
-    });
+      resultsCount.textContent = filteredStaff.length + ' ' + lecturerLabel;
 
-    searchInput.addEventListener('input', e=>{
-      query = e.target.value;
-      clearBtn.style.display = query ? 'flex' : 'none';
-      renderGrid();
-    });
-
-    clearBtn.addEventListener('click', ()=>{
-      searchInput.value = '';
-      query='';
-      clearBtn.style.display='none';
-      renderGrid();
-    });
-
-    grid.addEventListener('click', e=>{
-      const btn = e.target.closest('[data-id]');
-      if(!btn) return;
-      openDrawer(parseInt(btn.dataset.id));
-    });
-
-    const overlay = document.getElementById('overlay');
-    const drawer = document.getElementById('drawer');
-
-    function openDrawer(id){
-      const s = STAFF.find(x => x.id === id);
-      if(!s) return;
-
-      let avatarHTML = `<div class="drawer-photo" style="background:var(--udus-dark-green)">${initials(s.name)}</div>`;
-      if (s.profile_image) {
-          avatarHTML = `<div class="drawer-photo"><img src="${s.profile_image}" style="width:100%; height:100%; object-fit:cover;"></div>`;
+      if (filteredStaff.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--text-muted);">No lecturers match your search.</div>';
+        return;
       }
 
-      const tagsArray = s.research_interests ? s.research_interests.split(',').map(t => t.trim()).filter(t=>t) : [];
-      const tagsHTML = tagsArray.map(tag => `<span class="drawer-tag">${tag}</span>`).join('');
+      grid.innerHTML = filteredStaff.map(function (staff, index) {
+        return createStaffCard(staff, index);
+      }).join('');
+    }
+
+    function createDrawerAvatar(staff) {
+      if (staff.profile_image) {
+        return '<div class="drawer-photo"><img src="' + staff.profile_image + '" style="width: 100%; height: 100%; object-fit: cover;"></div>';
+      }
+
+      return '<div class="drawer-photo" style="background: var(--udus-dark-green);">' + getInitials(staff.name) + '</div>';
+    }
+
+    function createTags(text, className) {
+      if (!text || text === 'None' || text === 'Not specified') {
+        return '';
+      }
+
+      return text.split(',').map(function (item) {
+        return '<span class="drawer-tag ' + className + '">' + item.trim() + '</span>';
+      }).join('');
+    }
+
+    function displayDrawerProfile(staff) {
+      const avatarHTML = createDrawerAvatar(staff);
+      const title = staff.title && staff.title !== 'Others' ? staff.title + ' ' : '';
+      const specializationTags = createTags(staff.specializations, '');
+      const roleTags = createTags(staff.administrative_roles, 'role-tag');
+
+      let tagsHTML = '';
+
+      if (specializationTags) {
+        tagsHTML += '<div class="drawer-tags">' + specializationTags + '</div>';
+      }
+
+      if (roleTags) {
+        tagsHTML += '<div class="drawer-tags">' + roleTags + '</div>';
+      }
 
       document.getElementById('drawerProfile').innerHTML = `
         ${avatarHTML}
         <div class="drawer-id">
-          <h3>${s.title && s.title !== 'Others' ? s.title + ' ' : ''}${s.name}</h3>
-          ${tagsHTML ? `<div class="drawer-tags">${tagsHTML}</div>` : ''}
+          <h3>${title}${staff.name}</h3>
+          ${tagsHTML}
         </div>
       `;
+    }
 
-      let pathwaySteps = [];
-      if(s.building) pathwaySteps.push({ icon: "building", label: "Enter via", value: s.building, code: s.building.substring(0, 7).toUpperCase() });
-      if(s.floor) pathwaySteps.push({ icon: "stairs", label: "Take the stairs to", value: s.floor, code: "LEVEL 0" + s.floor.replace(/\D/g,'') });
-      if(s.guidance) pathwaySteps.push({ icon: "corridor", label: "Follow the corridor to", value: s.guidance, code: "PATH" });
-      if(s.office_number) {
-          pathwaySteps.push({ icon: "door", label: "Arrive at", value: s.office_number, code: s.office_number.toUpperCase(), final: true });
+    function createDirections(staff) {
+      const steps = [];
+
+      if (staff.building) {
+        steps.push({
+          icon: 'building',
+          label: 'Enter via',
+          value: staff.building,
+          code: staff.building.substring(0, 7).toUpperCase()
+        });
       }
 
-      document.getElementById('pathwaySteps').innerHTML = pathwaySteps.map((step, i) => `
-        <div class="pathway-step ${step.final ? 'step-final' : ''}">
-          <div class="step-rail">
-            <div class="step-node">${ICONS[step.icon]}</div>
-            ${i < pathwaySteps.length-1 ? '<div class="step-line"></div>' : ''}
-          </div>
-          <div class="step-body">
-            <div class="step-label">${step.label}</div>
-            <div class="step-value">${step.value}</div>
-            ${step.code && step.code !== "LEVEL 0" && step.code !== "PATH" ? `<div class="step-code">${step.code}</div>` : ''}
-          </div>
-        </div>
-      `).join('');
-
-      let officeHoursHTML = '';
-      if (s.working_hours) {
-           const lines = s.working_hours.split('\n').map(l => l.trim()).filter(l => l);
-           officeHoursHTML = lines.map(line => {
-               const parts = line.split(':');
-               const day = parts.shift().trim();
-               const time = parts.join(':').trim();
-               return `<div class="oh-row"><span class="oh-day">${day}</span><span class="oh-time mono">${time}</span></div>`;
-           }).join('');
-      } else {
-           officeHoursHTML = `<div style="font-size:14px; color:var(--text-muted);">No office hours set.</div>`;
+      if (staff.floor) {
+        steps.push({
+          icon: 'stairs',
+          label: 'Take the stairs to',
+          value: staff.floor,
+          code: 'LEVEL 0' + staff.floor.replace(/\D/g, '')
+        });
       }
-      document.getElementById('officeHours').innerHTML = officeHoursHTML;
 
-      const courseArray = s.courses_taught ? s.courses_taught.split(',').map(c => c.trim()).filter(c=>c) : [];
-      document.getElementById('coursesTaught').innerHTML = courseArray.map(course => {
-        const match = course.match(/^([a-zA-Z]{3}\s*\d{3})\s+(.*)/i);
-        if (match) {
-          return `<div class="course-row"><span class="course-code2">${match[1].toUpperCase()}</span><span class="course-name2">${match[2]}</span></div>`;
+      if (staff.guidance) {
+        steps.push({
+          icon: 'corridor',
+          label: 'Follow the corridor to',
+          value: staff.guidance,
+          code: 'PATH'
+        });
+      }
+
+      if (staff.office_number) {
+        steps.push({
+          icon: 'door',
+          label: 'Arrive at',
+          value: staff.office_number,
+          code: staff.office_number.toUpperCase(),
+          final: true
+        });
+      }
+
+      return steps.map(function (step, index) {
+        const finalClass = step.final ? 'step-final' : '';
+        const lineHTML = index < steps.length - 1 ? '<div class="step-line"></div>' : '';
+        let codeHTML = '';
+
+        if (step.code && step.code !== 'LEVEL 0' && step.code !== 'PATH') {
+          codeHTML = '<div class="step-code">' + step.code + '</div>';
         }
-        return `<div class="course-row"><span class="course-code2">${course}</span></div>`;
-      }).join('') || `<div style="font-size:14px; color:var(--text-muted);">No courses listed.</div>`;
 
-      const emailBtn = document.getElementById('emailBtn');
-      const waBtn = document.getElementById('waBtn');
+        return `
+          <div class="pathway-step ${finalClass}">
+            <div class="step-rail">
+              <div class="step-node">${icons[step.icon]}</div>
+              ${lineHTML}
+            </div>
+            <div class="step-body">
+              <div class="step-label">${step.label}</div>
+              <div class="step-value">${step.value}</div>
+              ${codeHTML}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
 
-      if(s.email) {
-        emailBtn.style.display = 'flex';
-        emailBtn.onclick = () => window.location.href = `mailto:${s.email}`;
-      } else {
-        emailBtn.style.display = 'none';
+    function displayOfficeHours(staff) {
+      if (!staff.working_hours) {
+        document.getElementById('officeHours').innerHTML = '<div style="font-size: 14px; color: var(--text-muted);">No office hours set.</div>';
+        return;
       }
 
-      if(s.whatsapp) {
-          waBtn.style.display = 'flex';
-          let cleanNumber = s.whatsapp.replace(/[^0-9]/g, '');
-          if (cleanNumber.startsWith('0')) { cleanNumber = '234' + cleanNumber.substring(1); }
-          waBtn.onclick = () => window.open(`https://wa.me/${cleanNumber}`, '_blank');
-      } else {
-          waBtn.style.display = 'none';
+      const officeHours = staff.working_hours.split('\n').filter(function (line) {
+        return line.trim() !== '';
+      });
+
+      const rows = officeHours.map(function (line) {
+        const parts = line.split(':');
+        const day = parts.shift().trim();
+        const time = parts.join(':').trim();
+
+        return '<div class="oh-row"><span class="oh-day">' + day + '</span><span class="oh-time mono">' + time + '</span></div>';
+      }).join('');
+
+      document.getElementById('officeHours').innerHTML = rows;
+    }
+
+    function displayCourses(staff) {
+      if (!staff.courses_taught) {
+        document.getElementById('coursesTaught').innerHTML = '<div style="font-size: 14px; color: var(--text-muted);">No courses listed.</div>';
+        return;
       }
+
+      const courses = staff.courses_taught.split(',').filter(function (course) {
+        return course.trim() !== '';
+      });
+
+      const courseRows = courses.map(function (course) {
+        const cleanCourse = course.trim();
+        const match = cleanCourse.match(/^([a-zA-Z]{3}\s*\d{3})\s+(.*)/i);
+
+        if (match) {
+          return '<div class="course-row"><span class="course-code2">' + match[1].toUpperCase() + '</span><span class="course-name2">' + match[2] + '</span></div>';
+        }
+
+        return '<div class="course-row"><span class="course-code2">' + cleanCourse + '</span></div>';
+      }).join('');
+
+      document.getElementById('coursesTaught').innerHTML = courseRows || '<div style="font-size: 14px; color: var(--text-muted);">No courses listed.</div>';
+    }
+
+    function setupContactButtons(staff) {
+      const emailButton = document.getElementById('emailBtn');
+      const whatsappButton = document.getElementById('waBtn');
+
+      if (staff.email) {
+        emailButton.style.display = 'flex';
+        emailButton.onclick = function () {
+          window.location.href = 'mailto:' + staff.email;
+        };
+      } else {
+        emailButton.style.display = 'none';
+      }
+
+      if (staff.whatsapp) {
+        whatsappButton.style.display = 'flex';
+
+        let phoneNumber = staff.whatsapp.replace(/[^0-9]/g, '');
+
+        if (phoneNumber.startsWith('0')) {
+          phoneNumber = '234' + phoneNumber.substring(1);
+        }
+
+        whatsappButton.onclick = function () {
+          window.open('https://wa.me/' + phoneNumber, '_blank');
+        };
+      } else {
+        whatsappButton.style.display = 'none';
+      }
+    }
+
+    function openDrawer(staffId) {
+      const staff = staffMembers.find(function (member) {
+        return member.id === staffId;
+      });
+
+      if (!staff) {
+        return;
+      }
+
+      displayDrawerProfile(staff);
+      document.getElementById('pathwaySteps').innerHTML = createDirections(staff);
+      displayOfficeHours(staff);
+      displayCourses(staff);
+      setupContactButtons(staff);
 
       overlay.classList.add('open');
       drawer.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
 
-    function closeDrawer(){
+    function closeDrawer() {
       overlay.classList.remove('open');
       drawer.classList.remove('open');
       document.body.style.overflow = '';
     }
 
+    document.getElementById('filterChips').addEventListener('click', function (event) {
+      const clickedChip = event.target.closest('.chip');
+
+      if (!clickedChip) {
+        return;
+      }
+
+      document.querySelectorAll('.chip').forEach(function (chip) {
+        chip.classList.remove('active');
+      });
+
+      clickedChip.classList.add('active');
+      selectedTitle = clickedChip.dataset.title;
+      displayStaffMembers();
+    });
+
+    searchInput.addEventListener('input', function (event) {
+      searchText = event.target.value;
+      clearButton.style.display = searchText ? 'flex' : 'none';
+      displayStaffMembers();
+    });
+
+    clearButton.addEventListener('click', function () {
+      searchInput.value = '';
+      searchText = '';
+      clearButton.style.display = 'none';
+      displayStaffMembers();
+    });
+
+    grid.addEventListener('click', function (event) {
+      const clickedButton = event.target.closest('[data-id]');
+
+      if (clickedButton) {
+        openDrawer(parseInt(clickedButton.dataset.id, 10));
+      }
+    });
+
     overlay.addEventListener('click', closeDrawer);
     document.getElementById('drawerClose').addEventListener('click', closeDrawer);
-    document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeDrawer(); });
 
-    fetchLiveDirectory();
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        closeDrawer();
+      }
+    });
+
+    loadStaffMembers();
   </script>
 </body>
 </html>
