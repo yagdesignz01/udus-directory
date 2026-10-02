@@ -116,19 +116,17 @@ USE_I18N = True
 USE_TZ = True
 
 
-import os 
-
+# Static and media
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STORAGES = {
-    # Handles media uploads (profile pictures)
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    # Handles CSS and JS files for production
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+# Email
+MAILERS = {
+    'default': {
+        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+import os
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
