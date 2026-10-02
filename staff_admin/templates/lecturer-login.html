@@ -165,99 +165,70 @@
         </p>
     </main>
 
-    <script>
-        const loginForm = document.getElementById('lecturerLoginForm');
+  <script>
+      document.getElementById('lecturerLoginForm').addEventListener('submit', async function(event) {
+          event.preventDefault();
 
-        loginForm.addEventListener('submit', function (event) {
-            event.preventDefault();
+          const staffIdInput = document.getElementById('staff_id').value;
+          const passwordInput = document.getElementById('password').value;
+          const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-            const typedStaffId = document.getElementById('staff_id').value;
-            const typedPassword = document.getElementById('password').value;
-            const djangoCsrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+          Swal.fire({
+              title: 'Authenticating...',
+              text: 'Please wait while we verify your credentials.',
+              allowOutsideClick: false,
+              didOpen: () => Swal.showLoading()
+          });
 
-            showLoadingMessage();
-            sendLoginRequest(typedStaffId, typedPassword, djangoCsrfToken);
-        });
+          try {
+              const response = await fetch('/api/lecturer/login/', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': csrfToken
+                  },
+                  body: JSON.stringify({
+                      staff_id: staffIdInput,
+                      password: passwordInput
+                  })
+              });
+              
+              const data = await response.json();
+              console.log("SERVER RESPONSE:", data); // This exposes exactly what the backend sends!
+              
+              if (response.ok && data.success) {
+                  localStorage.setItem('currentStaffId', data.staff_id);
 
-        function showLoadingMessage() {
-            Swal.fire({
-                title: 'Authenticating...',
-                text: 'Please wait while we verify your credentials.',
-                allowOutsideClick: false,
-                didOpen: function () {
-                    Swal.showLoading();
-                }
-            });
-        }
-
-        function sendLoginRequest(staffId, password, csrfToken) {
-            fetch('/api/lecturer/login/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
-                },
-                body: JSON.stringify({
-                    staff_id: staffId,
-                    password: password
-                })
-            })
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (data) {
-                    handleLoginResponse(data);
-                })
-                .catch(function () {
-                    showSystemError();
-                });
-        }
-
-        function handleLoginResponse(data) {
-            if (data.success) {
-                saveStaffId(data.staff_id);
-                showSuccessMessage();
-                return;
-            }
-
-            showAccessDeniedMessage(data.message);
-        }
-
-        function saveStaffId(staffId) {
-            localStorage.setItem('currentStaffId', staffId);
-        }
-
-        function showSuccessMessage() {
-            Swal.fire({
-                title: 'Welcome Back!',
-                text: 'Login successful. Redirecting to your dashboard...',
-                icon: 'success',
-                confirmButtonColor: '#008001',
-                timer: 2000,
-                showConfirmButton: false
-            }).then(function () {
-                window.location.href = '/lecturer-dashboard/';
-            });
-        }
-
-        function showAccessDeniedMessage(message) {
-            Swal.fire({
-                title: 'Access Denied',
-                text: message || 'Invalid Staff ID or Password.',
-                icon: 'error',
-                confirmButtonColor: '#D32F2F',
-                borderRadius: '12px'
-            });
-        }
-
-        function showSystemError() {
-            Swal.fire({
-                title: 'System Error',
-                text: 'Could not connect to the server. Please try again.',
-                icon: 'error',
-                confirmButtonColor: '#D32F2F'
-            });
-        }
-    </script>
+                  Swal.fire({
+                      title: 'Welcome Back!',
+                      text: 'Login successful. Redirecting to your dashboard...',
+                      icon: 'success',
+                      confirmButtonColor: '#008001',
+                      timer: 2000,
+                      showConfirmButton: false
+                  }).then(() => window.location.href = '/lecturer-dashboard/');
+              } else {
+                  // Catch both 'error' and 'message' to be completely bulletproof
+                  const serverError = data.error || data.message || 'Invalid Staff ID or Password.';
+                  
+                  Swal.fire({
+                      title: 'Access Denied',
+                      text: serverError,
+                      icon: 'error',
+                      confirmButtonColor: '#D32F2F',
+                      borderRadius: '12px'
+                  });
+              }
+          } catch (error) {
+              console.error("Fetch Error:", error);
+              Swal.fire({
+                  title: 'System Error',
+                  text: 'Could not connect to the server. Please try again.',
+                  icon: 'error',
+                  confirmButtonColor: '#D32F2F'
+              });
+          }
+      });
+  </script>
 </body>
 </html>

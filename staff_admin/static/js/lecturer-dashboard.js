@@ -2,6 +2,9 @@ const currentStaffId = localStorage.getItem('currentStaffId');
 
 if (!currentStaffId) window.location.replace('/lecturer-login/');
 
+// ==========================================
+// LOGOUT AND PAGE STATE
+// ==========================================
 function handleLogout() {
     localStorage.removeItem('currentStaffId');
     window.location.href = '/lecturer-login/';
@@ -11,6 +14,9 @@ document.getElementById('logoutLink')?.addEventListener('click', handleLogout);
 document.getElementById('mobileLogoutBtn')?.addEventListener('click', handleLogout);
 document.getElementById('discardBtn')?.addEventListener('click', () => window.location.reload());
 
+// ==========================================
+// NAVIGATION
+// ==========================================
 document.querySelectorAll('.nav-link[data-target]').forEach(link => {
     link.addEventListener('click', () => {
         document.querySelectorAll('.nav-link[data-target]').forEach(sl => sl.classList.remove('active'));
@@ -20,6 +26,9 @@ document.querySelectorAll('.nav-link[data-target]').forEach(link => {
     });
 });
 
+// ==========================================
+// IMAGE UPLOAD PREVIEW
+// ==========================================
 document.getElementById('uploadTriggerBtn')?.addEventListener('click', () => document.getElementById('imageUpload')?.click());
 
 document.getElementById('imageUpload')?.addEventListener('change', function() {
@@ -35,6 +44,9 @@ document.getElementById('imageUpload')?.addEventListener('change', function() {
     }
 });
 
+// ==========================================
+// COURSE TAGS
+// ==========================================
 const tagShell = document.getElementById('tagShell');
 const tagInput = document.getElementById('tagInput');
 
@@ -50,7 +62,9 @@ function addChip(value) {
 tagInput?.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); addChip(tagInput.value); } });
 tagShell?.addEventListener('click', e => { const rb = e.target.closest('button[data-remove]'); if (rb) rb.closest('.tag-chip').remove(); });
 
-// Checkboxes Logic
+// ==========================================
+// CHECKBOX LOGIC
+// ==========================================
 document.getElementById('otherSpecCheckbox')?.addEventListener('change', function() {
     const input = document.getElementById('otherSpecInput');
     if(input) { input.disabled = !this.checked; if (this.checked) input.focus(); else input.value = ''; }
@@ -73,6 +87,9 @@ document.querySelectorAll('#adminRoleCheckboxes input[type="checkbox"]:not(#role
     cb.addEventListener('change', function() { if (this.checked) { const ncb = document.getElementById('roleNoneCheckbox'); if (ncb) ncb.checked = false; } });
 });
 
+// ==========================================
+// PROFILE DATA
+// ==========================================
 async function loadProfileData() {
     if (!currentStaffId) return;
     try {
@@ -112,7 +129,7 @@ async function loadProfileData() {
                 if(dp) dp.innerHTML = img; if(sa) sa.innerHTML = img;
             } else {
                 const inits = (data.name||"U").replace(/^(Dr\.|Prof\.|Mr\.|Mrs\.)\s*/i, '').trim().split(' ');
-                const res = (inits[0][0] + (inits[1]?inits[1][0]:'')).toUpperCase();
+                const res = (inits[0][0] + (inits[1]?inits[1][0]: '')).toUpperCase();
                 if(dp) dp.innerHTML = res; if(sa) sa.innerHTML = res;
             }
 
@@ -125,6 +142,9 @@ async function loadProfileData() {
 }
 loadProfileData();
 
+// ==========================================
+// PASSWORD STRENGTH
+// ==========================================
 const passwordInput = document.getElementById('profPassword');
 passwordInput?.addEventListener('input', function() {
     const val = this.value;
@@ -141,6 +161,9 @@ passwordInput?.addEventListener('input', function() {
     bar.style.width = w; bar.style.backgroundColor = col; lbl.textContent = txt; lbl.style.color = col;
 });
 
+// ==========================================
+// PUBLISH PROFILE
+// ==========================================
 document.getElementById('publishBtn')?.addEventListener('click', async (event) => {
     event.preventDefault();
     const formData = new FormData();

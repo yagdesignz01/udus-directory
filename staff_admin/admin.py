@@ -4,15 +4,25 @@ from django.shortcuts import render
 
 from .models import AcademicStaff
 
+
+# ==========================================
+# DJANGO ADMIN REGISTRATION
+# ==========================================
 # Register the staff model in Django's built-in admin panel.
 admin.site.register(AcademicStaff)
 
 
+# ==========================================
+# ADMIN DASHBOARD VIEWS
+# ==========================================
 def dashboard_view(request):
     """Display the admin dashboard page."""
     return render(request, 'admin-dashboard-prototype.html')
 
 
+# ==========================================
+# ADMIN DATA API
+# ==========================================
 def get_staff_data(request):
     """Send all staff records as JSON for the dashboard JavaScript."""
 

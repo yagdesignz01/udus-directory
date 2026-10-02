@@ -13,7 +13,9 @@ function getInitials(fullName) {
     return (firstInitial + secondInitial).toUpperCase();
 }
 
-// Listen for the lecturer login button.
+// ==========================================
+// LOGIN FLOW
+// ==========================================
 document.getElementById('loginBtn').addEventListener('click', async event => {
     event.preventDefault();
 
@@ -25,7 +27,6 @@ document.getElementById('loginBtn').addEventListener('click', async event => {
         return;
     }
 
-    // Change the button text while the server checks the login.
     const loginButton = document.getElementById('loginBtn');
     const originalText = loginButton.innerHTML;
     loginButton.innerHTML = 'Verifying...';
@@ -45,14 +46,12 @@ document.getElementById('loginBtn').addEventListener('click', async event => {
 
         if (response.ok) {
             currentStaffId = data.staff_id;
-            
-            // Show the dashboard after a successful login.
+
             document.getElementById('screen-login').classList.remove('active');
             document.getElementById('screen-dashboard').classList.add('active');
             window.scrollTo(0, 0);
 
             await loadProfileData();
-            
         } else {
             alert(data.error || 'Login failed. Check your credentials.');
         }
@@ -64,14 +63,17 @@ document.getElementById('loginBtn').addEventListener('click', async event => {
     }
 });
 
-// Return to the login screen when either logout button is clicked.
+// ==========================================
+// LOGOUT FLOW
+// ==========================================
 function handleLogout() {
     currentStaffId = null;
     document.getElementById('screen-dashboard').classList.remove('active');
     document.getElementById('screen-login').classList.add('active');
-    document.getElementById('password').value = ''; 
+    document.getElementById('password').value = '';
     window.scrollTo(0, 0);
 }
+
 document
     .getElementById('logoutLink')
     .addEventListener('click', handleLogout);
@@ -80,7 +82,9 @@ document
     .getElementById('mobileLogoutBtn')
     .addEventListener('click', handleLogout);
 
-// Show or hide the password text when the eye button is clicked.
+// ==========================================
+// PASSWORD TOGGLE FLOW
+// ==========================================
 const passwordInput = document.getElementById('password');
 const eyeIcon = document.getElementById('eyeIcon');
 
@@ -94,7 +98,9 @@ document.getElementById('togglePw').addEventListener('click', () => {
     }
 });
 
-// Load the lecturer profile from the database.
+// ==========================================
+// PROFILE LOADING FLOW
+// ==========================================
 async function loadProfileData() {
     if (!currentStaffId) return;
 
@@ -103,11 +109,9 @@ async function loadProfileData() {
         const data = await response.json();
 
         if (response.ok) {
-            // Put the name and rank into the sidebar.
             document.querySelector('.sidebar-profile .name').textContent = data.name;
             document.querySelector('.sidebar-profile .rank').textContent = `${data.rank} · ${data.unit}`;
 
-            // Put the saved values into their matching input fields.
             document.getElementById('profName').value = data.name || '';
             document.getElementById('profRank').value = data.rank || '';
             document.getElementById('profQual').value = data.highest_qualification || '';
@@ -132,7 +136,6 @@ async function loadProfileData() {
                 sidebarAvatar.innerHTML = init;
             }
 
-            // Rebuild the course chips from the saved course list.
             const tagShell = document.getElementById('tagShell');
             tagShell.querySelectorAll('.tag-chip').forEach(chip => chip.remove());
 
@@ -150,7 +153,9 @@ async function loadProfileData() {
     }
 }
 
-// Show a preview when a new lecturer image is selected.
+// ==========================================
+// IMAGE PREVIEW FLOW
+// ==========================================
 document.getElementById('imageUpload').addEventListener('change', function() {
     if (this.files && this.files[0]) {
         const reader = new FileReader();
@@ -164,7 +169,9 @@ document.getElementById('imageUpload').addEventListener('change', function() {
     }
 });
 
-// Save the edited lecturer profile to the database.
+// ==========================================
+// PUBLISH PROFILE FLOW
+// ==========================================
 document.getElementById('publishBtn').addEventListener('click', async () => {
     if (!currentStaffId) return;
 
@@ -179,7 +186,6 @@ document.getElementById('publishBtn').addEventListener('click', async () => {
     formData.append('email', document.getElementById('profEmail').value);
     formData.append('whatsapp', document.getElementById('profWhatsapp').value);
 
-    // Convert the course chips back into one comma-separated value.
     const courseChips = Array.from(
         document.querySelectorAll('.tag-chip')
     ).map(chip => chip.textContent.replace('✕', '').trim());
@@ -209,7 +215,9 @@ document.getElementById('publishBtn').addEventListener('click', async () => {
     }
 });
 
-// These elements are used for adding and removing course chips.
+// ==========================================
+// COURSE TAG FLOW
+// ==========================================
 const tagShell = document.getElementById('tagShell');
 const tagInput = document.getElementById('tagInput');
 
@@ -239,7 +247,9 @@ tagShell.addEventListener('click', event => {
     }
 });
 
-// Scroll smoothly to the selected profile section.
+// ==========================================
+// SECTION NAVIGATION FLOW
+// ==========================================
 document.querySelectorAll('.nav-link[data-target]').forEach(link => {
     link.addEventListener('click', () => {
         document.querySelectorAll('.nav-link[data-target]').forEach(sidebarLink => {

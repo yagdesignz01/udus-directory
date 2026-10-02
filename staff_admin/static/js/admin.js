@@ -1,6 +1,6 @@
 const AVATAR_COLORS = ['#0B1B33', '#33415C', '#8A6A1B', '#1D6B4E', '#5C3A21', '#2A4B7C', '#6B3F8F', '#1F5C7A'];
 let STAFF = [];
-let activeStatus = 'all'; 
+let activeStatus = 'all';
 let query = '';
 
 const STATUS_BADGE = {
@@ -16,6 +16,9 @@ function initials(name) {
 
 const tbody = document.getElementById('tableBody');
 
+// ==========================================
+// STAFF FILTERING
+// ==========================================
 function getFilteredStaff() {
   const searchText = query.trim().toLowerCase();
   return STAFF.filter(staff => {
@@ -28,6 +31,9 @@ function getFilteredStaff() {
   });
 }
 
+// ==========================================
+// TABLE RENDERING
+// ==========================================
 function renderTable() {
   if (!tbody) return;
   const filtered = getFilteredStaff();
@@ -60,6 +66,9 @@ function renderTable() {
   }).join('') || `<tr class="empty-row"><td colspan="3">No staff accounts match your current filters.</td></tr>`;
 }
 
+// ==========================================
+// DASHBOARD METRICS
+// ==========================================
 function updateDynamicMetrics(data) {
   const total = data.length;
   const activeCount = data.filter(staff => (staff.status || '').toLowerCase() === 'active').length;
@@ -70,15 +79,20 @@ function updateDynamicMetrics(data) {
   if (totalElement) totalElement.textContent = total;
   if (activeElement) activeElement.textContent = activeCount;
   if (suspendedElement) suspendedElement.textContent = suspendedCount;
+
   let percent = total > 0 ? Math.round((activeCount / total) * 100) : 0;
   const percentElement = document.getElementById('bentoActivePercent');
   const chart = document.getElementById('activeProgressChart');
   if (percentElement) percentElement.textContent = `${percent}%`;
   if (chart) chart.style.background = `conic-gradient(var(--udus-dgreen) ${percent}%, #F0F2F5 0%)`;
+
   const sidebarSuspended = document.getElementById('sidebarSuspendedCount');
   if (sidebarSuspended) sidebarSuspended.textContent = suspendedCount;
 }
 
+// ==========================================
+// SEARCH AND NAVIGATION
+// ==========================================
 document.getElementById('searchInput')?.addEventListener('input', event => {
   query = event.target.value; renderTable();
 });
@@ -86,12 +100,15 @@ document.getElementById('searchInput')?.addEventListener('input', event => {
 document.getElementById('sidebarNav')?.addEventListener('click', event => {
   const link = event.target.closest('.nav-link');
   if (!link) return;
+
   document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
   link.classList.add('active');
+
   const targetId = link.getAttribute('data-target');
   document.querySelectorAll('.content-section').forEach(section => section.style.display = 'none');
   const targetSection = document.getElementById(targetId);
   if (targetSection) targetSection.style.display = 'block';
+
   if (targetId === 'section-manage') {
     activeStatus = link.getAttribute('data-status');
     const titleElement = document.getElementById('tableSectionTitle');
@@ -109,21 +126,37 @@ document.querySelector('.export-btn')?.addEventListener('click', () => {
   document.body.appendChild(link); link.click(); document.body.removeChild(link);
 });
 
-// -- VALIDATION --
+// ==========================================
+// VALIDATION
+// ==========================================
 function validateNameInput(inputEl, errorEl, submitBtn) {
   if(!inputEl || !errorEl || !submitBtn) return true;
-  const regex = /^[A-Za-z\s']+$/; 
+  const regex = /^[A-Za-z\s']+$/;
   const val = inputEl.value.trim();
+
   if (val === '') {
-    errorEl.style.display = 'none'; submitBtn.disabled = false; submitBtn.style.opacity = '1'; return true;
+    errorEl.style.display = 'none';
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = '1';
+    return true;
   }
+
   if (!regex.test(val)) {
-    errorEl.style.display = 'block'; submitBtn.disabled = true; submitBtn.style.opacity = '0.5'; return false;
+    errorEl.style.display = 'block';
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.5';
+    return false;
   } else {
-    errorEl.style.display = 'none'; submitBtn.disabled = false; submitBtn.style.opacity = '1'; return true;
+    errorEl.style.display = 'none';
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = '1';
+    return true;
   }
 }
 
+// ==========================================
+// ADD STAFF MODAL
+// ==========================================
 const addModal = document.getElementById('addStaffModal');
 const newNameInput = document.getElementById('newName');
 const newNameError = document.getElementById('newNameError');
@@ -136,13 +169,33 @@ newNameInput?.addEventListener('input', () => validateNameInput(newNameInput, ne
 document.getElementById('addStaffForm')?.addEventListener('submit', async event => {
   event.preventDefault();
   if (!validateNameInput(newNameInput, newNameError, addSubmitBtn)) return;
-  const newStaff = { id: document.getElementById('newId').value, name: newNameInput.value.trim(), status: document.getElementById('newStatus').value };
+
+  const newStaff = {
+    id: document.getElementById('newId').value,
+    name: newNameInput.value.trim(),
+    status: document.getElementById('newStatus').value
+  };
+
   try {
-    const response = await fetch('/api/staff/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(newStaff) });
-    if (response.ok) { addModal.style.display = 'none'; document.getElementById('addStaffForm').reset(); loadDataFromDatabase(); }
-  } catch (error) { console.error('Error saving staff:', error); }
+    const response = await fetch('/api/staff/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newStaff)
+    });
+
+    if (response.ok) {
+      addModal.style.display = 'none';
+      document.getElementById('addStaffForm').reset();
+      loadDataFromDatabase();
+    }
+  } catch (error) {
+    console.error('Error saving staff:', error);
+  }
 });
 
+// ==========================================
+// EDIT STAFF MODAL
+// ==========================================
 const editModal = document.getElementById('editStatusModal');
 const editStaffNameInput = document.getElementById('editStaffNameInput');
 const editNameError = document.getElementById('editNameError');
@@ -163,42 +216,73 @@ window.openEditModal = function(id, name, currentStatus) {
 document.getElementById('editStatusForm')?.addEventListener('submit', async event => {
   event.preventDefault();
   if (!validateNameInput(editStaffNameInput, editNameError, editSubmitBtn)) return;
-  const updateData = { id: document.getElementById('editStaffId').value, name: editStaffNameInput.value.trim(), status: document.getElementById('editStatusSelect').value };
+
+  const updateData = {
+    id: document.getElementById('editStaffId').value,
+    name: editStaffNameInput.value.trim(),
+    status: document.getElementById('editStatusSelect').value
+  };
+
   try {
-    const response = await fetch('/api/staff/', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(updateData) });
-    if (response.ok) { editModal.style.display = 'none'; loadDataFromDatabase(); }
-  } catch (error) { console.error('Error updating status:', error); }
+    const response = await fetch('/api/staff/', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updateData)
+    });
+
+    if (response.ok) {
+      editModal.style.display = 'none';
+      loadDataFromDatabase();
+    }
+  } catch (error) {
+    console.error('Error updating status:', error);
+  }
 });
 
 window.deleteStaff = async function(id, name) {
   if (confirm(`Are you sure you want to completely delete ${name}? This action cannot be undone.`)) {
     try {
-      const response = await fetch('/api/staff/', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: id }) });
+      const response = await fetch('/api/staff/', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id })
+      });
       if (response.ok) loadDataFromDatabase();
-    } catch (error) { console.error('Error deleting staff:', error); }
+    } catch (error) {
+      console.error('Error deleting staff:', error);
+    }
   }
 };
 
+// ==========================================
+// DATA LOADING
+// ==========================================
 async function loadDataFromDatabase() {
   try {
     const response = await fetch('/api/staff/');
     STAFF = await response.json();
     updateDynamicMetrics(STAFF);
     renderTable();
-  } catch (error) { console.error('Error fetching data:', error); }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
 }
 
 loadDataFromDatabase();
 
-// Settings Profile Logic
+// ==========================================
+// ADMIN SETTINGS
+// ==========================================
 async function loadAdminSettings() {
   try {
     const response = await fetch('/api/admin-settings/');
     const data = await response.json();
+
     if (response.ok) {
       document.getElementById('adminNameInput').value = data.name || '';
       document.getElementById('adminEmailInput').value = data.email || '';
       document.getElementById('adminDisplayName').textContent = data.name || 'Admin';
+
       const avatar = document.getElementById('adminDisplayPhoto');
       if (data.profile_image) {
         avatar.innerHTML = `<img src="${data.profile_image}" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;">`;
@@ -207,7 +291,9 @@ async function loadAdminSettings() {
         avatar.innerHTML = (nameParts[0][0] + (nameParts[1] ? nameParts[1][0] : '')).toUpperCase();
       }
     }
-  } catch (error) { console.error('Error loading admin settings:', error); }
+  } catch (error) {
+    console.error('Error loading admin settings:', error);
+  }
 }
 
 loadAdminSettings();
@@ -230,11 +316,13 @@ document.getElementById('adminSettingsForm')?.addEventListener('submit', async e
   formData.append('name', document.getElementById('adminNameInput').value);
   formData.append('email', document.getElementById('adminEmailInput').value);
   if (password) formData.append('password', password);
+
   const fileInput = document.getElementById('adminImageUpload');
   if (fileInput.files.length > 0) formData.append('profile_image', fileInput.files[0]);
 
   const saveButton = document.querySelector('#adminSettingsForm .save-btn');
   saveButton.textContent = 'Saving...';
+
   try {
     const response = await fetch('/api/admin-settings/', { method: 'POST', body: formData });
     if (response.ok) {
@@ -242,7 +330,12 @@ document.getElementById('adminSettingsForm')?.addEventListener('submit', async e
       document.getElementById('adminPasswordInput').value = '';
       document.getElementById('adminConfirmPasswordInput').value = '';
       loadAdminSettings();
-    } else { alert('Failed to update settings.'); }
-  } catch (error) { alert('Network error.'); } 
-  finally { saveButton.textContent = 'Save Admin Changes'; }
+    } else {
+      alert('Failed to update settings.');
+    }
+  } catch (error) {
+    alert('Network error.');
+  } finally {
+    saveButton.textContent = 'Save Admin Changes';
+  }
 });

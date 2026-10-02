@@ -1,11 +1,17 @@
 import json
+
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
+
 from .models import AcademicStaff, SystemAdmin
 
+
+# ==========================================
+# HELPER FUNCTIONS
+# ==========================================
 def get_image_url(image):
     if not image:
         return ""
@@ -14,14 +20,16 @@ def get_image_url(image):
     except ValueError:
         return ""
 
+
 def admin_password_is_correct(admin, password):
     if not admin:
         return False
     return admin.password == password or check_password(password, admin.password)
 
+
 def get_staff_profile_data(staff):
     return {
-        "name": staff.name.title(), # Forces Title Case
+        "name": staff.name.title(),  # Forces Title Case
         "title": staff.title,
         "profile_image": get_image_url(staff.profile_image),
         "highest_qualification": staff.highest_qualification or "",
@@ -37,6 +45,10 @@ def get_staff_profile_data(staff):
         "working_hours": staff.working_hours or "",
     }
 
+
+# ==========================================
+# ADMIN VIEWS
+# ==========================================
 def admin_login(request):
     if 'admin_id' in request.session:
         return redirect('admin_dashboard')
@@ -56,9 +68,11 @@ def admin_login(request):
 
     return render(request, 'admin-login.html')
 
+
 def admin_logout(request):
     request.session.flush()
     return redirect('admin_login')
+
 
 def admin_dashboard_view(request):
     if 'admin_id' not in request.session:
@@ -66,12 +80,21 @@ def admin_dashboard_view(request):
     current_admin = SystemAdmin.objects.get(id=request.session['admin_id'])
     return render(request, 'admin-dashboard-prototype.html', {'admin': current_admin})
 
+
+# ==========================================
+# LECTURER PAGE VIEWS
+# ==========================================
 def lecturer_login_view(request):
     return render(request, 'lecturer-login.html')
+
 
 def lecturer_dashboard_view(request):
     return render(request, 'lecturer-dashboard.html')
 
+
+# ==========================================
+# LECTURER AUTHENTICATION AND PROFILE API
+# ==========================================
 @csrf_exempt
 def lecturer_login(request):
     if request.method == 'POST':
@@ -87,13 +110,14 @@ def lecturer_login(request):
                     {"error": "Account suspended. Please contact the administrator."},
                     status=403
                 )
-            
+
             if str(staff.password).strip() == input_pw:
                 return JsonResponse({"success": True, "message": "Login successful", "staff_id": staff.staff_id})
             else:
                 return JsonResponse({"error": "Invalid Staff ID or Password"}, status=401)
         else:
             return JsonResponse({"error": "Invalid Staff ID or Password"}, status=401)
+
 
 @csrf_exempt
 def lecturer_profile(request, staff_id):
@@ -115,14 +139,13 @@ def lecturer_profile(request, staff_id):
         staff.office_number = request.POST.get('office_number', staff.office_number)
         staff.guidance = request.POST.get('guidance', staff.guidance)
         staff.working_hours = request.POST.get('working_hours', staff.working_hours)
-        
+
         # Safely handle unique fields so empty strings don't crash the database
         email_input = request.POST.get('email', '').strip()
         staff.email = email_input if email_input else None
 
         whatsapp_input = request.POST.get('whatsapp', '').strip()
         staff.whatsapp = whatsapp_input if whatsapp_input else None
-        
 
         new_password = request.POST.get('password', '').strip()
         if new_password:
@@ -134,6 +157,10 @@ def lecturer_profile(request, staff_id):
         staff.save()
         return JsonResponse({"success": True, "message": "Profile updated successfully!"})
 
+
+# ==========================================
+# ADMIN STAFF MANAGEMENT API
+# ==========================================
 @csrf_exempt
 def get_staff_data(request):
     if request.method == 'GET':
@@ -144,8 +171,8 @@ def get_staff_data(request):
     elif request.method == 'POST':
         data = json.loads(request.body)
         AcademicStaff.objects.create(
-            staff_id=data['id'], 
-            name=data['name'].title(), # Formats name properly before saving
+            staff_id=data['id'],
+            name=data['name'].title(),  # Formats name properly before saving
             status=data['status']
         )
         return JsonResponse({"message": "Staff added successfully!"})
@@ -153,10 +180,10 @@ def get_staff_data(request):
     elif request.method == 'PUT':
         data = json.loads(request.body)
         staff = AcademicStaff.objects.get(staff_id=data['id'])
-        
+
         if 'name' in data:
-            staff.name = data['name'].title() # Formats edited name
-            
+            staff.name = data['name'].title()  # Formats edited name
+
         staff.status = data['status']
         staff.save()
         return JsonResponse({"message": "Status updated successfully!"})
@@ -166,6 +193,7 @@ def get_staff_data(request):
         staff = AcademicStaff.objects.get(staff_id=data['id'])
         staff.delete()
         return JsonResponse({"message": "Staff deleted successfully!"})
+
 
 @csrf_exempt
 def admin_settings_api(request):
@@ -188,16 +216,21 @@ def admin_settings_api(request):
         admin_profile.save()
         return JsonResponse({"message": "Admin profile updated successfully!"})
 
+
+# ==========================================
+# PUBLIC DIRECTORY VIEWS
+# ==========================================
 def public_directory_view(request):
     return render(request, 'public-directory.html')
+
 
 def public_directory_api(request):
     active_staff = AcademicStaff.objects.filter(status__iexact='Active')
     data = []
     for s in active_staff:
         data.append({
-            "id": s.id, 
-            "name": s.name.title(), # Forces Title Case for the public grid
+            "id": s.id,
+            "name": s.name.title(),  # Forces Title Case for the public grid
             "title": s.title,
             "highest_qualification": s.highest_qualification or "Not specified",
             "specializations": s.specializations or "Not specified",
