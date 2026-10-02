@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security
 SECRET_KEY = 'django-insecure-xx4=+zrnvr2diz69e1q-u1t-@e20ko1y=jvk30lw6zn-n%=js('
-DEBUG = True  
+DEBUG = False  
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://udus-directory-production.up.railway.app']
 
@@ -122,8 +122,12 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Tells WhiteNoise to handle the files efficiently
 STORAGES = {
+    # Handles media uploads (profile pictures)
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    # Handles CSS and JS files for production
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
