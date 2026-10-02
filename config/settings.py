@@ -19,6 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-xx4=+zrnvr2diz69e1q-u1t-@e20ko1y=jvk30lw6zn-n%=js('
 DEBUG = False  
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://udus-directory-production.up.railway.app']
 
 
 # Applications and middleware
@@ -115,17 +116,15 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static and media
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+import os 
 
-# Email
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Tells WhiteNoise to handle the files efficiently
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
-import os
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
