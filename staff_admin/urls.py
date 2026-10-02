@@ -1,6 +1,5 @@
-from django.urls import re_path
-from django.views.static import serve
-from django.conf import settings
+from . import views
+from django.urls import path
 
 # This list connects each web address to the function that handles it.
 
@@ -23,8 +22,4 @@ urlpatterns = [
     path('api/lecturer/profile/<str:staff_id>/', views.lecturer_profile, name='lecturer_profile'),
     path('api/admin-settings/', views.admin_settings_api, name='admin_settings_api'),
     path('api/directory/', views.public_directory_api, name='public_directory_api'),
-]
-
-urlpatterns += [
-    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
