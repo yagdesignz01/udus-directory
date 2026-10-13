@@ -2,239 +2,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UDUS CS Directory Admin — Staff Management</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UDUS CS Directory Admin — Staff Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<!-- Dashboard styles that add the UDUS colours and metric cards. -->
+<style>
+  :root {
+    --udus-plum: #9F4A71;
+    --udus-lgreen: #8BC24A;
+    --udus-dgreen: #008001;
+  }
+  
+  /* Sidebar branding. */
+  .sidebar {
+    background: var(--udus-dgreen) !important;
+  }
 
-  <!-- Dashboard styles -->
-  <style>
-    :root {
-      --udus-plum: #9F4A71;
-      --udus-lgreen: #8BC24A;
-      --udus-dgreen: #008001;
-    }
+  .sidebar-brand {
+    border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+  }
 
-    /* Sidebar */
-    .sidebar {
-      background: var(--udus-dgreen) !important;
-    }
+  .nav-link.active {
+    background: rgba(139, 194, 74, 0.2) !important;
+    color: #FFFFFF !important;
+    box-shadow: inset 4px 0 0 var(--udus-lgreen) !important;
+  }
 
-    .sidebar-brand {
-      border-bottom: 1px solid rgba(255,255,255,0.15) !important;
-    }
+  .nav-link.active svg {
+    color: var(--udus-lgreen) !important;
+  }
 
-    .nav-link.active {
-      background: rgba(139, 194, 74, 0.2) !important;
-      color: #FFFFFF !important;
-      box-shadow: inset 4px 0 0 var(--udus-lgreen) !important;
-    }
+  .admin-avatar {
+    background: var(--udus-lgreen) !important;
+    color: var(--udus-dgreen) !important;
+  }
 
-    .nav-link.active svg {
-      color: var(--udus-lgreen) !important;
-    }
+  .admin-role {
+    color: var(--udus-lgreen) !important;
+  }
 
-    .admin-avatar {
-      background: var(--udus-lgreen) !important;
-      color: var(--udus-dgreen) !important;
-    }
+  /* Buttons and small accent elements. */
+  .add-btn,
+  .save-btn {
+    background: var(--udus-dgreen) !important;
+  }
 
-    .admin-role {
-      color: var(--udus-lgreen) !important;
-    }
+  .add-btn:hover,
+  .save-btn:hover {
+    background: #006000 !important;
+  }
 
-    /* Buttons */
-    .add-btn,
-    .save-btn {
-      background: var(--udus-dgreen) !important;
-    }
+  .nav-badge {
+    background: var(--udus-plum) !important;
+    color: #FFF !important;
+  }
 
-    .add-btn:hover,
-    .save-btn:hover {
-      background: #006000 !important;
-    }
+  /* Status badges. */
+  .status-active {
+    background: #E8F5E9 !important;
+    color: var(--udus-dgreen) !important;
+  }
 
-    .nav-badge {
-      background: var(--udus-plum) !important;
-      color: #FFF !important;
-    }
+  .status-active .dot {
+    background: var(--udus-dgreen) !important;
+  }
 
-    /* Status badges */
-    .status-active {
-      background: #E8F5E9 !important;
-      color: var(--udus-dgreen) !important;
-    }
+  .status-suspended {
+    background: #F8EBF0 !important;
+    color: var(--udus-plum) !important;
+  }
 
-    .status-active .dot {
-      background: var(--udus-dgreen) !important;
-    }
+  .status-suspended .dot {
+    background: var(--udus-plum) !important;
+  }
 
-    .status-suspended {
-      background: #F8EBF0 !important;
-      color: var(--udus-plum) !important;
-    }
+  /* Bento Box Grid */
+  .bento-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    grid-template-rows: 240px 240px;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .bento-card {
+    border-radius: 28px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.03);
+  }
+  
+  /* Tall Card: UDUS Light Green */
+  .card-tall {
+    grid-column: 1 / 2; grid-row: 1 / 3;
+    background: var(--udus-lgreen); 
+    color: #003300;
+  }
+  
+  /* Wide Top Card: White */
+  .card-wide-top {
+    grid-column: 2 / 4; grid-row: 1 / 2;
+    background: #FFFFFF; color: #121212;
+    flex-direction: row; align-items: center;
+  }
+  
+  /* Wide Bottom Card: UDUS Plum */
+  .card-wide-bottom {
+    grid-column: 2 / 4; grid-row: 2 / 3;
+    background: var(--udus-plum); 
+    color: #FFFFFF;
+    flex-direction: row; align-items: flex-end;
+  }
+  
+  /* Bento Typography */
+  .bento-label { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+  .bento-value { font-size: 86px; font-weight: 800; line-height: 1; letter-spacing: -0.04em; }
+  .bento-sub { font-size: 14px; margin-top: 12px; font-weight: 500; color: rgba(255,255,255,0.7); }
+  
+  /* Tall Card Button */
+  .bento-btn {
+    background: var(--udus-dgreen); color: #FFF; border: none; padding: 16px 24px;
+    border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer;
+    width: fit-content; z-index: 2; transition: transform 0.2s;
+  }
+  .bento-btn:hover { transform: translateY(-2px); }
+  
+  /* Abstract Overlapping Rings (Matching the Light Green theme) */
+  .bento-abstract-rings { position: absolute; top: 40%; left: 32px; z-index: 1; }
+  .bento-abstract-rings .ring {
+    width: 160px; height: 50px;
+    border: 1px solid rgba(0, 51, 0, 0.2); border-radius: 50%;
+    margin-top: -24px;
+  }
+  
+  /* Circular Progress Chart */
+  .circular-chart {
+    width: 140px; height: 140px; border-radius: 50%;
+    background: conic-gradient(var(--udus-dgreen) 0%, #F0F2F5 0%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .inner-circle {
+    width: 104px; height: 104px; background: #FFF; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 800; color: var(--udus-dgreen);
+  }
 
-    .status-suspended .dot {
-      background: var(--udus-plum) !important;
-    }
-
-    /* Bento grid */
-    .bento-metrics {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr 1fr;
-      grid-template-rows: 240px 240px;
-      gap: 24px;
-      margin-bottom: 40px;
-    }
-
-    .bento-card {
-      border-radius: 28px;
-      padding: 32px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.03);
-    }
-
-    .card-tall {
-      grid-column: 1 / 2;
-      grid-row: 1 / 3;
-      background: var(--udus-lgreen);
-      color: #003300;
-    }
-
-    .card-wide-top {
-      grid-column: 2 / 4;
-      grid-row: 1 / 2;
-      background: #FFFFFF;
-      color: #121212;
-      flex-direction: row;
-      align-items: center;
-    }
-
-    .card-wide-bottom {
-      grid-column: 2 / 4;
-      grid-row: 2 / 3;
-      background: var(--udus-plum);
-      color: #FFFFFF;
-      flex-direction: row;
-      align-items: flex-end;
-    }
-
-    .bento-label {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    .bento-value {
-      font-size: 86px;
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.04em;
-    }
-
-    .bento-sub {
-      font-size: 14px;
-      margin-top: 12px;
-      font-weight: 500;
-      color: rgba(255,255,255,0.7);
-    }
-
-    .bento-btn {
-      background: var(--udus-dgreen);
-      color: #FFF;
-      border: none;
-      padding: 16px 24px;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      width: fit-content;
-      z-index: 2;
-      transition: transform 0.2s;
-    }
-
-    .bento-btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .bento-abstract-rings {
-      position: absolute;
-      top: 40%;
-      left: 32px;
-      z-index: 1;
-    }
-
-    .bento-abstract-rings .ring {
-      width: 160px;
-      height: 50px;
-      border: 1px solid rgba(0, 51, 0, 0.2);
-      border-radius: 50%;
-      margin-top: -24px;
-    }
-
-    .circular-chart {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: conic-gradient(var(--udus-dgreen) 0%, #F0F2F5 0%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .inner-circle {
-      width: 104px;
-      height: 104px;
-      background: #FFF;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-      font-weight: 800;
-      color: var(--udus-dgreen);
-    }
-
-    .banned-icon-wrapper {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding-right: 20px;
-    }
-
-    .banned-icon-wrapper svg {
-      width: 130px;
-      height: 130px;
-      stroke: rgba(255, 255, 255, 0.25);
-    }
-  </style>
+  /* Massive Banned Icon (Replacing the bar chart) */
+  .banned-icon-wrapper {
+    height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 20px;
+  }
+  .banned-icon-wrapper svg {
+    width: 130px; height: 130px;
+    stroke: rgba(255, 255, 255, 0.25); /* Subtle transparent white */
+  }
+</style>
 </head>
 <body>
-  <div class="shell">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-brand">
-        <div class="brand-mark">
-          <img
-            src="{% static 'images/udus_logo.png' %}"
-            alt="UDUS Logo"
-            style="width: 34px; height: 34px; margin-bottom: 16px; object-fit: contain;"
-          >
-        </div>
+<div class="shell">
 
-        <div class="brand-copy">
-          <div class="l1">UDUS CS Directory</div>
-          <div class="l2">Admin Console</div>
-        </div>
+  <!-- Left menu for dashboard sections and logout. -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">
+        <img
+          src="{% static 'images/udus_logo.png' %}"
+          alt="UDUS Logo"
+          style="width: 34px; height: 34px; margin-bottom: 16px; object-fit: contain;"
+        >
       </div>
+      <div class="brand-copy">
+        <div class="l1">UDUS CS Directory</div>
+        <div class="l2">Admin Console</div>
+      </div>
+    </div>
 
       <!-- Navigation -->
       <nav class="nav-group" id="sidebarNav">
@@ -304,27 +251,30 @@
         </div>
       </div>
 
-      <div class="content">
-        <!-- Dashboard overview -->
-        <div id="section-dashboard" class="content-section active">
-          <div class="bento-metrics">
-            <!-- Total staff -->
-            <div class="bento-card card-tall">
-              <div>
-                <div class="bento-label">Total Academic Staff</div>
-                <div class="bento-value" id="bentoTotal">0</div>
-              </div>
-
-              <div class="bento-abstract-rings">
-                <div class="ring"></div>
-                <div class="ring"></div>
-                <div class="ring"></div>
-              </div>
-
-              <button class="bento-btn" onclick="document.querySelector('[data-target=\'section-manage\']').click()">
-                Manage Staff →
-              </button>
+    <div class="content">
+      
+      <!-- Dashboard overview and staff totals. -->
+      <div id="section-dashboard" class="content-section active">
+        <div class="bento-metrics">
+          
+          <!-- Card showing the total number of academic staff. -->
+          <div class="bento-card card-tall">
+            <div>
+              <div class="bento-label">Total Academic Staff</div>
+              <div class="bento-value" id="bentoTotal">0</div>
             </div>
+            
+            <div class="bento-abstract-rings">
+              <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+            </div>
+            
+            <button
+              class="bento-btn"
+              onclick="document.querySelector('[data-target=\'section-manage\']').click()"
+            >
+              Manage Staff →
+            </button>
+          </div>
 
             <!-- Active accounts -->
             <div class="bento-card card-wide-top">
@@ -574,6 +524,7 @@
     </div>
   </div>
 
-  <script src="{% static 'js/admin.js' %}"></script>
+<!-- Load the dashboard behavior after the page elements exist. -->
+<script src="{% static 'js/admin.js' %}"></script>
 </body>
 </html>

@@ -31,6 +31,7 @@ document.querySelectorAll('.nav-link[data-target]').forEach(link => {
 // ==========================================
 document.getElementById('uploadTriggerBtn')?.addEventListener('click', () => document.getElementById('imageUpload')?.click());
 
+// Show a preview when a new profile image is selected.
 document.getElementById('imageUpload')?.addEventListener('change', function() {
     if (this.files && this.files[0]) {
         const reader = new FileReader();
@@ -96,10 +97,11 @@ async function loadProfileData() {
         const response = await fetch(`/api/lecturer/profile/${currentStaffId}/`);
         const data = await response.json();
         if (response.ok) {
+            // Update the lecturer name and rank in the sidebar.
             const nameEl = document.querySelector('.sidebar-profile .name');
             const titleEl = document.getElementById('sidebarTitle');
             if (nameEl) nameEl.textContent = data.name;
-            if (titleEl) titleEl.textContent = data.title || 'Academic Staff';
+            if (rankEl) rankEl.textContent = `${data.rank} · ${data.unit}`;
 
             const fields = { profName: data.name, profTitle: data.title, profQual: data.highest_qualification, profBuilding: data.building, profFloor: data.floor, profOffice: data.office_number, profGuidance: data.guidance, profOfficeHours: data.working_hours, profEmail: data.email, profWhatsapp: data.whatsapp };
             for (const [id, val] of Object.entries(fields)) { const f = document.getElementById(id); if (f) f.value = val || ''; }

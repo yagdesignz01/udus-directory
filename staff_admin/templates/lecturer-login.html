@@ -6,16 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lecturer Login | UDUS Directory</title>
 
-    <!-- Load the font used by the page -->
+    <!-- Load the font used by the login page. -->
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
 
-    <!-- Load SweetAlert2 for login messages -->
+    <!-- Load SweetAlert2 for the login messages. -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Page styles. -->
     <style>
+        /* These colours are reused throughout the page. */
         :root {
             --udus-green: #008001;
             --udus-dark-green: #005A01;
@@ -25,7 +27,8 @@
             --text-muted: #6B7A94;
             --hairline: #E1E5EC;
         }
-
+        
+        /* Center the login card on the page. */
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
@@ -39,18 +42,20 @@
             box-sizing: border-box;
         }
 
+        /* White card that contains the login form. */
         .login-container {
             background: var(--white);
-            padding: 40px 30px;
+            padding: 40px 30px; 
             border-radius: 20px;
             box-shadow: 0 10px 40px -10px rgba(0, 90, 1, 0.15);
             width: 100%;
             max-width: 400px;
             text-align: center;
             border: 1px solid var(--hairline);
-            box-sizing: border-box;
+            box-sizing: border-box; /* Prevents the box from breaking on mobile */
         }
 
+        /* Keep the logo size in one CSS class. */
         .udus-logo {
             width: 65px;
             height: 65px;
@@ -58,6 +63,7 @@
             object-fit: contain;
         }
 
+        /* Heading and paragraph styles. */
         h1 {
             font-size: 22px;
             font-weight: 800;
@@ -71,6 +77,7 @@
             margin: 0 0 24px;
         }
 
+        /* Form labels and input fields. */
         .form-group {
             text-align: left;
             margin-bottom: 16px;
@@ -85,35 +92,34 @@
         }
 
         .form-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1.5px solid var(--hairline);
-            border-radius: 12px;
-            font-size: 14px;
-            font-family: inherit;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
+            width: 100%; 
+            padding: 14px 16px; 
+            border: 1.5px solid var(--hairline); 
+            border-radius: 12px; 
+            font-size: 14px; 
+            font-family: inherit; 
+            box-sizing: border-box; 
+            transition: border-color 0.2s; 
         }
-
         .form-group input:focus {
             outline: none;
             border-color: var(--udus-green);
         }
 
+        /* Main submit button. */
         .btn {
-            width: 100%;
-            padding: 14px;
-            background: var(--udus-green);
-            color: var(--white);
-            border: none;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background 0.2s;
+            width: 100%; 
+            padding: 14px; 
+            background: var(--udus-green); 
+            color: var(--white); 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 15px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            transition: background 0.2s; 
         }
-
         .btn:hover {
             background: var(--udus-dark-green);
         }
@@ -131,8 +137,9 @@
         <h1>UDUS Academic Staff Portal</h1>
         <p>Sign in to manage your directory profile</p>
 
-        <!-- Login form -->
+        <!-- JavaScript listens to this form ID. -->
         <form id="lecturerLoginForm">
+            <!-- Django security token. -->
             {% csrf_token %}
 
             <div class="form-group">
@@ -155,7 +162,10 @@
                 >
             </div>
 
-            <button type="submit" class="btn">
+            <button
+                type="submit"
+                class="btn"
+            >
                 Secure Login
             </button>
         </form>

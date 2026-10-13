@@ -30,6 +30,8 @@ class AcademicStaff(models.Model):
     # These basic details are entered by the administrator.
     staff_id = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=200)
+    rank = models.CharField(max_length=100)
+    unit = models.CharField(max_length=100)
     status = models.CharField(max_length=50, default='Active')
 
     # These details can be completed by the lecturer.
