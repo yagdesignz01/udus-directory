@@ -48,8 +48,6 @@ def get_staff_profile_data(staff):
         "floor": staff.floor or "",
         "office_number": staff.office_number or "",
         "guidance": staff.guidance or "",
-        "email": staff.email or "",
-        "whatsapp": staff.whatsapp or "",
         "working_hours": staff.working_hours or "",
     }
 
@@ -144,7 +142,7 @@ def lecturer_dashboard_view(request):
 @csrf_exempt
 def lecturer_login(request):
     """
-    Handles the lecturer login request sent from JavaScript (AJAX/fetch).
+    Handles the lecturer login request sent from JavaScript (fetch).
     Expects JSON data containing 'staff_id' and 'password'.
     """
 
@@ -201,6 +199,7 @@ def lecturer_profile(request, staff_id):
 
         # For each field, keep the old value if a new one wasn't sent
         staff.highest_qualification = request.POST.get('highest_qualification', staff.highest_qualification)
+        staff.title = request.POST.get('title', staff.title)
         staff.courses_taught = request.POST.get('courses_taught', staff.courses_taught)
         staff.specializations = request.POST.get('specializations', staff.specializations)
         staff.administrative_roles = request.POST.get('administrative_roles', staff.administrative_roles)
@@ -209,13 +208,6 @@ def lecturer_profile(request, staff_id):
         staff.office_number = request.POST.get('office_number', staff.office_number)
         staff.guidance = request.POST.get('guidance', staff.guidance)
         staff.working_hours = request.POST.get('working_hours', staff.working_hours)
-
-        # Safely handle unique fields so empty strings don't crash the database
-        email_input = request.POST.get('email', '').strip()
-        staff.email = email_input if email_input else None
-
-        whatsapp_input = request.POST.get('whatsapp', '').strip()
-        staff.whatsapp = whatsapp_input if whatsapp_input else None
 
         new_password = request.POST.get('password', '').strip()
         if new_password:
@@ -249,8 +241,7 @@ def get_staff_data(request):
             {
                 "id": s.staff_id,
                 "name": s.name,
-                "rank": s.rank,
-                "unit": s.unit,
+                "title": s.title,
                 "status": s.status
             }
             for s in staff_records
@@ -357,16 +348,14 @@ def public_directory_api(request):
             "id": s.id,
             "name": s.name.title(),  # Forces Title Case for the public grid
             "title": s.title,
-            "highest_qualification": s.highest_qualification or "Not specified",
-            "specializations": s.specializations or "Not specified",
-            "administrative_roles": s.administrative_roles or "Not specified",
+            "highest_qualification": s.highest_qualification or "",
+            "specializations": s.specializations or "",
+            "administrative_roles": s.administrative_roles or "",
             "courses_taught": s.courses_taught or "",
             "building": s.building or "",
             "floor": s.floor or "",
             "office_number": s.office_number or "",
             "guidance": s.guidance or "",
-            "email": s.email or "",
-            "whatsapp": s.whatsapp or "",
             "working_hours": s.working_hours or "",
             "profile_image": img_url
         })

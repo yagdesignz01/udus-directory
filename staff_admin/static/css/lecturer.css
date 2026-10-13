@@ -1,19 +1,23 @@
 :root {
   /* Main UDUS colours. */
   --udus-dark-green: #008001;
-  --udus-darker-green: #005A01;
-  --udus-light-green: #8BC24A;
-  --udus-light-bg: #F4F9EE;
-  --udus-plum: #9F4A71;
+  --udus-darker-green: #005a01;
+  --udus-light-green: #8bc24a;
+  --udus-light-bg: #f4f9ee;
+  --udus-plum: #9f4a71;
 
   /* Text and page colours. */
-  --text-dark: #12233F;
-  --text-muted: #6B7A94;
-  --surface: #F5F6F9;
-  --surface-alt: #EEF1F5;
-  --white: #FFFFFF;
-  --hairline: #E4E7EE;
+  --text-dark: #12233f;
+  --text-muted: #6b7a94;
+  --surface: #f5f6f9;
+  --surface-alt: #eef1f5;
+  --white: #ffffff;
+  --hairline: #e4e7ee;
   --shadow-card: 0 4px 24px rgba(0, 128, 1, 0.08);
+
+  /* Names also used by inline styles in the dashboard template. */
+  --surface-grey: var(--surface-alt);
+  --udus-dgreen: var(--udus-dark-green);
 }
 
 /* Give every element predictable sizing. */
@@ -28,7 +32,7 @@ body {
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
   background: var(--surface);
   color: var(--text-dark);
 }
@@ -71,9 +75,7 @@ select {
   }
 }
 
-/* ==========================================
-   LOGIN PAGE
-   ========================================== */
+/* Login page layout. */
 #screen-login {
   min-height: 100vh;
   display: flex;
@@ -221,14 +223,13 @@ select {
   padding: 0;
 }
 
-/* ==========================================
-   LECTURER DASHBOARD LAYOUT
-   ========================================== */
+/* Lecturer dashboard layout. */
 .shell {
   display: flex;
   min-height: 100vh;
 }
 
+/* The sidebar stays on the left on large screens. */
 .sidebar {
   width: 246px;
   flex-shrink: 0;
@@ -242,13 +243,14 @@ select {
   z-index: 100;
 }
 
+/* Lecturer photo and name area. */
 .sidebar-profile {
   padding: 26px 20px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  border-bottom: 1px solid rgba(255,255,255,0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .sidebar-avatar {
@@ -271,10 +273,11 @@ select {
   font-weight: 800;
 }
 
-.sidebar-profile .rank {
+.sidebar-profile .rank,
+.sidebar-profile .title {
   font-size: 11.5px;
   font-weight: 600;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255, 255, 255, 0.7);
   margin-top: 2px;
 }
 
@@ -282,7 +285,6 @@ select {
   padding: 16px 12px;
   flex: 1;
 }
-
 .nav-link {
   display: flex;
   align-items: center;
@@ -292,14 +294,14 @@ select {
   margin-bottom: 2px;
   font-size: 13.5px;
   font-weight: 600;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   transition: all 0.2s;
   width: 100%;
 }
 
 .nav-link:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   color: var(--white);
 }
 
@@ -315,7 +317,7 @@ select {
 
 .sidebar-footer {
   padding: 14px 16px 20px;
-  border-top: 1px solid rgba(255,255,255,0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .logout-link {
@@ -326,10 +328,11 @@ select {
   border-radius: 10px;
   font-size: 13px;
   font-weight: 700;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
 }
 
+/* Main dashboard content. */
 .main {
   flex: 1;
   min-width: 0;
@@ -371,7 +374,6 @@ select {
   max-width: 760px;
   margin: 0 auto;
   padding: 34px 40px 140px;
-  
 }
 
 .form-section {
@@ -401,4 +403,364 @@ select {
   font-size: 15.5px;
   font-weight: 800;
   margin: 0;
+}
+
+.section-desc {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin: 2px 0 20px 42px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--hairline);
+  margin: 28px 0;
+}
+
+/* Form fields and the two-column layout. */
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field-grid.cols-3 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.form-field {
+  margin-bottom: 16px;
+}
+
+.form-field label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 7px;
+}
+
+.form-field .helper {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.text-input,
+textarea {
+  width: 100%;
+  border: 1.5px solid var(--hairline);
+  border-radius: 11px;
+  background: var(--white);
+  padding: 14px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dark);
+  outline: none;
+}
+
+.text-input:focus,
+textarea:focus {
+  border-color: var(--udus-dark-green);
+}
+
+.text-input:disabled {
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 118px;
+}
+
+/* PROFILE PHOTO UPLOAD */
+.photo-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+.photo-preview {
+  width: 76px;
+  height: 76px;
+  border-radius: 20px;
+  flex-shrink: 0;
+  background: var(--udus-plum);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 24px;
+  overflow: hidden;
+}
+.photo-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.change-photo-btn {
+  padding: 9px 14px;
+  border-radius: 9px;
+  border: 1.5px solid var(--hairline);
+  background: var(--white);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-dark);
+  width: fit-content;
+}
+.change-photo-btn:hover {
+  background: var(--surface-alt);
+}
+.photo-hint {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+/* TAGS */
+.tag-input-shell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+  border: 1.5px solid var(--hairline);
+  border-radius: 11px;
+  background: var(--white);
+  padding: 9px 10px;
+}
+.tag-input-shell:focus-within {
+  border-color: var(--udus-dark-green);
+}
+.tag-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-alt);
+  color: var(--text-dark);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 5px 6px 5px 10px;
+  border-radius: 8px;
+}
+.tag-chip button {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 2px;
+}
+.tag-chip button:hover {
+  color: var(--udus-plum);
+}
+.tag-input-shell input {
+  border: none;
+  outline: none;
+  flex: 1;
+  min-width: 120px;
+  font-size: 13.5px;
+}
+
+/* ACTION BAR */
+.action-bar {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 246px !important;
+  right: 0 !important;
+  z-index: 999;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--hairline);
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.save-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.save-status .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #b4791f;
+}
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+.btn-discard {
+  padding: 11px 18px;
+  border-radius: 11px;
+  border: 1.5px solid var(--hairline);
+  background: var(--white);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+.btn-publish {
+  padding: 11px 20px;
+  border-radius: 11px;
+  border: none;
+  background: var(--udus-dark-green);
+  color: var(--white);
+  font-size: 13.5px;
+  font-weight: 700;
+}
+.btn-publish:hover {
+  background: var(--udus-darker-green);
+}
+
+/* =======================================================
+   NATIVE APP VIBES: MOBILE RESPONSIVENESS 
+======================================================= */
+@media (max-width: 900px) {
+  /* 1. LOCK THE PAGE */
+  body,
+  html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden !important;
+  }
+
+  /* 2. SCROLL THE CONTENT & BLOCK HORIZONTAL STRETCHING */
+  .shell {
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden !important; /* Stops the screen from stretching sideways */
+    padding-bottom: 0;
+  }
+
+  .main {
+    width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  /* 3. LOCK THE TOP HEADER */
+  .main-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000;
+    background: var(--white);
+    padding: 16px 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .main-header h1 {
+    font-size: 18px;
+  }
+
+  .mobile-logout-btn {
+    display: block;
+  }
+
+  .form-wrap {
+    padding: 90px 20px 160px 20px !important;
+    width: 100%;
+  }
+
+  /* 4. FIX GRID STRETCHING: Force all grids & checkboxes to 1 column on mobile */
+  .field-grid,
+  .field-grid.cols-3,
+  .checkbox-group {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+
+  /* 5. LOCK THE SAVE BAR */
+  .action-bar {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 75px !important;
+    margin: 0 !important;
+    padding: 12px 20px !important;
+    border-radius: 20px 20px 0 0;
+    flex-direction: row !important;
+    background: rgba(255, 255, 255, 0.98) !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 999;
+  }
+
+  .save-status {
+    display: none !important;
+  }
+
+  .action-buttons {
+    width: 100%;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+  }
+
+  .btn-discard,
+  .btn-publish {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+    padding: 12px !important;
+  }
+
+  /* 6. LOCK THE BOTTOM NAV */
+  .sidebar {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 75px !important;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 1001;
+  }
+
+  .sidebar-profile,
+  .sidebar-footer {
+    display: none;
+  }
+
+  .nav-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  .nav-link {
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    margin: 0;
+    font-size: 11px;
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .nav-link.active {
+    background: transparent;
+    color: var(--udus-light-green);
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .nav-link.active svg {
+    transform: scale(1.15);
+    margin-bottom: 2px;
+  }
 }

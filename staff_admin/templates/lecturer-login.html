@@ -1,244 +1,239 @@
-<!DOCTYPE html>
+<!doctype html>
 {% load static %}
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lecturer Login | UDUS Directory</title>
 
     <!-- Load the font used by the login page. -->
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Load SweetAlert2 for the login messages. -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Page styles. -->
     <style>
-        /* These colours are reused throughout the page. */
-        :root {
-            --udus-green: #008001;
-            --udus-dark-green: #005A01;
-            --surface: #F4F9EE;
-            --white: #FFFFFF;
-            --text-dark: #12233F;
-            --text-muted: #6B7A94;
-            --hairline: #E1E5EC;
-        }
-        
-        /* Center the login card on the page. */
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: var(--surface);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            color: var(--text-dark);
-            padding: 20px;
-            box-sizing: border-box;
-        }
+      /* These colours are reused throughout the page. */
+      :root {
+        --udus-green: #008001;
+        --udus-dark-green: #005a01;
+        --surface: #f4f9ee;
+        --white: #ffffff;
+        --text-dark: #12233f;
+        --text-muted: #6b7a94;
+        --hairline: #e1e5ec;
+      }
 
-        /* White card that contains the login form. */
-        .login-container {
-            background: var(--white);
-            padding: 40px 30px; 
-            border-radius: 20px;
-            box-shadow: 0 10px 40px -10px rgba(0, 90, 1, 0.15);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            border: 1px solid var(--hairline);
-            box-sizing: border-box; /* Prevents the box from breaking on mobile */
-        }
+      /* Center the login card on the page. */
+      body {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        background: var(--surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        color: var(--text-dark);
+        padding: 20px;
+        box-sizing: border-box;
+      }
 
-        /* Keep the logo size in one CSS class. */
-        .udus-logo {
-            width: 65px;
-            height: 65px;
-            margin-bottom: 16px;
-            object-fit: contain;
-        }
+      /* White card that contains the login form. */
+      .login-container {
+        background: var(--white);
+        padding: 40px 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px -10px rgba(0, 90, 1, 0.15);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        border: 1px solid var(--hairline);
+        box-sizing: border-box; /* Prevents the box from breaking on mobile */
+      }
 
-        /* Heading and paragraph styles. */
-        h1 {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin: 0 0 8px;
-        }
+      /* Keep the logo size in one CSS class. */
+      .udus-logo {
+        width: 65px;
+        height: 65px;
+        margin-bottom: 16px;
+        object-fit: contain;
+      }
 
-        p {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin: 0 0 24px;
-        }
+      /* Heading and paragraph styles. */
+      h1 {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--text-dark);
+        margin: 0 0 8px;
+      }
 
-        /* Form labels and input fields. */
-        .form-group {
-            text-align: left;
-            margin-bottom: 16px;
-        }
+      p {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin: 0 0 24px;
+      }
 
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-        }
+      /* Form labels and input fields. */
+      .form-group {
+        text-align: left;
+        margin-bottom: 16px;
+      }
 
-        .form-group input {
-            width: 100%; 
-            padding: 14px 16px; 
-            border: 1.5px solid var(--hairline); 
-            border-radius: 12px; 
-            font-size: 14px; 
-            font-family: inherit; 
-            box-sizing: border-box; 
-            transition: border-color 0.2s; 
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--udus-green);
-        }
+      .form-group label {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 8px;
+      }
 
-        /* Main submit button. */
-        .btn {
-            width: 100%; 
-            padding: 14px; 
-            background: var(--udus-green); 
-            color: var(--white); 
-            border: none; 
-            border-radius: 12px; 
-            font-size: 15px; 
-            font-weight: 700; 
-            cursor: pointer; 
-            margin-top: 10px; 
-            transition: background 0.2s; 
-        }
-        .btn:hover {
-            background: var(--udus-dark-green);
-        }
+      .form-group input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1.5px solid var(--hairline);
+        border-radius: 12px;
+        font-size: 14px;
+        font-family: inherit;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+      }
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--udus-green);
+      }
+
+      /* Main submit button. */
+      .btn {
+        width: 100%;
+        padding: 14px;
+        background: var(--udus-green);
+        color: var(--white);
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background 0.2s;
+      }
+      .btn:hover {
+        background: var(--udus-dark-green);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <main class="login-container">
-        <!-- University logo -->
-        <img
-            src="{% static 'images/udus_logo.png' %}"
-            alt="UDUS Logo"
-            class="udus-logo"
-        >
+      <!-- University logo -->
+      <img
+        src="{% static 'images/udus_logo.png' %}"
+        alt="UDUS Logo"
+        class="udus-logo"
+      />
 
-        <h1>UDUS Academic Staff Portal</h1>
-        <p>Sign in to manage your directory profile</p>
+      <h1>UDUS Academic Staff Portal</h1>
+      <p>Sign in to manage your directory profile</p>
 
-        <!-- JavaScript listens to this form ID. -->
-        <form id="lecturerLoginForm">
-            <!-- Django security token. -->
-            {% csrf_token %}
+      <!-- JavaScript listens to this form ID. -->
+      <form id="lecturerLoginForm">
+        <!-- Django security token. -->
+        {% csrf_token %}
 
-            <div class="form-group">
-                <label for="staff_id">Staff ID / Username</label>
-                <input
-                    type="text"
-                    id="staff_id"
-                    placeholder="e.g. STF-1001"
-                    required
-                >
-            </div>
+        <div class="form-group">
+          <label for="staff_id">Staff ID / Username</label>
+          <input type="text" id="staff_id" placeholder="e.g. SP1001" required />
+        </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Enter your password"
-                    required
-                >
-            </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
 
-            <button
-                type="submit"
-                class="btn"
-            >
-                Secure Login
-            </button>
-        </form>
+        <button type="submit" class="btn">Secure Login</button>
+      </form>
 
-        <p style="font-size: 11px; margin-top: 24px; margin-bottom: 0;">
-            Protected by UDUS institutional access control
-        </p>
+      <p style="font-size: 11px; margin-top: 24px; margin-bottom: 0">
+        Protected by UDUS institutional access control
+      </p>
     </main>
 
-  <script>
-      document.getElementById('lecturerLoginForm').addEventListener('submit', async function(event) {
+    <script>
+      document
+        .getElementById("lecturerLoginForm")
+        .addEventListener("submit", async function (event) {
           event.preventDefault();
 
-          const staffIdInput = document.getElementById('staff_id').value;
-          const passwordInput = document.getElementById('password').value;
-          const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+          const staffIdInput = document.getElementById("staff_id").value;
+          const passwordInput = document.getElementById("password").value;
+          const csrfToken = document.querySelector(
+            "[name=csrfmiddlewaretoken]",
+          ).value;
 
           Swal.fire({
-              title: 'Authenticating...',
-              text: 'Please wait while we verify your credentials.',
-              allowOutsideClick: false,
-              didOpen: () => Swal.showLoading()
+            title: "Authenticating...",
+            text: "Please wait while we verify your credentials.",
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading(),
           });
 
           try {
-              const response = await fetch('/api/lecturer/login/', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'X-CSRFToken': csrfToken
-                  },
-                  body: JSON.stringify({
-                      staff_id: staffIdInput,
-                      password: passwordInput
-                  })
-              });
-              
-              const data = await response.json();
-              console.log("SERVER RESPONSE:", data); // This exposes exactly what the backend sends!
-              
-              if (response.ok && data.success) {
-                  localStorage.setItem('currentStaffId', data.staff_id);
+            const response = await fetch("/api/lecturer/login/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken,
+              },
+              body: JSON.stringify({
+                staff_id: staffIdInput,
+                password: passwordInput,
+              }),
+            });
 
-                  Swal.fire({
-                      title: 'Welcome Back!',
-                      text: 'Login successful. Redirecting to your dashboard...',
-                      icon: 'success',
-                      confirmButtonColor: '#008001',
-                      timer: 2000,
-                      showConfirmButton: false
-                  }).then(() => window.location.href = '/lecturer-dashboard/');
-              } else {
-                  // Catch both 'error' and 'message' to be completely bulletproof
-                  const serverError = data.error || data.message || 'Invalid Staff ID or Password.';
-                  
-                  Swal.fire({
-                      title: 'Access Denied',
-                      text: serverError,
-                      icon: 'error',
-                      confirmButtonColor: '#D32F2F',
-                      borderRadius: '12px'
-                  });
-              }
-          } catch (error) {
-              console.error("Fetch Error:", error);
+            const data = await response.json();
+            console.log("SERVER RESPONSE:", data); // This exposes exactly what the backend sends!
+
+            if (response.ok && data.success) {
+              localStorage.setItem("currentStaffId", data.staff_id);
+
               Swal.fire({
-                  title: 'System Error',
-                  text: 'Could not connect to the server. Please try again.',
-                  icon: 'error',
-                  confirmButtonColor: '#D32F2F'
+                title: "Welcome Back!",
+                text: "Login successful. Redirecting to your dashboard...",
+                icon: "success",
+                confirmButtonColor: "#008001",
+                timer: 2000,
+                showConfirmButton: false,
+              }).then(() => (window.location.href = "/lecturer-dashboard/"));
+            } else {
+              // Catch both 'error' and 'message' to be completely bulletproof
+              const serverError =
+                data.error || data.message || "Invalid Staff ID or Password.";
+
+              Swal.fire({
+                title: "Access Denied",
+                text: serverError,
+                icon: "error",
+                confirmButtonColor: "#D32F2F",
+                borderRadius: "12px",
               });
+            }
+          } catch (error) {
+            console.error("Fetch Error:", error);
+            Swal.fire({
+              title: "System Error",
+              text: "Could not connect to the server. Please try again.",
+              icon: "error",
+              confirmButtonColor: "#D32F2F",
+            });
           }
-      });
-  </script>
-</body>
+        });
+    </script>
+  </body>
 </html>
